@@ -1,0 +1,331 @@
+- Hızlı Linkler
+
+# ANA VERİTABANI YAPISI
+
+### **1. Kullanıcı Tablosu**
+
+**Amaç:** Afet yardımlarını organize etmek için gönüllü insanları kaydetmek ve güvenlik doğrulaması sağlamak. Bu tablodaki bilgiler yardımları toplama, taşıma ve dağıtma aşamalarında kullanılacak.
+
+- **Kimlik Bilgileri**
+    - `ad`: Kullanıcının adı
+    - `soyad`: Kullanıcının soyadı
+    - `kimlik_numarası`: Türkiye Cumhuriyeti Kimlik Numarası veya yabancı kimlik numarası. (Kimlik doğrulama için zorunlu)
+- **İletişim Bilgileri (Opsiyonel)**
+    - `telefon_numarası`: Kullanıcının aktif telefon numarası (SMS bildirimi için)
+    - `email`: Kullanıcının e-posta adresi (E-posta bildirimi için)
+- **Güvenlik ve Doğrulama**
+    - Kimlik numarası veya telefon doğrulaması zorunlu.
+    - Yardım malzemesi ulaştığında SMS ve E-posta gönderilecek:
+        - Örnek mesaj: "Yaptığınız yardımlar [konum] bölgesine ulaşmıştır. Destekleriniz için teşekkür ederiz."
+
+---
+
+### **2. Lojistik Tablosu**
+
+**Amaç:** Afet bölgelerine yapılan yardımların güvenli ve eksiksiz şekilde taşınmasını sağlamak. Lojistik tablosu, yardımların nereden nereye, kim tarafından ve nasıl taşınacağını takip eder.
+
+- **Mekanlar**
+    - `yardım_toplama_merkezi`: Şehirlerde belirlenen yardım toplama merkezlerinin adı ve adres bilgisi.
+    - `yardım_dağıtım_merkezi`: Afet bölgelerindeki yardım dağıtım merkezlerinin adı ve adres bilgisi.
+    - `toplanma_alanı`: Afet sonrası belirlenen toplanma alanları (meydanlar, camiler vb.)
+- **Araçlar**
+    - `arac_plakası`: Yardımı taşıyacak aracın plaka bilgisi.
+    - `firma_adi`: Taşımacılık yapan firma bilgisi (Belediye, kargo firmaları, taşımacılık şirketleri vb.)
+    - `anlık_konum`: Yardım taşıyan aracın anlık GPS konumu.
+- **Gönüllüler**
+    - `sofor_tipi`: Şoförün profesyonel mi yoksa kamu gönüllüsü mü olduğunu belirten bilgi.
+    - `sofor_bilgileri`: Şoförün kimlik, ehliyet, iletişim bilgileri ve varsa profesyonel ehliyet numarası.
+    - `arac_sahibi_mi`: Şoförün kendi aracını kullanıp kullanmadığı bilgisi.
+- **Durum Bilgisi**
+    - `kargo_durumu`: Kargonun ulaşma durumu (Bekleniyor, Yolda, Teslim Edildi)
+
+---
+
+### **3. Stok Tablosu**
+
+**Amaç:** Yardım malzemelerinin toplandığı ve dağıtıldığı yerlerdeki stok miktarını gerçek zamanlı izlemek ve ihtiyaçları karşılamak için talepte bulunmak.
+
+- **Malzeme Bilgileri**
+    - `malzeme_adi`: Yardım malzemesinin adı (ör: su, mont, battaniye).
+    - `malzeme_turu`: Malzeme türü (gıda, giyecek, lojistik, sağlık vb.)
+    - `guncel_stok_miktari`: Anlık olarak mevcut stok miktarı.
+    - `kritik_stok_miktari`: Stok miktarının kritik düzeye geldiğinde yardım talebinin otomatik olarak oluşturulacağı eşik değer.
+- **Malzeme Güvenliği**
+    - Kargolardan gelen her yardım malzemesi için sürekli değişen karekod sistemi kullanılarak güvenlik doğrulaması yapılmalı.
+- **Stok Azalma Bildirimi**
+    - Stok belirlenen kritik seviyeye ulaştığında sistem, yöneticilere otomatik yardım talebi oluşturur.
+
+---
+
+### **4. Gönüllü Tablosu**
+
+**Amaç:** Afet yardımı gönüllülerinin kayıtlarını ve görev dağılımlarını yönetmek.
+
+- **Kullanıcı Bilgileri**
+    - `gönüllü_id`: Gönüllünün benzersiz kayıt numarası.
+    - `ad`: Gönüllünün adı.
+    - `soyad`: Gönüllünün soyadı.
+    - `iletisim_bilgileri`: Telefon numarası ve e-posta bilgisi.
+- **Görev Türü**
+    1. Yardım Toplama Merkezinde:
+        - `veri_girisi`: Yardım malzemesi veri girişini yapan gönüllü (yardım yapan kişinin ve yardım malzemesinin kaydını tutar).
+        - `arac_yukleme`: Yardım malzemelerini araca yükleyen kişi.
+        - `genel_veritabani_kontrol`: Hangi yardım dağıtım merkezine ne kadar malzeme gönderileceğine karar veren kişi.
+    2. Yardım Dağıtım Merkezinde:
+        - `miktar_kontrolu`: Gelen yardım malzemesinin miktar ve güvenlik kontrolünü yapan kişi.
+        - `dağıtım`: İhtiyaç sahiplerine yardım malzemesini dağıtan kişi.
+    3. Yardım Taşıma:
+        - `profesyonel_sofor`: Tır şoförü veya diğer profesyonel şoförler (ehliyet kontrolü zorunlu).
+        - `kamu_gonullusu_sofor`: Kendi aracıyla yardım taşımak isteyen gönüllü (güvenlik kontrolü yapılmalı).
+
+---
+
+# MOBİL UYGULAMA TASARIMI
+
+### 1. **YARDIM ALMAK İSTİYORUM**
+
+Afetzedenin en hızlı şekilde ihtiyaç duyduğu yardıma ulaşabilmesi için şu özellikler sunulmalıdır:
+
+- **Konum Erişimi:**
+    - Afetzedenin bulunduğu yerin tespiti için konum bilgisi alınır.
+    - Bulunduğu konuma en yakın yardım dağıtım merkezlerinin listelenmesi sağlanır.
+    - Her dağıtım merkezindeki mevcut **yardım malzemesi durumu** anlık olarak görüntülenir.
+    - Kullanıcıya "En yakın dağıtım merkezi şu anda X malzemesine sahip" şeklinde geri bildirim verilir.
+- **Güvenlik:**
+    - Afetzedenin konum verileri ve kişisel bilgileri, veri güvenliği standartlarına uygun olarak korunur.
+    - Konum izni yalnızca yardım dağıtım merkezlerinin belirlenmesi ve hizmetin sağlanması amacıyla kullanılır.
+
+### 2. **YARDIM ETMEK İSTİYORUM**
+
+Yardımda bulunmak isteyen kullanıcılar için çeşitli seçenekler sunulmalıdır:
+
+- **Kayıt ve Giriş:**
+    - Kullanıcılar uygulamaya giriş yaparken **Telefon Numarası** girer ve telefona gönderilen doğrulama kodunu kullanarak kimliklerini doğrular.
+    - Yeni kullanıcılar için kayıt sırasında **Ad, Soyad, Kimlik Numarası, Telefon Numarası, E-posta** bilgileri istenir.
+    - Yardımların ulaştığına dair kullanıcılara otomatik teşekkür mesajı gönderilir. (Örnek: “Yaptığınız yardımlar … konumuna ulaşmıştır. Destekleriniz için teşekkürler.”)
+- **Fiziksel Gönüllü Olma:**
+Kullanıcılar farklı gönüllülük seçenekleri arasından seçim yapabilir:
+    - Afet bölgesine **yardım toplama** gönüllüsü olmak.
+    - Afet bölgesinde **yardım dağıtma** gönüllüsü olmak.
+    - Afet bölgesine yardım taşıyan **şoför** gönüllüsü olmak.
+    - Her gönüllü, ilgili görev için kayıt olurken kimlik doğrulamasından geçer.
+- **Para Yardımı:**
+    - AFAD, Ahbap, Kızılay gibi yardım kuruluşlarının IBAN ve adres bilgileri gösterilir. Kullanıcılar buradan para yardımı yapabilir.
+- **Kargo Takibi:**
+    - Kullanıcı, yaptığı yardımın durumunu takip edebilir. Canlı konum ya da geçiş noktalarını gösteren bir harita sunulur.
+    - Kargo takip numarası girilerek yardım malzemesinin nerede olduğu anlık olarak izlenebilir.
+- **Şirket Yardım Menüsü:**
+    - Yardımda bulunmak isteyen şirketler için ayrı bir menü sunulur.
+    - Şirketler büyük yardımları organize edebilmek için detaylı yardım miktarlarını ve adres bilgilerini girebilirler.
+
+---
+
+# WEB SİTESİ TASARIMI
+
+Web sitesi, mobil uygulamayla tam entegre bir şekilde çalışmalı ve kullanıcılara mobil deneyimde sunulan özelliklerin web ortamına taşınmasını sağlamalıdır. Aşağıda ayrıntılı bir şablon verilmiştir:
+
+### 1. **Ana Sayfa**
+
+- **Tanıtım Bölümü:**
+    - Web sitesinin ana sayfasında, afet yardımı organizasyonu ve hizmetleri hakkında kısa bir bilgilendirme yapılır.
+    - Kullanıcılara yardımların nasıl organize edildiği, gönüllülerin ve bağışçıların sürece nasıl katılabileceği açıklanır.
+    - "Yardım etmek ister misiniz?" şeklinde bir pop-up, ziyaretçilerin dikkatini çekerek onlara bağış yapma veya gönüllü olma çağrısı yapar.
+
+### 2. **Kargo Takip Numarası Girişi**
+
+- Kullanıcıların yaptıkları yardımları takip edebilmeleri için bir **Kargo Takip Numarası** girişi sunulur.
+    - Bu sayede kullanıcılar, yardımlarının nerede olduğunu ve yardım dağıtım merkezlerine ulaşana kadar hangi aşamalardan geçtiğini izleyebilirler.
+    - Canlı harita ile yardım taşıyan aracın anlık konumu görüntülenebilir.
+
+### 3. **Gönüllü Olma ve Kayıt Sistemi**
+
+- **Mobil Uygulamayla Senkronize Gönüllü Sistemi:**
+    - Mobil uygulamayla senkronize olarak çalışan bir **Giriş Yap veya Kayıt Ol** menüsü bulunur.
+    - Gönüllü olmak isteyen kullanıcılar, ad, soyad, kimlik numarası, telefon numarası gibi bilgilerini girerek kayıt olabilirler.
+    - Kullanıcılar kayıt olduktan sonra, mobil uygulamada olduğu gibi gönüllü olmak istedikleri alanı seçebilirler: Yardım toplama, yardım dağıtma veya şoförlük.
+
+### 4. **Hakkımızda Sayfası**
+
+- **Afet Yardımı Organizasyonu Tanıtımı:**
+    - Web sitesinde yer alan bu bölüm, afet yardımı organizasyonunun tarihçesini, misyonunu ve vizyonunu anlatır.
+    - Organizasyonun kurucuları, ekip üyeleri ve işbirliği yaptığı kuruluşlar hakkında bilgiler sunulur.
+    - **Destekçiler** listesi ile bireysel ve kurumsal bağışçılar, gönüllüler veya şirketler burada şeffaflıkla belirtilir.
+
+### 5. **Sıkça Sorulan Sorular (SSS)**
+
+- Kullanıcılardan gelen en yaygın sorular ve cevapları bu bölümde sunulur:
+    - "Nasıl gönüllü olabilirim?"
+    - "Para yardımı nasıl yapabilirim?"
+    - "Kargo takibini nasıl yaparım?"
+    - "Yardım malzemelerinin güvenliği nasıl sağlanıyor?"
+    - "Yardım dağıtım merkezleri nerede?"
+
+### 6. **Öneri ve Şikayetler Bölümü**
+
+- Kullanıcıların yaşadıkları deneyimlerle ilgili **geri bildirim** verebilecekleri bir form veya iletişim bölümü olmalıdır:
+    - Kullanıcılar site ve mobil uygulama ile ilgili önerilerini veya karşılaştıkları sorunları bu bölümde paylaşabilir.
+    - Geri bildirimler incelenip, gerekirse güncellemeler yapılabilir.
+
+### 7. **Yardım Ulaşımı ve Şeffaflık**
+
+- Yardımların şeffaflığı ve güvenilirliği için yardımların ulaştığı yerler hakkında sürekli güncellemeler sunulmalıdır:
+    - Yardım dağıtım merkezlerine ulaştırılan yardımların **fotoğrafları** ve **açıklamaları** eklenir.
+    - Yardımın ulaştığı bölgedeki ihtiyaçlar hakkında bilgi verilir.
+    - Kullanıcılar yardımlarının hangi aşamada olduğunu kolayca görebilirler.
+
+### 8. **Afet Riski Uyarıları**
+
+- Afet bölgesine yakın veya afet riski olan yerlerde yaşayan insanlara yönelik **afet riski uyarıları** yapılır.
+    - Bu uyarılar hava durumu, yerel otoritelerden gelen afet risk raporları ve diğer kaynaklardan alınan verilerle güncellenir.
+    - Afetlere hazırlıklı olma konusunda ipuçları ve öneriler sunulur.
+
+### 9. **Afet Yardımıyla İlgili Güncel Bilgiler**
+
+- **Güncel Haberler ve Bilgiler:**
+    - Afet yardımı sürecinde neler yapıldığı, yardımların nasıl organize edildiği ve hangi bölgelere ne tür yardımların gönderildiği hakkında düzenli olarak güncellemeler yapılır.
+    - **Resmi kaynaklar**, yardım kuruluşları ve diğer güvenilir kanallardan alınan haberler paylaşılır.
+
+### 10. **Bağış Menüsü ve Yardım Kuruluşları**
+
+- **Bağış Yapmak İsteyenler İçin:**
+    - Afet bölgesine veya belirli yardım kuruluşlarına para yardımı yapmak isteyenler için IBAN bilgileri ve yardım kuruluşlarının adresleri verilir.
+    - AFAD, Ahbap, Kızılay gibi resmi ve güvenilir yardım kuruluşlarına yönlendirme yapılır.
+
+### 11. **Şirket Yardım Menüsü**
+
+- **Şirketlerin Yardım Organize Edebilmesi İçin:**
+    - Web sitesi, şirketlerin büyük çaplı yardımları organize etmelerine imkan sağlayan özel bir menü sunar.
+    - Şirketler ne tür yardımlar yapabileceklerini belirtebilir ve bu yardımların hangi bölgeye ulaştırılacağını planlayabilirler.
+
+### 12. **İletişim Bölümü**
+
+- Web sitesinin alt kısmında **iletişim bilgileri**, sosyal medya hesapları ve yardım organizasyonu merkezlerinin adresleri yer alır.
+    - Kullanıcılar burada doğrudan organizasyonla iletişime geçebilir ve acil durumlar için anında destek talep edebilirler.
+
+Bu şablon, web sitesinin tüm ayrıntıları içeren, kullanıcı dostu, profesyonel ve işlevsel bir hale gelmesini sağlar. Mobil uygulama ile tam uyumlu çalışan bu web sitesi, kullanıcıların ihtiyaçlarını karşılamaya yönelik eksiksiz bir platform sunar.
+
+---
+
+# GENEL ÖZELLİKLER VE YAZILIM DİLLERİ
+
+Bu proje, afet zamanlarında ihtiyaç sahiplerinin hızlıca yardım alabilmesini ve gönüllülerin etkin bir şekilde yardım ulaştırabilmesini sağlayan bir mobil, web ve backend altyapılı uygulamadır. Detaylı planlama ile kullanıcı dostu, güvenli ve etkili bir sistem geliştirilmesi amaçlanmaktadır.
+
+### Teknoloji Yığını:
+
+
+# PROJE SÜRECİ ADIMLARI
+
+### 1. Kaynak Tarama
+
+Projenin başlangıç aşamasında, mevcut yardım uygulamaları (AFAD, Ahbap, Kızılay) incelenmeli ve bu kuruluşlarla işbirliği yapılarak proje geliştirilmelidir. Yardım kuruluşlarıyla irtibat kurularak onların süreçleri hakkında bilgi alınmalıdır. Ayrıca lojistik firmalarıyla görüşülerek kargo ve malzeme ulaştırma süreçlerinin nasıl entegre edileceği öğrenilmelidir.
+
+### 2. SQL ile Veritabanı Tasarımı
+
+Kullanıcı, lojistik ve stok veritabanı kullanılarak tasarlanacaktır. Veritabanı sadece genel olarak ele alınmalı, veritabanı ilişkileri ve tablolardaki alanlar titizlikle belirlenmelidir.
+
+### 3. Mobil Uygulama Geliştirme
+
+Mobil uygulama, kullanıcı konumu  ile entegre edilip, bu veriler yardımların en yakın dağıtım merkezlerine yönlendirilmesini sağlayacak. Görsel olarak kullanıcı dostu bir arayüz geliştirilecek ve yardımların kolayca takip edilmesi sağlanacak.
+
+### 4. Responsive Web Sitesi Geliştirme 
+
+Geliştirilecek web sitesi, mobil uyumlu ve hızlı bir deneyim sunacak. Yardım organizasyonları hakkında bilgilendirme ve bağış süreçlerinin yönetimi web üzerinden de yapılabilecek.
+
+### 5. Uygulama ve Sistem Entegrasyonu
+
+Mobil, web ve backend sistemleri arasında veri akışını sağlamak için API entegrasyonları yapılacak. Kullanıcılar arasındaki iletişim, kargo takibi, stok bilgileri ve afet uyarıları sistemler arası bağlı bir yapıda çalışacak.
+
+### 6. Kontrol ve Test Süreci
+
+Projede yer alan her modül için ayrı ayrı test senaryoları oluşturulacak. Hem mobil hem de web uygulamaları için unit testler ve entegrasyon testleri yapılacak. Veritabanı ile uygulama arasındaki iletişim doğrulanacak, güvenlik açıkları incelenecek.
+
+### 7. Reklam ve Pazarlama
+
+Uygulamanın tanıtımı sosyal medya platformları üzerinden yapılmalı ve afetzedelere ne kadar hızlı ulaşıldığı test edilmelidir. Yardım kuruluşları ve gönüllülerin katılımı arttırılmalı, platformun gerçekten faydalı olup olmadığı analiz edilmelidir.
+
+### 8. Proje Sonuçlandırma ve Sunum
+
+Proje tamamlandığında, ayrıntılı bir sunum hazırlanmalı ve proje boyunca yapılan çalışmalar, elde edilen sonuçlar belgelenmelidir. Sunum sırasında proje işleyişi, teknolojik altyapı ve kullanılan yöntemler detaylı şekilde anlatılmalıdır.
+
+---
+
+# **Senaryo: A Şehrinde Deprem Oldu**
+
+### 1. **Acil Durum Aktivasyonu**
+
+- Afet sonrası, uygulama otomatik olarak alarma geçer. Tüm giriş ve kayıt sistemleri açılır. Kullanıcılar, afetzede olarak yardım talep edebilir veya gönüllü olmak için başvuruda bulunabilirler.
+
+### 2. **Yardım Organizasyonu Başlatılır**
+
+- **A Şehrinde**, afet sonrası yardım malzemelerinin dağıtımı için bir **yardım malzemesi dağıtım merkezi** oluşturulur. Dağıtım gönüllüleri buraya toplanır.
+- **B Şehrinde**, yardım malzemelerinin toplandığı bir **yardım malzemesi toplama merkezi** belirlenir. Gönüllü toplamacılar, yardım malzemelerini toplar; taşıma gönüllüleri ve gönüllü şoförler ise bu malzemeleri afet bölgesine ulaştırmak için organize edilir.
+
+### 3. **Yardım Malzemesi Toplama ve Taşıma Süreci**
+
+- **B Şehrindeki kullanıcılar**, uygulama üzerinden **en yakın yardım malzemesi toplama merkezini** bulur ve yardımlarını bu merkeze getirir.
+- Yardım toplama gönüllüleri, getirilen yardım malzemelerini uygulamaya kaydederek veritabanına işler. Toplanan malzemeler, taşınacak araçlarla ilişkilendirilir.
+- Yardım malzemesi ve gönüllü şoför birleştirildikten sonra, güvenlik amacıyla bir **karekod** oluşturulur. Bu karekod, yardım malzemesinin güvenli ve izlenebilir bir şekilde taşınmasını sağlar.
+
+### 4. **Yardım Taşımacılığı ve İzleme**
+
+- Yardım malzemelerini taşıyan araç, **A Şehrine doğru yola çıkar**. Araç hareket halindeyken, içerisindeki yardım malzemeleri ve aracın **anlık konumu** uygulama üzerinden hem kullanıcılar hem de sistem yöneticileri tarafından izlenebilir.
+
+### 5. **Yardımın Teslimatı**
+
+- Araç, **A Şehrindeki yardım malzemesi dağıtım merkezine** ulaştığında, malzemeler karekod taraması ile güvenlik kontrolünden geçer. Gelen yardım malzemelerinin miktarı ve içeriği onaylanır.
+- B Şehrinde yardıma katkı sağlayan kullanıcılara, yardımları başarıyla ulaştığı için teşekkür mesajı gönderilir.
+
+### 6. **Afetzedelerin Yardım Alması**
+
+- **A Şehrindeki afetzedeler**, uygulama üzerinden **ihtiyaç duydukları yardım malzemesini ve en yakın yardım dağıtım merkezini** görebilirler. Afetzedeler, kendilerine en yakın dağıtım merkezine giderek yardımlarını teslim alırlar.
+- Yardım dağıtım gönüllüleri, teslim edilen malzemeleri sistemde güncelleyerek stoktan düşerler.
+
+---
+
+# **Eklenmesi Gereken Özellikler:**
+
+### 1. **Öncelikli Yardım Hiyerarşisi ve Bilinçlendirme**
+
+- Afet anında, bazı yardım malzemeleri diğerlerinden daha kritik olabilir (örneğin, su, gıda, ilaçlar). Uygulama, kullanıcıları bu öncelikli yardımlar hakkında bilinçlendirebilir ve yardım hiyerarşisine göre malzemelerin dağıtımını optimize edebilir.
+- Kullanıcılara, hangi malzemelere daha çok ihtiyaç olduğu konusunda düzenli bilgilendirme yapılabilir.
+
+### 2. **Stok Yönetimi ve Otomatik Yardım Talebi**
+
+- Yardım malzemesi stokları azaldığında, sistem **otomatik olarak yardım talebi** oluşturabilir. Bu talep, gönüllüler ve yardım kuruluşlarına iletilir. Böylece sürekli bir stok akışı sağlanır.
+
+### 3. **İletişim Sistemi**
+
+- Acil durumlar için, gönüllüler ve afetzedeler arasında hızlı bir iletişim kurulabilmesi adına uygulama içerisine **anlık mesajlaşma** veya **acil yardım çağrısı** özellikleri eklenebilir.
+
+### 4. **AFAD ve Diğer Resmi Kurumların Anlık Bilgileri**
+
+- Uygulama, AFAD ve diğer resmi yardım kuruluşlarının **anlık olarak hangi bölgelerde yardım faaliyetleri** yürüttüğünü gösterebilir. Bu, hem yardım edenler hem de yardım alanlar için büyük bir fark yaratır.
+
+### 5. **Kargo Takip Sistemi**
+
+- Yardım malzemelerini gönderen kullanıcılar, malzemelerinin durumu hakkında bilgi sahibi olabilmeli. Bu yüzden uygulama içerisinde **PTT kargo takip sistemine benzer bir sistem** eklenebilir. Böylece yardımların hangi aşamada olduğu kullanıcılar tarafından izlenebilir.
+
+### 6. **Çevrimdışı Acil Yardım Rehberi**
+
+- Afet bölgesinde internet bağlantısının zayıf veya kesik olabileceği durumlar düşünülerek, uygulama çevrimdışı çalışabilecek bir **acil yardım rehberi** sunabilir. Bu rehberde **çadır kurma, ilkyardım, barınma** gibi hayati bilgiler bulunabilir.
+
+---
+
+# **Önerilen Yeni Özellikler ve Fikirler:**
+
+### 1. **Kullanıcı Güvenliği ve Kimlik Doğrulama**
+
+- Yardım sürecinde güvenlik çok önemli. Yardım dağıtımı ve toplanması süreçlerinde, yardım malzemeleri ve kişilerin kimlik doğrulama sistemlerine (QR kod, kimlik numarası, yüz tanıma vb.) dahil edilmesi güvenliği artırabilir.
+
+### 2. **Topluluk ve Yardımlaşma Ağları**
+
+- Kullanıcılar arasında bir **yardım grubu** oluşturma seçeneği ekleyebilirsin. Böylece aynı bölgedeki kullanıcılar birbirleriyle organize olabilir ve koordineli bir şekilde yardım ulaştırabilirler.
+
+### 3. **Gönüllü Yönetim Sistemi**
+
+- Gönüllülerin organize edilmesi için uygulama içerisinde bir **gönüllü yönetim modülü** ekleyebilirsin. Bu modül, hangi gönüllünün hangi bölgede çalıştığını ve ne tür yardımda bulunduğunu takip edebilir.
+
+### 4. **Anket ve Geri Bildirim Sistemi**
+
+- Yardım alan kişilere, aldıkları yardımlar hakkında **geri bildirim** sağlama fırsatı sunulabilir. Ayrıca, yardım süreçlerinin verimliliğini artırmak için gönüllü ve kullanıcı geri bildirimlerine dayalı anketler yapılabilir.
+

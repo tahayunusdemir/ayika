@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>AYİKA - Ekibimiz</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+
+    <!-- Custom styles -->
+    <style>
+        /* Root değişkenler */
+        :root {
+            --md-primary: #1a237e;
+            --md-secondary: #3949ab;
+            --md-accent: #00acc1;
+            --md-surface: #ffffff;
+            --md-background: #f5f7fa;
+            --md-elevation-1: 0 2px 4px rgba(0,0,0,0.1);
+            --md-elevation-2: 0 4px 8px rgba(0,0,0,0.12);
+            --md-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Genel stiller */
+        body {
+            background-color: var(--md-background);
+        }
+
+        /* Başlık stilleri */
+        .section-heading, .main-heading {
+            color: var(--md-primary);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-heading {
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--md-secondary);
+            border-radius: 2px;
+        }
+
+        /* Ekip üyesi kartı */
+        .team-member-card {
+            border: none;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            transition: var(--md-transition);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+
+        .team-member-img {
+            height: 360px;
+            object-fit: cover;
+            object-position: top center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-member-card:hover .team-member-img {
+            transform: scale(1.05);
+        }
+
+        .team-member-info {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px 24px 0 0;
+            margin-top: -30px;
+        }
+
+        .team-member-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .team-member-role {
+            font-size: 1.1rem;
+            color: var(--md-secondary);
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-member-info p {
+            color: #4a5568;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sosyal medya linkleri */
+        .social-links {
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.5rem;
+            transition: var(--md-transition);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        /* İstatistik bölümü */
+        .stats-section {
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+            padding: 4rem 0;
+            margin-top: 4rem;
+            border-radius: 30px;
+            color: white;
+        }
+
+        /* Teknoloji stack ikonları */
+        .tech-stack-icon {
+            background: white;
+            border-radius: 12px;
+            transition: var(--md-transition);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .tech-stack-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .tech-stack-icon i {
+            transition: transform 0.3s ease;
+        }
+
+        .tech-stack-icon:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Geri dönüş butonu */
+        .back-button {
+            transition: var(--md-transition);
+            border-radius: 30px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Animasyonlar */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .team-member-img {
+                height: 320px;
+            }
+            
+            .team-member-info {
+                padding: 2rem 1.5rem;
+            }
+            
+            .team-member-name {
+                font-size: 1.5rem;
+            }
+            
+            .team-member-role {
+                font-size: 1rem;
+            }
+        }
+
+        /* İstatistik kartları */
+        .stats-card {
+            background: white;
+            border-radius: 24px;
+            transition: var(--md-transition);
+            box-shadow: var(--md-elevation-1);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .stats-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .stats-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(8px);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .stats-icon i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-card h3 {
+            font-size: 2.5rem;
+            color: var(--md-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-card p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Responsive düzenlemeler */
+        @media (max-width: 768px) {
+            .stats-card {
+                padding: 1.5rem !important;
+            }
+            
+            .stats-card h3 {
+                font-size: 2rem;
+            }
+            
+            .stats-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Üniversite rozeti için sadeleştirilmiş stil */
+        .university-badge {
+            background: var(--md-primary);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-text {
+            background: #f8bbd0;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .highlight-primary {
+            background: #e3f2fd;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .highlight-secondary {
+            background: #f3e5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="mt-5">
+        <div class="container py-5">
+            <!-- Geri Dönüş Butonu -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <a href="index.html" class="btn btn-outline-primary back-button fs-5 fw-bold">
+                        <i class="fas fa-arrow-left me-2"></i>Ana Sayfaya Dön
+                    </a>
+                </div>
+            </div>
+
+            <!-- Başlık -->
+            <div class="row mb-5 fade-in">
+                <div class="col-12 text-center">
+                    <h1 class="main-heading display-3 mb-4">Ekibimizle Tanışın</h1>
+                    <p class="lead text-muted px-md-5 mx-auto" style="max-width: 800px;">
+                        <span class="highlight-text">AYİKA'nın kalbi</span> olan ekibimiz, 
+                        <span class="highlight-primary">afet anında toplumsal dayanışmayı güçlendirmek için</span> 
+                        teknoloji ve inovasyonu bir araya getiriyor. Her üyemiz, 
+                        <span class="highlight-secondary">daha güvenli ve organize bir gelecek</span> için
+                        tutkuyla çalışıyor.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ekip Üyeleri -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6 slide-up" style="animation-delay: 0.1s">
+                    <div class="team-member-card">
+                        <img src="img/team/taha.jpg" class="team-member-img w-100" alt="Taha Yunus Demir">
+                        <div class="team-member-info">
+                            <h4 class="team-member-name">Taha Yunus Demir</h4>
+                            <div class="team-member-role mb-2">
+                                <span class="badge rounded-pill bg-primary px-3 py-2">Backend & DevOps Mühendisi</span>
+                            </div>
+                            <div class="university-info mb-3">
+                                <div class="university-badge">
+                                    <i class="fas fa-university me-2"></i>
+                                    Dumlupınar Üniversitesi
+                                </div>
+                            </div>
+                            <p class="mb-4">
+                                Backend sistemlerimizin mimarı ve DevOps uzmanı. Mikroservis mimarisi ve 
+                                cloud teknolojileri ile sistemlerimizin kesintisiz çalışmasını sağlıyor. 
+                                CI/CD süreçleri ve container teknolojileri konusundaki deneyimiyle 
+                                projemizin teknik altyapısını güçlendiriyor.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://www.linkedin.com/in/taha-yunus-demir/" class="bg-primary text-white" target="_blank">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="mailto:tahayunusdemir@gmail.com" class="bg-danger text-white">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                <a href="https://github.com/tahayunusdemir" class="bg-dark text-white" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Harun Celen -->
+                <div class="col-lg-4 col-md-6 slide-up" style="animation-delay: 0.2s">
+                    <div class="team-member-card">
+                        <img src="img/team/harun.jpg" class="team-member-img w-100" alt="Harun Celen">
+                        <div class="team-member-info">
+                            <h4 class="team-member-name">Harun Celen</h4>
+                            <div class="team-member-role mb-2">
+                                <span class="badge rounded-pill bg-primary px-3 py-2">Frontend & UI/UX Tasarımcısı</span>
+                            </div>
+                            <div class="university-info mb-3">
+                                <div class="university-badge">
+                                    <i class="fas fa-university me-2"></i>
+                                    Kırıkkale Üniversitesi
+                                </div>
+                            </div>
+                            <p class="mb-4">
+                                Modern ve kullanıcı dostu arayüzlerimizin tasarımcısı. React ve Next.js 
+                                kullanarak web platformumuzu geliştiriyor. Material Design prensipleriyle 
+                                kullanıcı deneyimini en üst seviyeye çıkarıyor ve responsive tasarımlarla 
+                                her cihazda mükemmel görünüm sağlıyor.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://www.linkedin.com/in/harun-celen-566665258/" class="bg-primary text-white" target="_blank">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="mailto:haruncelen89@gmail.com" class="bg-danger text-white">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                <a href="https://github.com/HarunCelen" class="bg-dark text-white" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hamza Erdal -->
+                <div class="col-lg-4 col-md-6 slide-up" style="animation-delay: 0.3s">
+                    <div class="team-member-card">
+                        <img src="img/team/hamza.jpg" class="team-member-img w-100" alt="Hamza Erdal">
+                        <div class="team-member-info">
+                            <h4 class="team-member-name">Hamza Erdal</h4>
+                            <div class="team-member-role mb-2">
+                                <span class="badge rounded-pill bg-primary px-3 py-2">Mobil Uygulama Geliştirici</span>
+                            </div>
+                            <div class="university-info mb-3">
+                                <div class="university-badge">
+                                    <i class="fas fa-university me-2"></i>
+                                    Dumlupınar Üniversitesi
+                                </div>
+                            </div>
+                            <p class="mb-4">
+                                Mobil uygulamamızın geliştiricisi. Flutter teknolojisi ile iOS ve Android 
+                                platformları için kesintisiz bir deneyim sunuyor. Firebase entegrasyonları 
+                                ve state management konularındaki uzmanlığıyla, afet anında bile sorunsuz 
+                                çalışan bir mobil uygulama geliştiriyor.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://www.linkedin.com/in/hamza-erdal-29b58519b/" class="bg-primary text-white" target="_blank">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="mailto:hamzaerdal123@gmail.com" class="bg-danger text-white">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                <a href="https://github.com/Toruk-Makto-01" class="bg-dark text-white" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İstatistikler -->
+            <div class="row g-4 mt-5">
+                <div class="col-md-3">
+                    <div class="stats-card p-4 text-center">
+                        <div class="stats-icon bg-primary bg-opacity-10">
+                            <i class="fas fa-heart fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">50+</h3>
+                        <p class="text-muted mb-0">Mutlu Ettiğimiz İnsan</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card p-4 text-center">
+                        <div class="stats-icon bg-success bg-opacity-10">
+                            <i class="fas fa-code-branch fa-2x text-success"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">10K+</h3>
+                        <p class="text-muted mb-0">Satır Kod ve Sevgi</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card p-4 text-center">
+                        <div class="stats-icon bg-warning bg-opacity-10">
+                            <i class="fas fa-mug-hot fa-2x text-warning"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">500+</h3>
+                        <p class="text-muted mb-0">İçilen Kahve ve Sohbet</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card p-4 text-center">
+                        <div class="stats-icon bg-danger bg-opacity-10">
+                            <i class="fas fa-clock-rotate-left fa-2x text-danger"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">1000+</h3>
+                        <p class="text-muted mb-0">Keyifli Çalışma Saati</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yeni teknoloji stack bölümü -->
+            <div class="container py-5">
+                <h2 class="text-center section-heading mb-5">Teknoloji Stack'imiz</h2>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-2 col-md-3 col-4">
+                        <div class="tech-stack-icon p-3 text-center">
+                            <i class="fab fa-html5 fa-3x" style="color: #e34f26;"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-4">
+                        <div class="tech-stack-icon p-3 text-center">
+                            <i class="fab fa-css3-alt fa-3x" style="color: #264de4;"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-4">
+                        <div class="tech-stack-icon p-3 text-center">
+                            <i class="fab fa-js fa-3x" style="color: #f7df1e;"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-4">
+                        <div class="tech-stack-icon p-3 text-center">
+                            <i class="fab fa-react fa-3x" style="color: #61DAFB;"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-4">
+                        <div class="tech-stack-icon p-3 text-center">
+                            <i class="fab fa-node-js fa-3x" style="color: #339933;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.umd.min.js"></script>
+</body>
+</html>

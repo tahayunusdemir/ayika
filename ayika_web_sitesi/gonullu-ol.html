@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>AYİKA - Gönüllü Ol</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+
+    <!-- Custom styles -->
+    <style>
+        .volunteer-form {
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .volunteer-type-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .volunteer-type-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .volunteer-type-card.selected {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .step.completed {
+            background-color: #198754;
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #e9ecef;
+            right: -100%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .availability-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .availability-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .availability-card.selected {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+        
+        .skill-badge {
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .skill-badge:hover {
+            transform: scale(1.1);
+        }
+        
+        .form-floating > label {
+            padding-left: 1.25rem;
+        }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: #0d6efd;
+            opacity: 1;
+        }
+
+        .volunteer-type-card {
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .volunteer-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .volunteer-type-card.selected {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .skill-badge {
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .skill-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .custom-file-upload {
+            border: 2px dashed #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-file-upload:hover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .form-progress {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress {
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background-color: #0d6efd;
+            transition: width 0.3s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .step.completed {
+            background-color: #198754;
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #e9ecef;
+            right: -100%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .progress-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background: white;
+        }
+
+        .step-item {
+            text-align: center;
+            position: relative;
+            width: 33.333%;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin: 0 auto;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .step-text {
+            color: #6c757d;
+            margin-top: 4px;
+            display: block;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-item.active .step-circle {
+            background-color: #0d6efd;
+            color: #ffffff;
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0d6efd;
+        }
+
+        .step-item.active .step-text {
+            color: #0d6efd;
+        }
+
+        .step-item.completed .step-circle {
+            background-color: #198754;
+            color: white;
+        }
+
+        .step-item.completed .step-text {
+            color: #198754;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="mt-5">
+        <div class="container">
+            <!-- Ana Sayfaya Dön Butonu -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <a href="index.html" class="btn btn-outline-primary px-4 py-2 rounded-pill hover-shadow fs-6 fw-bold">
+                        <i class="fas fa-arrow-left me-2"></i>Ana Sayfaya Dön
+                    </a>
+                </div>
+            </div>
+
+            <!-- Başlık -->
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3">Gönüllü Ol</h1>
+                <p class="text-muted">AYİKA ailesine katılarak afet yardımlarında aktif rol alın</p>
+            </div>
+
+            <!-- E-Devlet ile Giriş -->
+            <div class="text-center mb-4">
+                <a href="#" class="btn btn-lg btn-danger shadow-sm d-inline-flex align-items-center justify-content-center px-4 py-2" onclick="eDevletLogin()">
+                    <i class="fas fa-user-shield me-2"></i>
+                    E-Devlet ile Giriş Yap
+                </a>
+                <p class="text-muted mt-2 small">
+                    E-Devlet ile giriş yaparak başvuru sürecinizi hızlandırabilirsiniz
+                </p>
+            </div>
+
+            <!-- Sadeleştirilmiş Progress Bar -->
+            <div class="container mb-4">
+                <div class="progress-wrapper py-4 bg-white sticky-top shadow-sm">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="visually-hidden">İlerleme</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4 position-relative">
+                        <div class="step-item active" data-step="1">
+                            <div class="step-circle d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <small class="step-text">Kişisel</small>
+                        </div>
+                        <div class="step-item" data-step="2">
+                            <div class="step-circle d-flex align-items-center justify-content-center">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <small class="step-text">Tercihler</small>
+                        </div>
+                        <div class="step-item" data-step="3">
+                            <div class="step-circle d-flex align-items-center justify-content-center">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <small class="step-text">Belgeler</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gönüllü Formu -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <form id="volunteerForm" class="volunteer-form p-4 p-md-5 needs-validation" novalidate>
+                        <!-- Adım 1: Kişisel Bilgiler -->
+                        <div class="form-step" id="step1">
+                            <h3 class="fw-bold mb-4">Kişisel Bilgiler</h3>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">Ad</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Adınız" required>
+                                    <div class="invalid-tooltip">Lütfen adınızı girin</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Soyad</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                    <div class="invalid-feedback">
+                                        Lütfen soyadınızı girin
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="tcno" class="form-label">T.C. Kimlik No</label>
+                                    <input type="text" class="form-control" id="tcno" pattern="[0-9]{11}" required>
+                                    <div class="invalid-feedback">
+                                        Geçerli bir T.C. kimlik numarası girin
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="birthDate" class="form-label">Doğum Tarihi</label>
+                                    <input type="date" class="form-control" id="birthDate" required>
+                                    <div class="invalid-feedback">
+                                        Doğum tarihinizi seçin
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Telefon Numarası</label>
+                                    <input type="tel" class="form-control" id="phone" pattern="[0-9]{10}" required>
+                                    <div class="invalid-feedback">
+                                        Geçerli bir telefon numarası girin
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">E-posta</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                    <div class="invalid-feedback">
+                                        Geçerli bir e-posta adresi girin
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <button type="button" class="btn btn-primary px-4" onclick="nextStep(2)">
+                                    İleri <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Adım 2: Gönüllülük Tercihi -->
+                        <div class="form-step" id="step2">
+                            <h3 class="fw-bold mb-4">Gönüllülük Tercihi</h3>
+                            
+                            <!-- Gönüllülük Türü Kartları -->
+                            <div class="row g-4">
+                                <!-- Yardım Toplama Kartı -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 volunteer-type-card" onclick="selectVolunteerType(this, 'toplama')">
+                                        <div class="card-body text-center p-4">
+                                            <div class="mb-3">
+                                                <i class="fas fa-box-open fa-3x text-primary"></i>
+                                            </div>
+                                            <h5 class="card-title fw-bold">Yardım Toplama</h5>
+                                            <p class="card-text text-muted mb-3">
+                                                Yardım malzemelerinin toplanması ve organizasyonu
+                                            </p>
+                                            <div class="small text-start">
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>Veri girişi</p>
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>Malzeme kontrolü</p>
+                                                <p class="mb-0"><i class="fas fa-check text-success me-2"></i>Depo organizasyonu</p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <small class="text-muted">Gerekli: Kimlik doğrulama</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yardım Dağıtma Kartı -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 volunteer-type-card" onclick="selectVolunteerType(this, 'dagitim')">
+                                        <div class="card-body text-center p-4">
+                                            <div class="mb-3">
+                                                <i class="fas fa-hands-helping fa-3x text-success"></i>
+                                            </div>
+                                            <h5 class="card-title fw-bold">Yardım Dağıtma</h5>
+                                            <p class="card-text text-muted mb-3">
+                                                Yardımların ihtiyaç sahiplerine ulaştırılması
+                                            </p>
+                                            <div class="small text-start">
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>Saha çalışması</p>
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>İhtiyaç tespiti</p>
+                                                <p class="mb-0"><i class="fas fa-check text-success me-2"></i>Koordinasyon</p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <small class="text-muted">Gerekli: Kimlik ve adres doğrulama</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yardım Taşıma Kartı -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 volunteer-type-card" onclick="selectVolunteerType(this, 'tasima')">
+                                        <div class="card-body text-center p-4">
+                                            <div class="mb-3">
+                                                <i class="fas fa-truck fa-3x text-warning"></i>
+                                            </div>
+                                            <h5 class="card-title fw-bold">Yardım Taşıma</h5>
+                                            <p class="card-text text-muted mb-3">
+                                                Yardımların şehirler arası taşınması
+                                            </p>
+                                            <div class="small text-start">
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>Araç kullanımı</p>
+                                                <p class="mb-2"><i class="fas fa-check text-success me-2"></i>Rota planlama</p>
+                                                <p class="mb-0"><i class="fas fa-check text-success me-2"></i>Lojistik destek</p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <small class="text-muted">Gerekli: Ehliyet ve araç bilgileri</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gönüllülük Süresi -->
+                            <div class="mt-4 p-4 bg-light rounded">
+                                <h5 class="fw-bold mb-3">Gönüllülük Süresi ve Uygunluk</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="volunteerDuration" id="shortTerm" value="short" required>
+                                            <label class="form-check-label" for="shortTerm">
+                                                Kısa Süreli (1-7 gün)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="volunteerDuration" id="longTerm" value="long">
+                                            <label class="form-check-label" for="longTerm">
+                                                Uzun Süreli (7+ gün)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Beceriler ve Sertifikalar -->
+                            <div class="mt-4 p-4 bg-light rounded">
+                                <h5 class="fw-bold mb-3">Beceriler ve Sertifikalar</h5>
+                                <div class="mb-3">
+                                    <p class="text-muted small">Sahip olduğunuz becerileri seçin:</p>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">İlk Yardım</span>
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">Araç Kullanımı</span>
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">Depo Yönetimi</span>
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">Veri Girişi</span>
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">Koordinasyon</span>
+                                        <span class="badge bg-primary skill-badge" onclick="toggleSkill(this)">Yabancı Dil</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Özel Yetenekler -->
+                            <div class="mb-3">
+                                <label class="form-label">Özel Yetenekler</label>
+                                <div class="form-control" style="min-height: 100px;">
+                                    <div class="d-flex flex-wrap gap-2" id="customSkillsContainer">
+                                        <!-- Seçilen yetenekler buraya eklenecek -->
+                                    </div>
+                                    <input type="text" class="border-0 w-100 mt-2" id="skillInput" placeholder="Yetenek yazın ve Enter'a basın...">
+                                </div>
+                            </div>
+
+                            <!-- Navigasyon Butonları -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-4">
+                                <button type="button" class="btn btn-outline-secondary px-4" onclick="prevStep(1)">
+                                    <i class="fas fa-arrow-left me-2"></i> Geri
+                                </button>
+                                <button type="button" class="btn btn-primary px-4" onclick="nextStep(3)">
+                                    İleri <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Adım 3: Ek Bilgiler -->
+                        <div class="form-step d-none" id="step3">
+                            <h3 class="fw-bold mb-4">Ek Bilgiler ve Belgeler</h3>
+
+                            <!-- Dosya Yükleme Bölümü -->
+                            <div class="mb-4 p-4 bg-light rounded">
+                                <h5 class="fw-bold mb-3">Gerekli Belgeler</h5>
+                                <div class="row g-3">
+                                    <!-- Kimlik Belgesi -->
+                                    <div class="col-md-6">
+                                        <label class="form-label d-block">
+                                            <i class="fas fa-id-card me-2"></i>Kimlik Belgesi
+                                            <small class="text-muted d-block">Nüfus cüzdanı veya ehliyet</small>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="idCard" accept="image/*,.pdf" required>
+                                            <label class="input-group-text" for="idCard">Yükle</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Sürücü Belgesi (Şoför gönüllüleri için) -->
+                                    <div class="col-md-6">
+                                        <label class="form-label d-block">
+                                            <i class="fas fa-car me-2"></i>Sürücü Belgesi
+                                            <small class="text-muted d-block">Şoför gönüllüleri için zorunlu</small>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="driverLicense" accept="image/*,.pdf">
+                                            <label class="input-group-text" for="driverLicense">Yükle</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- İlk Yardım Sertifikası -->
+                                    <div class="col-md-6">
+                                        <label class="form-label d-block">
+                                            <i class="fas fa-medkit me-2"></i>İlk Yardım Sertifikası
+                                            <small class="text-muted d-block">Varsa ekleyebilirsiniz</small>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="firstAidCert" accept="image/*,.pdf">
+                                            <label class="input-group-text" for="firstAidCert">Yükle</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Diğer Sertifikalar -->
+                                    <div class="col-md-6">
+                                        <label class="form-label d-block">
+                                            <i class="fas fa-certificate me-2"></i>Diğer Sertifikalar
+                                            <small class="text-muted d-block">İlgili diğer belgeler</small>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="otherCerts" accept="image/*,.pdf" multiple>
+                                            <label class="input-group-text" for="otherCerts">Yükle</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ek Özellikler ve Yetenekler -->
+                            <div class="mb-4 p-4 bg-light rounded">
+                                <h5 class="fw-bold mb-3">Ek Özellikler ve Yetenekler</h5>
+                                
+                                <!-- Yabancı Dil Bilgisi -->
+                                <div class="mb-3">
+                                    <label class="form-label">Yabancı Dil Bilgisi</label>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <select class="form-select mb-2" id="language">
+                                                <option value="">Dil seçiniz</option>
+                                                <option value="en">İngilizce</option>
+                                                <option value="de">Almanca</option>
+                                                <option value="fr">Fransızca</option>
+                                                <option value="ar">Arapça</option>
+                                                <option value="other">Diğer</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-select mb-2" id="languageLevel">
+                                                <option value="">Seviye seçiniz</option>
+                                                <option value="beginner">Başlangıç</option>
+                                                <option value="intermediate">Orta</option>
+                                                <option value="advanced">İleri</option>
+                                                <option value="native">Anadil</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary btn-sm mt-2">
+                                        <i class="fas fa-plus me-2"></i>Dil Ekle
+                                    </button>
+                                </div>
+
+                                <!-- Araç Bilgileri -->
+                                <div class="mb-3">
+                                    <h6 class="fw-bold mb-2">Araç Bilgileri</h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="hasVehicle">
+                                        <label class="form-check-label" for="hasVehicle">
+                                            Şahsi aracımla yardım taşıyabilirim
+                                        </label>
+                                    </div>
+                                    <div class="row g-3" id="vehicleDetails" style="display: none;">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Araç Tipi</label>
+                                            <select class="form-select">
+                                                <option value="">Seçiniz</option>
+                                                <option value="car">Binek Araç</option>
+                                                <option value="van">Minibüs/Van</option>
+                                                <option value="truck">Kamyon</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Plaka</label>
+                                            <input type="text" class="form-control" placeholder="34ABC123">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Yük Kapasitesi</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" placeholder="0">
+                                                <span class="input-group-text">kg</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                                <button type="button" class="btn btn-outline-secondary px-4" onclick="prevStep(2)">
+                                    <i class="fas fa-arrow-left me-2"></i> Geri
+                                </button>
+                                <button type="submit" class="btn btn-success px-4">
+                                    <i class="fas fa-check me-2"></i> Başvuruyu Tamamla
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.umd.min.js"></script>
+    
+    <!-- Custom scripts -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        // Progress bar ve adım değişkenlerini tanımlayalım
+        const progressBar = document.querySelector('.progress-bar');
+        const stepItems = document.querySelectorAll('.step-item');
+
+        function updateProgress(step) {
+            const percent = ((step - 1) / (totalSteps - 1)) * 100;
+            
+            // Progress bar güncelleme
+            progressBar.style.width = `${percent}%`;
+            progressBar.setAttribute('aria-valuenow', percent);
+
+            // Adımları güncelle
+            stepItems.forEach((item, index) => {
+                const stepNum = index + 1;
+                item.classList.remove('active', 'completed');
+                
+                if (stepNum < step) {
+                    item.classList.add('completed');
+                } else if (stepNum === step) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Adım gösterimi fonksiyonunu güncelleyelim
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(formStep => {
+                formStep.classList.add('d-none');
+            });
+            document.getElementById(`step${step}`).classList.remove('d-none');
+        }
+
+        // nextStep ve prevStep fonksiyonlarını güncelleyelim
+        function nextStep(nextStepNumber) {
+            if (currentStep < totalSteps) {
+                currentStep = nextStepNumber;
+                updateProgress(currentStep);
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep(prevStepNumber) {
+            if (currentStep > 1) {
+                currentStep = prevStepNumber;
+                updateProgress(currentStep);
+                showStep(currentStep);
+            }
+        }
+
+        // Sayfa yüklendiğinde başlangıç durumunu ayarlayalım
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress(1);
+            showStep(1);
+        });
+
+        let selectedVolunteerType = null;
+
+        function selectVolunteerType(element, type) {
+            // Önceki seçimi kaldır
+            document.querySelectorAll('.volunteer-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Yeni seçimi işaretle
+            element.classList.add('selected');
+            selectedVolunteerType = type;
+        }
+
+        // Beceri seçimi için toggle fonksiyonu
+        function toggleSkill(element) {
+            element.classList.toggle('bg-primary');
+            element.classList.toggle('bg-success');
+        }
+
+        // Özel yetenek ekleme işlevselliği
+        document.getElementById('skillInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skillText = this.value.trim();
+                
+                if (skillText) {
+                    const skillBadge = document.createElement('span');
+                    skillBadge.className = 'badge bg-primary me-1 mb-1';
+                    skillBadge.innerHTML = `${skillText} <i class="fas fa-times ms-1" style="cursor: pointer;"></i>`;
+                    
+                    // Silme işlevselliği
+                    skillBadge.querySelector('i').addEventListener('click', function() {
+                        skillBadge.remove();
+                    });
+                    
+                    document.getElementById('customSkillsContainer').appendChild(skillBadge);
+                    this.value = '';
+                }
+            }
+        });
+
+        // Form gönderimi basitleştirilmiş hali
+        document.getElementById('volunteerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            if (this.checkValidity()) {
+                alert('Form başarıyla gönderildi!');
+                // Form temizleme veya yönlendirme işlemleri buraya eklenebilir
+            }
+            
+            this.classList.add('was-validated');
+        });
+
+        // E-Devlet girişi basitleştirilmiş hali
+        function eDevletLogin() {
+            alert('E-Devlet girişi şu anda aktif değildir.');
+        }
+
+        // Dosya yükleme için drag & drop desteği
+        const dropZone = document.querySelector('.custom-file-upload');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-primary');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-primary');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-primary');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            // Dosya işleme mantığı
+            Array.from(files).forEach(file => {
+                // Dosya önizleme ve yükleme işlemleri
+            });
+        }
+
+        // Form ilerlemesini otomatik kaydetme
+        let formData = new FormData();
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('change', () => {
+                formData.set(input.id, input.value);
+                localStorage.setItem('volunteerFormData', JSON.stringify(Object.fromEntries(formData)));
+            });
+        });
+
+        // Form verilerini geri yükleme
+        window.addEventListener('load', () => {
+            const savedData = localStorage.getItem('volunteerFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.entries(data).forEach(([key, value]) => {
+                    const element = document.getElementById(key);
+                    if (element) element.value = value;
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

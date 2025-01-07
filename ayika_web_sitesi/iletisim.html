@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>AYİKA - İletişim</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+
+    <!-- Custom styles eklenmeli -->
+    <style>
+        .contact-form {
+            background: #f8f9fa;
+            border-radius: 1rem;
+        }
+        
+        .form-section {
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #1266f1;
+            box-shadow: 0 0 0 0.25rem rgba(18,102,241,.25);
+        }
+        
+        .contact-icon {
+            width: 3rem;
+            height: 3rem;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1266f1;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="mt-5">
+        <div class="container">
+            <!-- Geri Dönüş Butonu - aynı stil -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <a href="index.html" class="btn btn-outline-primary px-4 py-2 rounded-pill hover-shadow fs-6 fw-bold">
+                        <i class="fas fa-arrow-left me-2"></i>Ana Sayfaya Dön
+                    </a>
+                </div>
+            </div>
+
+            <!-- Başlık - yeni stil -->
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h1 class="fw-bold mb-3">İletişim</h1>
+                    <p class="text-muted lead">Bize ulaşın, yardımlaşma ağına katılın</p>
+                </div>
+            </div>
+
+            <!-- İletişim Bilgileri -->
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-8">
+                    <div class="row g-4 text-center">
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="contact-icon mx-auto">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <h5 class="fw-bold">Telefon</h5>
+                                <p class="text-muted">+90 (212) 123 45 67</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="contact-icon mx-auto">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h5 class="fw-bold">E-posta</h5>
+                                <p class="text-muted">iletisim@ayika.org</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4">
+                                <div class="contact-icon mx-auto">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h5 class="fw-bold">Adres</h5>
+                                <p class="text-muted">İstanbul, Türkiye</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İletişim Formu -->
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="form-section p-5">
+                        <form action="/iletisim" method="post" id="contact-form" class="needs-validation" novalidate>
+                            <!-- Form içeriği aynı kalacak ancak görünümü güncellenecek -->
+                            
+                            <!-- Kategori Seçimi -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-tag me-2"></i>Kategori
+                                </label>
+                                <select class="form-select form-select-lg bg-light" id="category" name="category" required>
+                                    <option value="" selected disabled>Kategori seçin</option>
+                                    <option value="yardim">Yardım İstiyorum</option>
+                                    <option value="gonullu">Gönüllü Olmak İstiyorum</option>
+                                    <option value="bagis">Bağış Yapmak İstiyorum</option>
+                                    <option value="proje">Proje Önerisi</option>
+                                    <option value="diger">Diğer</option>
+                                </select>
+                                <div class="invalid-feedback">Lütfen bir kategori seçin</div>
+                            </div>
+
+                            <!-- Ad Soyad -->
+                            <div class="mb-4">
+                                <label for="name" class="form-label fw-bold">Ad Soyad</label>
+                                <input type="text" class="form-control form-control-lg" id="name" name="name" required>
+                                <div class="invalid-feedback">Ad soyad bilgisi gereklidir</div>
+                            </div>
+
+                            <!-- E-posta -->
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-bold">E-posta</label>
+                                <input type="email" class="form-control form-control-lg" id="email" name="email"
+                                    required>
+                                <div class="invalid-feedback">Geçerli bir e-posta adresi giriniz</div>
+                            </div>
+
+                            <!-- Telefon -->
+                            <div class="mb-4">
+                                <label for="phone" class="form-label fw-bold">Telefon</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">+90</span>
+                                    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+                                        placeholder="5XX XXX XX XX" required>
+                                    <div class="invalid-feedback">Geçerli bir telefon numarası giriniz</div>
+                                </div>
+                            </div>
+
+                            <!-- Şehir -->
+                            <div class="mb-4">
+                                <label for="city" class="form-label fw-bold">Şehir</label>
+                                <select class="form-select form-select-lg" id="city" name="city" required>
+                                    <option value="" selected disabled>Şehir seçin</option>
+                                    <option value="34">İstanbul</option>
+                                    <option value="06">Ankara</option>
+                                    <option value="35">İzmir</option>
+                                    <!-- Diğer şehirler... -->
+                                </select>
+                                <div class="invalid-feedback">Lütfen bir şehir seçin</div>
+                            </div>
+
+                            <!-- Mesaj -->
+                            <div class="mb-4">
+                                <label for="message" class="form-label fw-bold">Mesajınız</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                <div class="invalid-feedback">Lütfen mesajınızı yazın</div>
+                            </div>
+
+                            <!-- Dosya Yükleme -->
+                            <div class="mb-4">
+                                <label for="file" class="form-label fw-bold">Dosya Ekle (Opsiyonel)</label>
+                                <input type="file" class="form-control form-control-lg" id="file" name="file">
+                                <div class="form-text">Maksimum dosya boyutu: 5MB</div>
+                            </div>
+
+                            <!-- KVKK Onayı -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="kvkk" name="kvkk" required>
+                                    <label class="form-check-label" for="kvkk">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#kvkkModal">
+                                            KVKK Aydınlatma Metni</a>'ni okudum ve onaylıyorum
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        Devam etmek için KVKK metnini onaylamanız gerekmektedir
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gönder Butonu -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                    <i class="fas fa-paper-plane me-2"></i>Gönder
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- KVKK Modal -->
+    <div class="modal fade" id="kvkkModal" tabindex="-1" aria-labelledby="kvkkModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="kvkkModalLabel">KVKK Aydınlatma Metni</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- KVKK metni buraya gelecek -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.umd.min.js"></script>
+    <!-- Form Validation Script -->
+    <script type="text/javascript">
+        // Form doğrulama için JavaScript kodu
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+
+</html>

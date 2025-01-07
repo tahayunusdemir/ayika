@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>AYİKA - Giriş Yap</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+
+    <!-- Custom styles -->
+    <style>
+        .login-container {
+            min-height: 100vh;
+            background: linear-gradient(75deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 100%),
+                        url('img/hero-image.png') center/cover no-repeat fixed;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15);
+        }
+
+        .hover-lift {
+            transition: transform 0.2s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container d-flex align-items-center justify-content-center p-3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5">
+                <!-- Geri Dönüş Butonu - Yeniden konumlandırıldı -->
+                <div class="text-center mb-4">
+                    <a href="index.html" class="btn btn-outline-light px-4 py-2 rounded-pill hover-shadow fs-6 fw-bold w-100 w-sm-auto">
+                        <i class="fas fa-arrow-left me-2"></i>Ana Sayfaya Dön
+                    </a>
+                </div>
+
+                <div class="login-card p-4 p-md-5">
+                    <!-- Logo ve Başlık - Görsel iyileştirmeler -->
+                    <div class="text-center mb-5">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-4 d-inline-block mb-3 hover-lift">
+                            <i class="fas fa-hands-helping text-primary fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">AYİKA</h3>
+                        <p class="text-muted">Acil Yardım ve İhtiyaç Koordinasyon Ağı</p>
+                    </div>
+
+                    <!-- Form güncellendi -->
+                    <form id="phoneLoginForm" class="needs-validation" novalidate>
+                        <!-- Telefon Input -->
+                        <div class="form-floating mb-4">
+                            <div class="input-group input-group-lg has-validation">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </span>
+                                <input type="tel" 
+                                       id="phoneNumber" 
+                                       class="form-control form-control-lg border-start-0 ps-0" 
+                                       pattern="[0-9]{10}" 
+                                       required 
+                                       placeholder="5XX XXX XX XX"
+                                       data-mdb-input-mask="+90 (___) ___ __ __"/>
+                                <div class="invalid-feedback">
+                                    Lütfen geçerli bir telefon numarası giriniz
+                                </div>
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Telefon numaranızı başında 0 olmadan giriniz
+                            </div>
+                        </div>
+
+                        <!-- Şifre Input -->
+                        <div class="form-floating mb-4">
+                            <div class="input-group input-group-lg has-validation">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fas fa-lock text-primary"></i>
+                                </span>
+                                <input type="password" 
+                                       id="password" 
+                                       class="form-control form-control-lg border-start-0 border-end-0 ps-0" 
+                                       required 
+                                       minlength="8" 
+                                       placeholder="Şifreniz"/>
+                                <button class="btn btn-light border border-start-0" 
+                                        type="button" 
+                                        id="togglePassword"
+                                        data-mdb-toggle="tooltip"
+                                        title="Şifreyi göster/gizle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <div class="invalid-feedback">
+                                    Şifreniz en az 8 karakter olmalıdır
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Beni Hatırla & Şifremi Unuttum -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">
+                                    Beni hatırla
+                                </label>
+                            </div>
+                            <a href="#" class="text-primary text-decoration-none hover-lift">
+                                <i class="fas fa-key me-1"></i>
+                                Şifremi unuttum
+                            </a>
+                        </div>
+
+                        <!-- Butonlar - Yeniden düzenlendi -->
+                        <div class="d-grid gap-3 mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill hover-lift">
+                                <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                            </button>
+                            
+                            <div class="position-relative text-center">
+                                <hr class="text-muted">
+                                <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">
+                                    veya
+                                </span>
+                            </div>
+                            
+                            <button type="button" class="btn btn-danger btn-lg rounded-pill hover-lift">
+                                <i class="fas fa-government me-2"></i>e-Devlet ile giriş
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Kayıt Ol - Yeniden düzenlendi -->
+                    <div class="text-center border-top pt-4">
+                        <p class="text-muted mb-3">Henüz hesabınız yok mu?</p>
+                        <a href="/gonullu-ol.html" class="btn btn-outline-primary btn-lg rounded-pill w-100 hover-lift">
+                            Hemen Kayıt Ol
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KVKK - Yeniden düzenlendi -->
+                <div class="text-center mt-4">
+                    <small class="text-white opacity-75">
+                        Giriş yaparak <a href="#" class="text-white text-decoration-underline">Kullanım Şartları</a> ve 
+                        <a href="#" class="text-white text-decoration-underline">KVKK</a>'yı kabul etmiş olursunuz.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MDB -->
+<script type="text/javascript" src="js/mdb.umd.min.js"></script>
+
+<!-- Form Validation Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Şifre göster/gizle fonksiyonu
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    // Telefon numarası formatlaması
+    const phoneInput = document.getElementById('phoneNumber');
+    phoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+        
+        // Telefon numarası formatlama
+        if (value.length >= 6) {
+            value = value.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
+        } else if (value.length >= 3) {
+            value = value.replace(/(\d{3})(\d{0,3})/, '$1 $2');
+        }
+        
+        e.target.value = value;
+    });
+
+    // Tooltips aktivasyonu
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-mdb-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new mdb.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+
+</body>
+</html> 

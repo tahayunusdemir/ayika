@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Material Design for Bootstrap</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+  </head>
+  <body>
+    <!--Main Navigation-->
+    <header>
+      <!-- Top Bar -->
+      <div class="alert alert-light alert-dismissible fade show m-0 border-bottom" role="alert">
+        <div class="container d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-phone-alt me-2 text-danger"></i>
+              <strong>Acil Yardım:</strong>
+              <a href="tel:112" class="text-danger ms-2 text-decoration-none">112</a>
+            </div>
+            <div>
+              <i class="fas fa-headset me-2 text-primary"></i>
+              <strong>7/24 Destek:</strong>
+              <a href="tel:08505555555" class="text-primary ms-2 text-decoration-none">0850 *** ** **</a>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <a href="https://www.afad.gov.tr" class="text-dark me-3 text-decoration-none fw-bold" target="_blank">
+              <i class="fas fa-external-link-alt me-1"></i>AFAD
+            </a>
+            <a href="https://www.kizilay.org.tr" class="text-dark me-3 text-decoration-none fw-bold" target="_blank">
+              <i class="fas fa-external-link-alt me-1"></i>Kızılay
+            </a>
+            <a href="https://ahbap.org" class="text-dark me-3 text-decoration-none fw-bold" target="_blank">
+              <i class="fas fa-external-link-alt me-1"></i>Ahbap
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3">
+        <div class="container">
+          <!-- Logo -->
+          <a class="navbar-brand d-flex align-items-center" href="">
+            <div class="me-3">
+              <i class="fas fa-hands-helping text-primary fa-2x"></i>
+            </div>
+            <div>
+              <h4 class="mb-0 text-dark">AYİKA</h4>
+              <small class="text-muted">Acil Yardım ve İhtiyaç Koordinasyon Ağı</small>
+            </div>
+          </a>
+
+          <!-- Mobile menu button - Tasarımı iyileştirildi -->
+          <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Navbar content -->
+          <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav mx-auto">
+              <!-- Hakkımızda Dropdown -->
+              <li class="nav-item dropdown me-1">
+                <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown" 
+                   data-bs-auto-close="outside">
+                  Hakkımızda
+                </a>
+                <ul class="dropdown-menu border-0 shadow-sm">
+                  <li><a class="dropdown-item fw-bold" href="ayika-nedir.html">AYİKA Nedir?</a></li>
+                  <li><a class="dropdown-item fw-bold" href="ekibimiz.html">Ekibimiz</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item me-1">
+                <a class="nav-link d-flex align-items-center fw-bold" href="#guncel-haberler">
+                  Haberler
+                </a>
+              </li>
+
+              <li class="nav-item me-1">
+                <a class="nav-link d-flex align-items-center fw-bold" href="yardim-takibi.html">
+                  Yardım Takibi
+                </a>
+              </li>
+
+              <li class="nav-item me-1">
+                <a class="nav-link d-flex align-items-center fw-bold" href="iletisim.html">
+                  İletişim
+                </a>
+              </li>
+
+              <!-- Dil Seçimi -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">
+                  TR
+                </a>
+                <ul class="dropdown-menu border-0 shadow-sm">
+                  <li>
+                    <a class="dropdown-item active d-flex align-items-center fw-bold" href="#">
+                      Türkçe
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center fw-bold" href="#">
+                      English
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center fw-bold" href="#">
+                      العربية
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <!-- Sağ Menü -->
+            <div class="d-flex align-items-center gap-3">
+              <a href="giris.html" class="btn btn-outline-primary px-4 py-2 rounded-pill hover-shadow fs-6 fw-bold">
+                GİRİŞ YAP
+              </a>
+              <a href="gonullu-ol.html" class="btn btn-primary px-4 py-2 rounded-pill hover-shadow fs-6 fw-bold">
+                GÖNÜLLÜ OL
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <div class="bg-image vh-100 position-relative" style="margin-top: -58.59px;">
+        <img src="img/hero-image.png" class="w-100 h-100 object-fit-cover" alt="Afet yardımlaşma"/>
+        
+        <!-- Gradient mask güncellendi -->
+        <div class="mask" style="background: linear-gradient(75deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 100%);">
+          <div class="container h-100">
+            <div class="row h-100 align-items-center">
+              <div class="col-12 col-lg-8 text-white">
+                <!-- Ana başlık güncellendi -->
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeIn">
+                  Acil Yardım ve İhtiyaç<br>
+                  <span class="text-primary">Koordinasyon Ağı</span>
+                </h1>
+                
+                <!-- Alt başlık güncellendi -->
+                <p class="lead mb-5 animate__animated animate__fadeIn animate__delay-1s">
+                  Afet durumlarında hızlı, güvenilir ve organize yardımlaşma platformu. 
+                  Birlikte daha güçlüyüz!
+                </p>
+                
+                <!-- Butonlar güncellendi -->
+                <div class="d-flex flex-wrap gap-3 animate__animated animate__fadeIn animate__delay-2s">
+                  <a class="btn btn-outline-light btn-lg px-4 rounded-pill shadow-sm hover-lift" href="#yardim-et">
+                    <i class="fas fa-hand-holding-heart me-2"></i>Yardım Et
+                  </a>
+                  <a class="btn btn-outline-light btn-lg px-4 rounded-pill shadow-sm hover-lift" href="#gonullu">
+                    <i class="fas fa-user-friends me-2"></i>Gönüllü Ol
+                  </a>
+                  <a class="btn btn-outline-light btn-lg px-4 rounded-pill shadow-sm hover-lift" href="#yardim-al">
+                    <i class="fas fa-hands-helping me-2"></i>Yardım Al
+                  </a>
+                </div>
+                
+                <!-- İstatistikler eklendi -->
+                <div class="row mt-5 g-4 animate__animated animate__fadeIn animate__delay-3s">
+                  <div class="col-6 col-md-3">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-users fa-2x text-primary me-3"></i>
+                      <div>
+                        <h3 class="fw-bold mb-0">10K+</h3>
+                        <p class="small mb-0">Aktif Gönüllü</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-box fa-2x text-primary me-3"></i>
+                      <div>
+                        <h3 class="fw-bold mb-0">50K+</h3>
+                        <p class="small mb-0">Yardım Paketi</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-map-marker-alt fa-2x text-primary me-3"></i>
+                      <div>
+                        <h3 class="fw-bold mb-0">81</h3>
+                        <p class="small mb-0">İlde Aktif</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!--Main Navigation-->
+
+    <!--Main layout-->
+    <main>
+      <!-- Section: Haberler -->
+      <section class="py-5 bg-light" id="guncel-haberler">
+        <div class="container">
+          <!-- Başlık -->
+          <div class="row mb-5">
+            <div class="col-12 text-center">
+              <h2 class="fw-bold mb-3">Güncel Haberler</h2>
+              <p class="text-muted lead">Afet bölgelerinden ve yardım çalışmalarından son gelişmeler</p>
+            </div>
+          </div>
+
+          <!-- Haberler Grid -->
+          <div class="row g-4">
+            <!-- Öne Çıkan Haber -->
+            <div class="col-lg-8 mb-4">
+              <div class="card border-0 shadow-sm h-100 hover-overlay ripple">
+                <div class="position-relative">
+                  <img src="img/news/featured-news.jpg" class="card-img-top" alt="Öne çıkan haber görseli" style="height: 400px; object-fit: cover;">
+                  <div class="badge bg-primary position-absolute top-0 end-0 m-3">Öne Çıkan</div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-danger me-2">Acil</span>
+                    <small class="text-muted"><i class="fas fa-clock me-1"></i> 2 saat önce</small>
+                  </div>
+                  <h3 class="card-title fw-bold mb-3">Deprem Bölgesinde Yeni Yardım Merkezi Açıldı</h3>
+                  <p class="card-text">Bölgede yaşayan afetzedelerin temel ihtiyaçlarını karşılamak üzere yeni bir yardım merkezi faaliyete geçti. Merkez, günlük 1000 kişiye hizmet verebilecek kapasiteye sahip.</p>
+                  <a href="#" class="btn btn-outline-primary rounded-pill">Devamını Oku <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diğer Haberler -->
+            <div class="col-lg-4">
+              <div class="row g-4">
+                <!-- Haber Kartı 1 -->
+                <div class="col-12">
+                  <div class="card border-0 shadow-sm hover-overlay ripple h-100">
+                    <div class="row g-0">
+                      <div class="col-4">
+                        <img src="img/news/news-1.jpg" class="img-fluid rounded-start h-100" alt="Haber görseli" style="object-fit: cover;">
+                      </div>
+                      <div class="col-8">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-info me-2">Güncel</span>
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 5 saat önce</small>
+                          </div>
+                          <h5 class="card-title fw-bold">Gönüllü Sayımız 15.000'e Ulaştı</h5>
+                          <p class="card-text small">Türkiye genelinde gönüllü ağımız büyümeye devam ediyor...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Haber Kartı 2 -->
+                <div class="col-12">
+                  <div class="card border-0 shadow-sm hover-overlay ripple h-100">
+                    <div class="row g-0">
+                      <div class="col-4">
+                        <img src="img/news/news-2.jpg" class="img-fluid rounded-start h-100" alt="Haber görseli" style="object-fit: cover;">
+                      </div>
+                      <div class="col-8">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-success me-2">Başarı Hikayesi</span>
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 1 gün önce</small>
+                          </div>
+                          <h5 class="card-title fw-bold">100.000 Yardım Paketi Dağıtıldı</h5>
+                          <p class="card-text small">Koordineli çalışmalarımız sayesinde yeni bir milestone'a ulaştık...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Haber Kartı 3 -->
+                <div class="col-12">
+                  <div class="card border-0 shadow-sm hover-overlay ripple h-100">
+                    <div class="row g-0">
+                      <div class="col-4">
+                        <img src="img/news/news-3.jpg" class="img-fluid rounded-start h-100" alt="Haber görseli" style="object-fit: cover;">
+                      </div>
+                      <div class="col-8">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-warning text-dark me-2">Duyuru</span>
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 2 gün önce</small>
+                          </div>
+                          <h5 class="card-title fw-bold">Yeni Mobil Uygulamamız Yayında</h5>
+                          <p class="card-text small">Yardım takibi artık cebinizde. Hemen indirin...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tüm Haberler Butonu -->
+          <div class="text-center mt-5">
+            <a href="haberler" class="btn btn-primary btn-lg rounded-pill px-5 hover-shadow">
+              Tüm Haberleri Görüntüle <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- Section: Haberler -->
+    </main>
+    <!--Main layout-->
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-light">
+      <!-- Sosyal Medya Bölümü -->
+      <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <div class="me-5 d-none d-lg-block">
+          <span class="text-muted">Sosyal medya hesaplarımızdan bizi takip edin:</span>
+        </div>
+
+        <div>
+          <a href="#" class="me-4 text-primary">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="me-4 text-info">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="me-4 text-danger">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="me-4 text-dark">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="me-4 text-success">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="#" class="me-4 text-primary">
+            <i class="fab fa-telegram"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- Ana Footer İçeriği -->
+      <section class="pt-5">
+        <div class="container text-center text-md-start mt-5">
+          <div class="row mt-3">
+            
+            <!-- Kurumsal Bilgiler -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <h6 class="text-uppercase fw-bold mb-4">
+                <i class="fas fa-hands-helping me-2 text-primary"></i>
+                AYİKA
+              </h6>
+              <p class="text-muted">
+                Acil Yardım ve İhtiyaç Koordinasyon Ağı olarak afet durumlarında hızlı, güvenilir ve organize yardımlaşma platformu sunuyoruz.
+              </p>
+            </div>
+
+            <!-- Hızlı Linkler -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <h6 class="text-uppercase fw-bold mb-4">HIZLI ERİŞİM</h6>
+              <p>
+                <a href="#" class="text-muted text-decoration-none">Ana Sayfa</a>
+              </p>
+              <p>
+                <a href="#" class="text-muted text-decoration-none">Hakkımızda</a>
+              </p>
+              <p>
+                <a href="#" class="text-muted text-decoration-none">Yardım Takibi</a>
+              </p>
+              <p>
+                <a href="#" class="text-muted text-decoration-none">Gönüllü Ol</a>
+              </p>
+            </div>
+
+            <!-- Yardım Kuruluşları -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <h6 class="text-uppercase fw-bold mb-4">YARDIM KURULŞLARI</h6>
+              <p>
+                <a href="https://www.afad.gov.tr" class="text-muted text-decoration-none" target="_blank">AFAD</a>
+              </p>
+              <p>
+                <a href="https://www.kizilay.org.tr" class="text-muted text-decoration-none" target="_blank">Kızılay</a>
+              </p>
+              <p>
+                <a href="https://ahbap.org" class="text-muted text-decoration-none" target="_blank">Ahbap</a>
+              </p>
+              <p>
+                <a href="#" class="text-muted text-decoration-none">Diğer Kuruluşlar</a>
+              </p>
+            </div>
+
+            <!-- İletişim Bilgileri -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <h6 class="text-uppercase fw-bold mb-4">İLETİŞİM</h6>
+              <p class="text-muted">
+                <i class="fas fa-home me-2 text-primary"></i>
+                Ankara, Çankaya, 06800
+              </p>
+              <p class="text-muted">
+                <i class="fas fa-envelope me-2 text-primary"></i>
+                info@ayika.org.tr
+              </p>
+              <p class="text-muted">
+                <i class="fas fa-phone me-2 text-primary"></i>
+                0850 *** ** **
+              </p>
+              <p class="text-muted">
+                <i class="fas fa-print me-2 text-primary"></i>
+                0312 *** ** **
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Telif Hakkı -->
+      <div class="text-center p-4 bg-white">
+        <span class="text-muted">© 2024 Telif Hakkı:</span>
+        <a class="text-primary fw-bold text-decoration-none" href=""> AYİKA - Acil Yardım ve İhtiyaç Koordinasyon Ağı</a>
+      </div>
+    </footer>
+    <!-- Footer -->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="js/mdb.umd.min.js"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    <!-- Bootstrap JS ve Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
