@@ -62,7 +62,6 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               You can reach our customer support team by emailing&nbsp;
               <Link href="mailto:support@email.com">support@email.com</Link>
@@ -88,7 +87,6 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               Absolutely! We offer a hassle-free return policy. If you&apos;re not
               completely satisfied, you can return the product within [number of
@@ -113,7 +111,6 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               Our product distinguishes itself through its adaptability, durability,
               and innovative features. We prioritize user satisfaction and
@@ -138,7 +135,6 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               Yes, our product comes with a [length of warranty] warranty. It covers
               defects in materials and workmanship. If you encounter any issues
