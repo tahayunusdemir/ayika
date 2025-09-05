@@ -23,4 +23,9 @@
 - `npm create vite@latest vite-template -- --template react-ts` komutu ile Vite projesi oluşturuldu.
 
 ### Bağımlılıkların Kurulumu
-- Gerekli `npm` paketleri yüklendi: `@mui/material @mui/icons-material @emotion/styled @emotion/react @mui/x-charts @mui/x-date-pickers @mui/x-data-grid @mui/x-tree-view dayjs markdown-to-jsx react-router-dom`
+- Gerekli `npm` paketleri yüklendi: `@mui/material @mui/icons-material @emotion/styled @emotion/react @mui/x-charts @mui/x-date-pickers @mui/x-data-grid @mui/x-tree-view @react-spring/web dayjs markdown-to-jsx react-router-dom`
+
+### Hata Düzeltmeleri ve İyileştirmeler
+- `tsconfig.app.json` dosyasında `"verbatimModuleSyntax": false` ayarı ile TypeScript tip hataları giderildi.
+- `process.env.TEMPLATE_IMAGE_URL` kullanımından kaynaklanan hatalar düzeltildi.
+- `App.css` ve `index.css` dosyalarında yapılan iyileştirmeler ile uygulamanın tam ekran görünmesi sağlandı.
