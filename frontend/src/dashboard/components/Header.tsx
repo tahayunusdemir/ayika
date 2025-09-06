@@ -5,7 +5,16 @@ import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 
-export default function Header() {
+interface BreadcrumbItem {
+  label: string;
+  active?: boolean;
+}
+
+interface HeaderProps {
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+export default function Header({ breadcrumbs }: HeaderProps) {
   return (
     <Stack
       direction="row"
@@ -19,7 +28,7 @@ export default function Header() {
       }}
       spacing={2}
     >
-      <NavbarBreadcrumbs />
+      <NavbarBreadcrumbs breadcrumbs={breadcrumbs} />
       <Stack direction="row" sx={{ gap: 1 }}>
         <MenuButton showBadge aria-label="Open notifications">
           <NotificationsRoundedIcon />

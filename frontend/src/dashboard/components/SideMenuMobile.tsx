@@ -12,9 +12,11 @@ import MenuContent from './MenuContent';
 interface SideMenuMobileProps {
   open: boolean | undefined;
   toggleDrawer: (newOpen: boolean) => () => void;
+  selectedPage?: string;
+  onPageSelect?: (page: string) => void;
 }
 
-export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
+export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPageSelect }: SideMenuMobileProps) {
   return (
     <Drawer
       anchor="right"
@@ -49,7 +51,7 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>
-          <MenuContent />
+          <MenuContent selectedPage={selectedPage} onPageSelect={onPageSelect} />
           <Divider />
         </Stack>
         <Stack sx={{ p: 2 }}>

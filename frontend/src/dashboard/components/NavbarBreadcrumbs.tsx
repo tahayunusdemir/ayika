@@ -15,16 +15,34 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   },
 }));
 
-export default function NavbarBreadcrumbs() {
+interface BreadcrumbItem {
+  label: string;
+  active?: boolean;
+}
+
+interface NavbarBreadcrumbsProps {
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+export default function NavbarBreadcrumbs({ breadcrumbs = [{ label: 'Home', active: true }] }: NavbarBreadcrumbsProps) {
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
       <Typography variant="body1">Dashboard</Typography>
-      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-        Home
-      </Typography>
+      {breadcrumbs.map((item, index) => (
+        <Typography 
+          key={index}
+          variant="body1" 
+          sx={{ 
+            color: item.active ? 'text.primary' : 'text.secondary', 
+            fontWeight: item.active ? 600 : 400 
+          }}
+        >
+          {item.label}
+        </Typography>
+      ))}
     </StyledBreadcrumbs>
   );
 }
