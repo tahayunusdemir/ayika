@@ -14,7 +14,6 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
-import { Link as RouterLink } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -93,7 +92,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage('Lütfen geçerli bir e-posta adresi giriniz.');
       isValid = false;
     } else {
       setEmailError(false);
@@ -102,7 +101,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Şifre en az 6 karakter olmalıdır.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -122,7 +121,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            Giriş Yap
           </Typography>
           <Box
             component="form"
@@ -136,14 +135,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">E-posta</FormLabel>
               <TextField
                 error={emailError}
                 helperText={emailErrorMessage}
                 id="email"
                 type="email"
                 name="email"
-                placeholder="your@email.com"
+                placeholder="ornek@email.com"
                 autoComplete="email"
                 autoFocus
                 required
@@ -153,7 +152,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">Şifre</FormLabel>
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
@@ -171,7 +170,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Beni hatırla"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
@@ -180,7 +179,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              Giriş yap
             </Button>
             <Link
               component="button"
@@ -189,18 +188,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >
-              Forgot your password?
+              Şifrenizi mi unuttunuz?
             </Link>
           </Box>
           <Typography sx={{ textAlign: 'center' }}>
-            Don&apos;t have an account?{' '}
+            Hesabınız yok mu?{' '}
             <Link
-              component={RouterLink}
-              to="/sign-up"
+              component="button"
+              type="button"
+              onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >
-              Sign up
+              Gönüllü ol 💙
             </Link>
           </Typography>
         </Card>

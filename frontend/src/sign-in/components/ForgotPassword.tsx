@@ -28,13 +28,12 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         },
       }}
     >
-      <DialogTitle>Reset password</DialogTitle>
+      <DialogTitle>Şifre sıfırla</DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
       >
         <DialogContentText>
-          Enter your account&apos;s email address, and we&apos;ll send you a link to
-          reset your password.
+          Hesabınızın e-posta adresini girin, size şifre sıfırlama bağlantısı göndereceğiz.
         </DialogContentText>
         <OutlinedInput
           autoFocus
@@ -42,16 +41,16 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
           margin="dense"
           id="email"
           name="email"
-          label="Email address"
-          placeholder="Email address"
+          label="E-posta adresi"
+          placeholder="E-posta adresi"
           type="email"
           fullWidth
         />
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>İptal</Button>
         <Button variant="contained" type="submit">
-          Continue
+          Devam et
         </Button>
       </DialogActions>
     </Dialog>

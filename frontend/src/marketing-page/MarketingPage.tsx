@@ -8,7 +8,7 @@ import LogoCollection from './components/LogoCollection';
 import Highlights from './components/Highlights';
 import Features from './components/Features';
 import FAQ from './components/FAQ';
-import Footer from './components/Footer';
+import Footer from '../shared-theme/components/Footer';
 
 export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
   React.useEffect(() => {

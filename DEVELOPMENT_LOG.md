@@ -104,3 +104,51 @@
     - `SignIn.tsx` ve `SignUp.tsx` sayfalarından `ColorModeSelect` butonları kaldırıldı.
     - `ColorModeSelect.tsx` dosyası `frontend/src/kullanılmayanlar/` dizinine taşındı.
     - Giriş ve kayıt sayfaları artık tema seçici olmadan daha temiz görünüyor.
+- [x] **Sign-up sayfası tamamen kaldırılıp Google Forms'a yönlendirme eklendi.**
+    - `sign-up` klasörü ve tüm içeriği (`SignUp.tsx`, `README.md`) `frontend/src/kullanılmayanlar/` dizinine taşındı.
+    - `App.tsx` dosyasından sign-up import'u ve route tanımı kaldırıldı.
+    - `AppAppBar.tsx` dosyasındaki hem desktop hem mobile menülerdeki "Sign up" butonları Google Forms linki (https://forms.gle/VRahDyBZUA3cojZa6) açacak şekilde güncellendi.
+    - `SignIn.tsx` sayfasındaki "Don't have an account? Sign up" linki de Google Forms'a yönlendirildi.
+    - Artık sign-up butonlarına tıklandığında Ayika Gönüllülük Formu yeni sekmede açılıyor.
+- [x] **Navigasyon butonları ve giriş sayfası tamamen Türkçeleştirildi.**
+    - `AppAppBar.tsx` dosyasında "Sign in" → "Giriş yap" ve "Sign up" → "Gönüllü ol 💙" olarak değiştirildi.
+    - Hem desktop hem mobile menülerde güncellemeler yapıldı.
+    - `SignIn.tsx` sayfası tamamen Türkçeleştirildi:
+        - Başlık: "Sign in" → "Giriş Yap"
+        - Form alanları: "Email" → "E-posta", "Password" → "Şifre"
+        - Placeholder: "your@email.com" → "e-postanız@örnek.com"
+        - "Remember me" → "Beni hatırla"
+        - Buton: "Sign in" → "Giriş yap"
+        - "Forgot your password?" → "Şifrenizi mi unuttunuz?"
+        - "Don't have an account? Sign up" → "Hesabınız yok mu? Gönüllü ol 💙"
+        - Hata mesajları Türkçeleştirildi
+    - `ForgotPassword.tsx` bileşeni Türkçeleştirildi:
+        - "Reset password" → "Şifre sıfırla"
+        - Açıklama metni Türkçeleştirildi
+        - "Email address" → "E-posta adresi"
+        - "Cancel" → "İptal", "Continue" → "Devam et"
+    - Gönüllü ol butonlarının yanına mavi kalp emojisi (💙) eklendi.
+- [x] **Footer ve AppAppBar tamamen Türkçeleştirildi.**
+    - `AppAppBar.tsx` dosyasında navigasyon menüsü Türkçeleştirildi:
+        - "Features" → "Özellikler" (hem desktop hem mobile menüde)
+        - "Highlights" → "Öne Çıkanlar" (hem desktop hem mobile menüde)
+        - "FAQ" → "S.S.S" (hem desktop hem mobile menüde)
+        - "Blog" aynı kaldı
+    - `shared-theme/components/Footer.tsx` dosyası tamamen Türkçeleştirildi:
+        - "Product" → "Sayfa"
+        - "Features" → "Özellikler"
+        - "Highlights" → "Öne Çıkanlar"
+        - "FAQ" → "S.S.S"
+        - "Privacy Policy" → "Gizlilik Politikası"
+        - "Terms of Service" → "Kullanım Şartları"
+    - Footer'daki tüm linkler güncellendi:
+        - Navigasyon linkleri doğru sayfa/bölümlere yönlendirildi (/#features, /#highlights, /#faq, /blog)
+        - Sosyal medya linkleri anasayfaya (/) yönlendirildi
+        - Copyright'taki Ayika linki anasayfaya yönlendirildi
+        - Gizlilik ve kullanım şartları linkleri geçici olarak anasayfaya yönlendirildi
+
+### Dashboard Routing
+- [x] **Dashboard sayfa yönlendirmesi eklendi.**
+    - `App.tsx` dosyasına `/dashboard` route'u eklendi.
+    - Dashboard bileşeni import edildi ve Routes içerisine tanımlandı.
+    - Artık http://localhost:5173/dashboard URL'i ile dashboard sayfasına erişim sağlanabiliyor.

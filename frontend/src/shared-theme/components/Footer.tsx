@@ -13,8 +13,8 @@ function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
       {'Copyright © '}
-      <Link color="text.secondary" href="https://mui.com/">
-        Sitemark
+      <Link color="text.secondary" href="/">
+        Ayika
       </Link>
       &nbsp;
       {new Date().getFullYear()}
@@ -62,18 +62,18 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-            Product
+            Sayfa
           </Typography>
-          <Link color="text.secondary" variant="body2" href="#">
-            Features
+          <Link color="text.secondary" variant="body2" href="/#features">
+            Özellikler
           </Link>
-          <Link color="text.secondary" variant="body2" href="#">
-            Highlights
+          <Link color="text.secondary" variant="body2" href="/#highlights">
+            Öne Çıkanlar
           </Link>
-          <Link color="text.secondary" variant="body2" href="#">
-            FAQ
+          <Link color="text.secondary" variant="body2" href="/#faq">
+            S.S.S
           </Link>
-          <Link color="text.secondary" variant="body2" href="#">
+          <Link color="text.secondary" variant="body2" href="/blog">
             Blog
           </Link>
         </Box>
@@ -89,14 +89,14 @@ export default function Footer() {
         }}
       >
         <div>
-          <Link color="text.secondary" variant="body2" href="#">
-            Privacy Policy
+          <Link color="text.secondary" variant="body2" href="/">
+            Gizlilik Politikası
           </Link>
           <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
             &nbsp;•&nbsp;
           </Typography>
-          <Link color="text.secondary" variant="body2" href="#">
-            Terms of Service
+          <Link color="text.secondary" variant="body2" href="/">
+            Kullanım Şartları
           </Link>
           <Copyright />
         </div>
@@ -109,7 +109,7 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://github.com/mui"
+            href="/"
             aria-label="GitHub"
             sx={{ alignSelf: 'center' }}
           >
@@ -118,7 +118,7 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://x.com/MaterialUI"
+            href="/"
             aria-label="X"
             sx={{ alignSelf: 'center' }}
           >
@@ -127,7 +127,7 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://www.linkedin.com/company/mui/"
+            href="/"
             aria-label="LinkedIn"
             sx={{ alignSelf: 'center' }}
           >

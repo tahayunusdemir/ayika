@@ -5,7 +5,7 @@ import AppTheme from '../shared-theme/AppTheme';
 import AppAppBar from '../shared-theme/components/AppAppBar';
 import MainContent from './components/MainContent';
 import Latest from './components/Latest';
-import Footer from './components/Footer';
+import Footer from '../shared-theme/components/Footer';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
   return (

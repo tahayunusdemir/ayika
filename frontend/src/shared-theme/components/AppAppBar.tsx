@@ -106,7 +106,7 @@ export default function AppAppBar() {
                 size="small"
                 onClick={() => scrollToSection('features')}
               >
-                Features
+                Özellikler
               </Button>
               <Button 
                 variant="text" 
@@ -114,7 +114,7 @@ export default function AppAppBar() {
                 size="small"
                 onClick={() => scrollToSection('highlights')}
               >
-                Highlights
+                Öne Çıkanlar
               </Button>
               <Button 
                 variant="text" 
@@ -123,7 +123,7 @@ export default function AppAppBar() {
                 sx={{ minWidth: 0 }}
                 onClick={() => scrollToSection('faq')}
               >
-                FAQ
+                S.S.S
               </Button>
               <Button 
                 component={Link}
@@ -151,16 +151,15 @@ export default function AppAppBar() {
               variant="text"
               size="small"
             >
-              Sign in
+              Giriş yap
             </Button>
             <Button
-              component={Link}
-              to="/sign-up"
               color="primary"
               variant="contained"
               size="small"
+              onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
             >
-              Sign up
+              Gönüllü ol 💙
             </Button>
             <ColorModeIconDropdown />
           </Box>
@@ -191,9 +190,9 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem onClick={() => scrollToSection('features')}>Features</MenuItem>
-                <MenuItem onClick={() => scrollToSection('highlights')}>Highlights</MenuItem>
-                <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
+                <MenuItem onClick={() => scrollToSection('features')}>Özellikler</MenuItem>
+                <MenuItem onClick={() => scrollToSection('highlights')}>Öne Çıkanlar</MenuItem>
+                <MenuItem onClick={() => scrollToSection('faq')}>S.S.S</MenuItem>
                 <MenuItem>
                   <Button
                     component={Link}
@@ -208,13 +207,12 @@ export default function AppAppBar() {
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Button
-                    component={Link}
-                    to="/sign-up"
                     color="primary"
                     variant="contained"
                     fullWidth
+                    onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
                   >
-                    Sign up
+                    Gönüllü ol 💙
                   </Button>
                 </MenuItem>
                 <MenuItem>
@@ -225,7 +223,7 @@ export default function AppAppBar() {
                     variant="outlined"
                     fullWidth
                   >
-                    Sign in
+                    Giriş yap
                   </Button>
                 </MenuItem>
               </Box>
