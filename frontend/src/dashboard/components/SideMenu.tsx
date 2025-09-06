@@ -1,14 +1,13 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import SelectContent from './SelectContent';
+import Button from '@mui/material/Button';
+import SitemarkIcon from '../../shared-theme/components/SitemarkIcon';
 import MenuContent from './MenuContent';
-import OptionsMenu from './OptionsMenu';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 const drawerWidth = 240;
 
@@ -37,11 +36,12 @@ export default function SideMenu() {
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'center',
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
           p: 1.5,
         }}
       >
-        <SelectContent />
+        <SitemarkIcon />
       </Box>
       <Divider />
       <Box
@@ -64,21 +64,14 @@ export default function SideMenu() {
           borderColor: 'divider',
         }}
       >
-        <Avatar
-          sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
-        <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
+        <Box sx={{ mr: 'auto', display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body1" sx={{ fontWeight: 500 }}>
             Riley Carter
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
-          </Typography>
         </Box>
-        <OptionsMenu />
+        <Button variant="outlined" startIcon={<LogoutRoundedIcon />} color="error">
+          Çıkış
+        </Button>
       </Stack>
     </Drawer>
   );
