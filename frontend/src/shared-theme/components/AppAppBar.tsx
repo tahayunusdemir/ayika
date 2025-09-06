@@ -38,6 +38,13 @@ export default function AppAppBar() {
     setOpen(newOpen);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   const scrollToSection = (sectionId: string) => {
     // If we're not on the home page, navigate to home page first
     if (window.location.pathname !== '/') {
@@ -97,7 +104,10 @@ export default function AppAppBar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+          <Box
+            sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, cursor: 'pointer' }}
+            onClick={scrollToTop}
+          >
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button 

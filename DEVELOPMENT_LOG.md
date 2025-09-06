@@ -147,6 +147,10 @@
         - Copyright'taki Ayika linki anasayfaya yönlendirildi
         - Gizlilik ve kullanım şartları linkleri geçici olarak anasayfaya yönlendirildi
 
+### Kullanıcı Deneyimi (UX) İyileştirmeleri
+- [x] **"Ayika" logosuna tıklandığında sayfanın en üstüne kaydırma özelliği eklendi.**
+    - `AppAppBar.tsx` bileşenindeki logoya tıklandığında, sayfanın en üstüne yumuşak bir şekilde kaydırma (smooth scroll) işlevi eklendi.
+
 ### Dashboard Routing
 - [x] **Dashboard sayfa yönlendirmesi eklendi.**
     - `App.tsx` dosyasına `/dashboard` route'u eklendi.
