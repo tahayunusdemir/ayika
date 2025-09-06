@@ -9,24 +9,22 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
   { text: 'Ana Sayfa', icon: <HomeRoundedIcon />, key: 'home' },
-  { text: 'Analizler', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
-  { text: 'Hakkımızda', icon: <InfoRoundedIcon />, key: 'about' },
   { text: 'Geri Bildirim', icon: <HelpRoundedIcon />, key: 'feedback', isExternal: true, url: 'https://forms.gle/SqSKAGdtF6CoU1Jd8' },
 ];
 
 const adminListItems = [
   { text: 'Gönüllüler', icon: <PeopleRoundedIcon />, key: 'volunteers' },
+  { text: 'Analizler', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
 ];
 
 const secondaryListItems = [
   { text: 'Profil', icon: <AccountCircleRoundedIcon />, key: 'profile' },
-  { text: 'Bildirimler', icon: <NotificationsRoundedIcon />, key: 'notifications' },
+  { text: 'Bildirimler', icon: <NotificationsIcon />, key: 'notifications' },
 ];
 
 interface MenuContentProps {

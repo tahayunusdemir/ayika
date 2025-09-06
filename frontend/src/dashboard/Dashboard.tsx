@@ -16,7 +16,6 @@ import Analytics from './pages/Analytics/Analytics';
 import { default as Volunteers } from './pages/Volunteers/Volunteers';
 import Profile from './pages/Profile/Profile';
 import Notifications from './pages/Notifications/Notifications';
-import About from './pages/About/About';
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -37,7 +36,6 @@ const pageConfig = {
   volunteers: { component: Volunteers, breadcrumb: [{ label: 'Gönüllüler', active: true }] },
   profile: { component: Profile, breadcrumb: [{ label: 'Profil', active: true }] },
   notifications: { component: Notifications, breadcrumb: [{ label: 'Bildirimler', active: true }] },
-  about: { component: About, breadcrumb: [{ label: 'Hakkımızda', active: true }] },
 };
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {

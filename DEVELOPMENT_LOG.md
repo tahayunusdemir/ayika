@@ -170,6 +170,8 @@
 - [x] **"Feedback" sayfası silindi ve yerine Google Forms yönlendirmesi eklendi.**
     - `pages/Feedback/Feedback.tsx` dosyası ve ilgili route tanımı kaldırıldı.
     - `AppAppBar.tsx` ve `Footer.tsx` gibi ilgili menü ve linkler Google Forms'a yönlendirildi.
+- [x] **"Hakkımızda" sayfası silindi.**
+    - İlgili dosya ve route tanımları projeden tamamen kaldırıldı.
 
 ### Dashboard Breadcrumb Navigasyonu ve Sayfa Yapısı
 - [x] **Breadcrumb navigasyon sistemi eklendi.**
@@ -213,6 +215,8 @@
     - `pages/Feedback/Feedback.tsx` -> "Geri Bildirim" (önceki silinmeden önce)
 - [x] **"Hakkımızda" ve "Geri Bildirim" üst menüye taşındı.**
     - Bu sayfaların menüdeki konumları `MenuContent.tsx` içinde düzenlendi.
+- [x] **Dashboard menüsündeki "Analitik" bölümü "Admin" kısmına taşındı.**
+    - `MenuContent.tsx` bileşenindeki "Analitik" sayfası, "Admin" bölüm başlığının altına taşındı.
 
 - [x] **Yeni placeholder sayfalar oluşturuldu.**
     - `pages/Profile/Profile.tsx` - Kullanıcı profili yönetimi sayfası placeholder'ı oluşturuldu.
@@ -243,11 +247,15 @@
     - Smooth hover animasyonları eklendi (translateY + boxShadow).
     - Typography hierarchy optimize edildi ve kompakt spacing uygulandı.
     - Material-UI tema renklerine tam uyum sağlandı.
+- [x] **Hesap silme ve şifre değiştirme diyalogları tasarlandı.**
+    - `pages/Profile/components/AccountDeleteDialog.tsx` ve `pages/Profile/components/PasswordResetDialog.tsx` bileşenleri oluşturuldu ve tasarımları yapıldı.
 - [x] **Bildirimler menüsü dashboard'a eklendi.**
     - Sol menüde Profile'ın altına "Notifications" menü öğesi eklendi.
     - `pages/Notifications/Notifications.tsx` placeholder sayfası oluşturuldu.
     - Dashboard routing sistemi bildirimler sayfası için güncellendi.
     - Basit placeholder tasarım ile ileride geliştirilebilir yapı hazırlandı.
+- [x] **Bildirimler sayfası örneği tasarlandı.**
+    - `pages/Notifications/Notifications.tsx` dosyasına örnek bildirim öğeleri ve düzeni eklendi.
 - [x] **Avatar sistemi kaldırıldı.**
     - Tüm avatar gösterimleri projeden tamamen kaldırıldı.
 - [x] **Mobil menü düzenlendi.**
