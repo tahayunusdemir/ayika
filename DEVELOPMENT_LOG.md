@@ -161,3 +161,78 @@
 - [x] **Dashboard Header'dan Arama ve Takvim bileşenleri kaldırıldı.**
     - `Header.tsx` bileşeninden `Search` ve `CustomDatePicker` component'leri ve ilgili import'lar kaldırıldı.
     - Artık kullanılmayan `CustomDatePicker.tsx` dosyası projeden silindi.
+
+### Dashboard Breadcrumb Navigasyonu ve Sayfa Yapısı
+- [x] **Breadcrumb navigasyon sistemi eklendi.**
+    - `NavbarBreadcrumbs.tsx` bileşeni dinamik breadcrumb desteği ile güncellendi.
+    - "Dashboard > [Sayfa Adı]" formatında breadcrumb yapısı oluşturuldu.
+    - Her sayfa için otomatik breadcrumb oluşturma sistemi implementasyonu yapıldı.
+- [x] **Dashboard sayfa yapısı oluşturuldu.**
+    - `pages/Home/Home.tsx` - Ana sayfa placeholder'ı oluşturuldu
+    - `pages/Analytics/Analytics.tsx` - Analitik sayfası placeholder'ı oluşturuldu
+    - `pages/Clients/Clients.tsx` - Müşteriler sayfası placeholder'ı oluşturuldu
+    - `pages/Tasks/Tasks.tsx` - Görevler sayfası placeholder'ı oluşturuldu
+    - `pages/Settings/Settings.tsx` - Ayarlar sayfası placeholder'ı oluşturuldu
+    - `pages/About/About.tsx` - Hakkında sayfası placeholder'ı oluşturuldu
+    - `pages/Feedback/Feedback.tsx` - Geri bildirim sayfası placeholder'ı oluşturuldu
+    - Her sayfa basit placeholder içerik, sayfa ikonu ve açıklama metni ile oluşturuldu.
+- [x] **Dashboard navigasyon sistemi geliştirildi.**
+    - `MenuContent.tsx` bileşeni sayfa seçimi ve aktif sayfa vurgulaması için güncellendi.
+    - `SideMenu.tsx` ve `SideMenuMobile.tsx` bileşenleri navigasyon desteği ile güncellendi.
+    - `AppNavbar.tsx` bileşeni sayfa geçişleri için güncellendi.
+    - `Header.tsx` bileşeni dinamik breadcrumb desteği için güncellendi.
+- [x] **Dashboard merkezi sayfa yönetimi eklendi.**
+    - `Dashboard.tsx` bileşeni state-based sayfa yönetimi ile güncellendi.
+    - Sayfa geçişleri React state ile yönetilir hale getirildi.
+    - Her sayfa için breadcrumb konfigürasyonu eklendi.
+    - Menüden sayfa seçildiğinde otomatik breadcrumb güncelleme sistemi eklendi.
+
+### Dashboard Menü Yapısı Genişletmesi
+- [x] **Profil ve Admin bölümleri dashboard menüsüne eklendi.**
+    - `MenuContent.tsx` bileşenine Profil bölümü Settings üstüne eklendi.
+    - Ana menüler ile alt menüler arasına "Admin" bölüm başlığı eklendi.
+    - Admin bölümü altında "Volunteers" (Gönüllüler) menü öğesi eklendi.
+    - Admin sadece bölüm başlığı olarak tasarlandı (tıklanamaz metin).
+- [x] **Yeni placeholder sayfalar oluşturuldu.**
+    - `pages/Profile/Profile.tsx` - Kullanıcı profili yönetimi sayfası placeholder'ı oluşturuldu.
+    - `pages/Volunteers/Volunteers.tsx` - Gönüllü yönetimi sayfası placeholder'ı oluşturuldu.
+    - Her sayfa tutarlı tasarım ile sayfa ikonu ve açıklama metni içeriyor.
+- [x] **Dashboard routing sistemi güncellendi.**
+    - `Dashboard.tsx` dosyasına yeni sayfalar için routing desteği eklendi.
+    - Profile ve Volunteers sayfaları için breadcrumb konfigürasyonu eklendi.
+    - Menü yapısı: Ana Menüler → Admin (başlık) → Volunteers → Alt Menüler (Profile, Settings, About, Feedback)
+- [x] **Admin sayfa yapısı optimize edildi.**
+    - Admin bir sayfa yerine sadece menüde bölüm başlığı olarak düzenlendi.
+    - `ListSubheader` komponenti kullanılarak "Admin" başlığı eklendi.
+    - Gereksiz `pages/Admin/Admin.tsx` dosyası kaldırıldı.
+    - Dashboard routing sisteminden admin sayfa konfigürasyonu çıkarıldı.
+
+### Dashboard Profil ve Bildirim Sistemi Geliştirmeleri
+- [x] **Profil sayfası modernize edildi ve sadeleştirildi.**
+    - Avatar/profil resmi, status chip'leri ve hızlı erişim menüsü kaldırıldı.
+    - Telefon numarası alanı ve gereksiz butonlar kaldırıldı.
+    - Sadece temel kişisel bilgiler (Ad Soyad, Email, Konum, Kayıt Tarihi) bırakıldı.
+    - Şifre değiştirme ve hesap silme için kompakt butonlar eklendi.
+    - "Tehlikeli Alan" yazısı kaldırılarak daha temiz tasarım sağlandı.
+- [x] **Profil sayfası tasarımı modern hale getirildi.**
+    - İkonlar boyut açısından tutarlı hale getirildi (18px-20px).
+    - Flexbox layout ile Liste yapısı değiştirildi.
+    - Smooth hover animasyonları eklendi (translateY + boxShadow).
+    - Typography hierarchy optimize edildi ve kompakt spacing uygulandı.
+    - Material-UI tema renklerine tam uyum sağlandı.
+- [x] **Bildirimler menüsü dashboard'a eklendi.**
+    - Sol menüde Profile'ın altına "Notifications" menü öğesi eklendi.
+    - `pages/Notifications/Notifications.tsx` placeholder sayfası oluşturuldu.
+    - Dashboard routing sistemi bildirimler sayfası için güncellendi.
+    - Basit placeholder tasarım ile ileride geliştirilebilir yapı hazırlandı.
+- [x] **Avatar sistemi kaldırıldı.**
+    - Tüm avatar gösterimleri projeden tamamen kaldırıldı.
+- [x] **Mobil menü düzenlendi.**
+    - Mobil menüde "Dashboard" yerine "Ayika" yazısı kullanıldı.
+- [x] **Sol üst logo/marka alanı düzenlendi.**
+    - `SitemarkIcon.tsx` bileşeni dashboard için özelleştirildi.
+    - Opsiyonel olarak "Gönüllü Paneli" yazısı eklendi.
+- [x] **Sağ üst arama ve takvim kaldırıldı.**
+    - `AppNavbar.tsx` bileşeninden arama (Search) ve takvim (CustomDatePicker) bileşenleri kaldırıldı.
+- [x] **Sol alt çıkış butonu eklendi.**
+    - Sol alttaki 3 nokta menüsü yerine "Çıkış Yap" butonu konumlandırıldı.
