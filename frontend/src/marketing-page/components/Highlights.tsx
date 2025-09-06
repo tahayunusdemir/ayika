@@ -15,39 +15,39 @@ import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon />,
-    title: 'Adaptable performance',
+    title: 'Uyarlanabilir performans',
     description:
-      'Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.',
+      'Ürünümüz ihtiyaçlarınıza zahmetsizce uyum sağlayarak verimliliği artırır ve görevlerinizi basitleştirir.',
   },
   {
     icon: <ConstructionRoundedIcon />,
-    title: 'Built to last',
+    title: 'Uzun ömürlü',
     description:
-      'Experience unmatched durability that goes above and beyond with lasting investment.',
+      'Kalıcı yatırımla eşsiz dayanıklılığı deneyimleyin.',
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
-    title: 'Great user experience',
+    title: 'Harika kullanıcı deneyimi',
     description:
-      'Integrate our product into your routine with an intuitive and easy-to-use interface.',
+      'Sezgisel ve kullanımı kolay bir arayüzle ürünümüzü rutininize entegre edin.',
   },
   {
     icon: <AutoFixHighRoundedIcon />,
-    title: 'Innovative functionality',
+    title: 'Yenilikçi işlevsellik',
     description:
-      'Stay ahead with features that set new standards, addressing your evolving needs better than the rest.',
+      'Yeni standartlar belirleyen, gelişen ihtiyaçlarınızı diğerlerinden daha iyi karşılayan özelliklerle önde olun.',
   },
   {
     icon: <SupportAgentRoundedIcon />,
-    title: 'Reliable support',
+    title: 'Güvenilir destek',
     description:
-      'Count on our responsive customer support, offering assistance that goes beyond the purchase.',
+      'Satın alma ötesine geçen destek sunan duyarlı müşteri desteğimize güvenin.',
   },
   {
     icon: <QueryStatsRoundedIcon />,
-    title: 'Precision in every detail',
+    title: 'Her ayrıntıda hassasiyet',
     description:
-      'Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.',
+      'Küçük dokunuşların genel deneyiminiz üzerinde önemli bir etki yarattığı titizlikle hazırlanmış bir ürünün keyfini çıkarın.',
   },
 ];
 
@@ -78,12 +78,12 @@ export default function Highlights() {
           }}
         >
           <Typography component="h2" variant="h4" gutterBottom>
-            Highlights
+            Öne Çıkanlar
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
-            Explore why our product stands out: adaptability, durability,
-            user-friendly design, and innovation. Enjoy reliable customer support and
-            precision in every detail.
+            Ürünümüzün neden öne çıktığını keşfedin: uyarlanabilirlik, dayanıklılık,
+            kullanıcı dostu tasarım ve yenilikçilik. Güvenilir müşteri desteği ve
+            her ayrıntıda hassasiyetin keyfini çıkarın.
           </Typography>
         </Box>
         <Grid container spacing={2}>

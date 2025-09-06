@@ -66,7 +66,7 @@ export default function AppNavbar({ selectedPage, onPageSelect }: AppNavbarProps
             spacing={1}
             sx={{ justifyContent: 'center', mr: 'auto' }}
           >
-            <SitemarkIcon />
+            <SitemarkIcon to="/dashboard" onIconClick={() => onPageSelect && onPageSelect('home')} variant="h4" />
           </Stack>
           <ColorModeIconDropdown />
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>

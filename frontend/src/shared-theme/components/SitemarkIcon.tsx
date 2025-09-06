@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 
 interface SitemarkIconProps {
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  to?: string;
+  onIconClick?: () => void;
 }
 
-export default function SitemarkIcon({ variant = 'h5' }: SitemarkIconProps) {
+export default function SitemarkIcon({ variant = 'h5', to = '/', onIconClick }: SitemarkIconProps) {
   return (
     <Typography
       component={Link}
-      to="/"
+      to={to}
+      onClick={onIconClick}
       variant={variant}
       sx={{
         mr: 2,

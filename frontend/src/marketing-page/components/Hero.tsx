@@ -90,9 +90,7 @@ export default function Hero() {
               width: { sm: '100%', md: '80%' },
             }}
           >
-            Explore our cutting-edge dashboard, delivering high-quality solutions
-            tailored to your needs. Elevate your experience with top-tier features
-            and services.
+            İhtiyaçlarınıza özel olarak tasarlanmış, yüksek kaliteli çözümler sunan son teknoloji kontrol panelimizi keşfedin. Üst düzey özellikler ve hizmetlerle deneyiminizi yükseltin.
           </Typography>
         </Stack>
         <StyledBox id="image" />

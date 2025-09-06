@@ -12,11 +12,11 @@ export default function About() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <InfoRoundedIcon color="primary" />
             <Typography variant="h4" component="h1">
-              About
+              Hakkımızda
             </Typography>
           </Box>
           <Typography variant="body1" color="text.secondary">
-            About page placeholder. Here you would display information about your application or company.
+            Hakkımızda sayfası yer tutucusu. Burada uygulamanız veya şirketiniz hakkında bilgi görüntüleyebilirsiniz.
           </Typography>
         </CardContent>
       </Card>

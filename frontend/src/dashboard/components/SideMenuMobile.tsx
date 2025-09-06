@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
@@ -41,8 +42,8 @@ export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPag
             direction="row"
             sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
           >
-            <Typography component="p" variant="h6">
-              Riley Carter
+            <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              Örnek Kullanıcı
             </Typography>
           </Stack>
           <MenuButton showBadge>
@@ -55,8 +56,8 @@ export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPag
           <Divider />
         </Stack>
         <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
-            Logout
+          <Button component={Link} to="/sign-in" variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+            Çıkış
           </Button>
         </Stack>
       </Stack>

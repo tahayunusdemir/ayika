@@ -14,25 +14,25 @@ import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    title: 'Kontrol Paneli',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
+      'Bu öğe, ürünle ilgili en önemli metriklerin veya veri noktalarının bir anlık görüntüsünü sağlayabilir.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-dark.png")`,
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    title: 'Mobil entegrasyon',
     description:
-      'This item could provide information about the mobile app version of the product.',
+      'Bu öğe, ürünün mobil uygulama sürümü hakkında bilgi sağlayabilir.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-dark.png")`,
   },
   {
     icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    title: 'Tüm platformlarda kullanılabilir',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
+      'Bu öğe, kullanıcılara ürünün web, mobil ve masaüstü gibi tüm platformlarda mevcut olduğunu bildirebilir.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-dark.png")`,
   },
@@ -151,15 +151,13 @@ export default function Features() {
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Product features
+          Ürün Özellikleri
         </Typography>
         <Typography
           variant="body1"
           sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
         >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
+          Ürünün temel özelliklerine kısa bir genel bakış sağlayın. Örneğin, özelliklerin sayısını, türlerini veya faydalarını ve eklentilerini listeleyebilirsiniz.
         </Typography>
       </Box>
       <Box

@@ -14,6 +14,8 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
+import AppAppBar from '../shared-theme/components/AppAppBar';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -114,6 +116,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
+      <AppAppBar />
       <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <Typography
@@ -182,8 +185,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               Giriş yap
             </Button>
             <Link
-              component="button"
-              type="button"
+              component={RouterLink}
+              to="/forgot-password"
               onClick={handleClickOpen}
               variant="body2"
               sx={{ alignSelf: 'center' }}
@@ -194,8 +197,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           <Typography sx={{ textAlign: 'center' }}>
             Hesabınız yok mu?{' '}
             <Link
-              component="button"
-              type="button"
               onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
               variant="body2"
               sx={{ alignSelf: 'center' }}

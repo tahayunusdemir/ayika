@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 import SitemarkIcon from '../../shared-theme/components/SitemarkIcon';
 import MenuContent from './MenuContent';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -46,7 +47,7 @@ export default function SideMenu({ selectedPage, onPageSelect }: SideMenuProps) 
           p: 1.5,
         }}
       >
-        <SitemarkIcon />
+        <SitemarkIcon to="/dashboard" onIconClick={() => onPageSelect && onPageSelect('home')} variant="h3" />
       </Box>
       <Divider />
       <Box
@@ -71,10 +72,10 @@ export default function SideMenu({ selectedPage, onPageSelect }: SideMenuProps) 
       >
         <Box sx={{ mr: 'auto', display: 'flex', alignItems: 'center' }}>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            Riley Carter
+            Örnek Kullanıcı
           </Typography>
         </Box>
-        <Button variant="outlined" startIcon={<LogoutRoundedIcon />} color="error">
+        <Button component={Link} to="/sign-in" variant="outlined" startIcon={<LogoutRoundedIcon />} color="error">
           Çıkış
         </Button>
       </Stack>

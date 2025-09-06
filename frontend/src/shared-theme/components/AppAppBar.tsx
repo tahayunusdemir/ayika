@@ -106,9 +106,8 @@ export default function AppAppBar() {
         <StyledToolbar variant="dense" disableGutters>
           <Box
             sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, cursor: 'pointer' }}
-            onClick={scrollToTop}
           >
-            <Sitemark />
+            <Sitemark to="/" />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button 
                 variant="text" 

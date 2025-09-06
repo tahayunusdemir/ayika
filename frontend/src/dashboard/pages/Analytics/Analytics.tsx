@@ -12,11 +12,11 @@ export default function Analytics() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <AnalyticsRoundedIcon color="primary" />
             <Typography variant="h4" component="h1">
-              Analytics
+              Analizler
             </Typography>
           </Box>
           <Typography variant="body1" color="text.secondary">
-            Analytics dashboard placeholder. Here you would see charts, metrics, and data insights.
+            Analiz panosu yer tutucusu. Burada çizelgeleri, metrikleri ve veri analizlerini görebilirsiniz.
           </Typography>
         </CardContent>
       </Card>

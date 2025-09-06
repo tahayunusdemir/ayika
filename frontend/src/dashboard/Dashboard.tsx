@@ -13,14 +13,10 @@ import SideMenu from './components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
 import Home from './pages/Home/Home';
 import Analytics from './pages/Analytics/Analytics';
-import Clients from './pages/Clients/Clients';
-import Tasks from './pages/Tasks/Tasks';
-import Volunteers from './pages/Volunteers/Volunteers';
+import { default as Volunteers } from './pages/Volunteers/Volunteers';
 import Profile from './pages/Profile/Profile';
 import Notifications from './pages/Notifications/Notifications';
-import Settings from './pages/Settings/Settings';
 import About from './pages/About/About';
-import Feedback from './pages/Feedback/Feedback';
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -36,16 +32,12 @@ const xThemeComponents = {
 };
 
 const pageConfig = {
-  home: { component: Home, breadcrumb: [{ label: 'Home', active: true }] },
-  analytics: { component: Analytics, breadcrumb: [{ label: 'Analytics', active: true }] },
-  clients: { component: Clients, breadcrumb: [{ label: 'Clients', active: true }] },
-  tasks: { component: Tasks, breadcrumb: [{ label: 'Tasks', active: true }] },
-  volunteers: { component: Volunteers, breadcrumb: [{ label: 'Volunteers', active: true }] },
-  profile: { component: Profile, breadcrumb: [{ label: 'Profile', active: true }] },
-  notifications: { component: Notifications, breadcrumb: [{ label: 'Notifications', active: true }] },
-  settings: { component: Settings, breadcrumb: [{ label: 'Settings', active: true }] },
-  about: { component: About, breadcrumb: [{ label: 'About', active: true }] },
-  feedback: { component: Feedback, breadcrumb: [{ label: 'Feedback', active: true }] },
+  home: { component: Home, breadcrumb: [{ label: 'Ana Sayfa', active: true }] },
+  analytics: { component: Analytics, breadcrumb: [{ label: 'Analizler', active: true }] },
+  volunteers: { component: Volunteers, breadcrumb: [{ label: 'Gönüllüler', active: true }] },
+  profile: { component: Profile, breadcrumb: [{ label: 'Profil', active: true }] },
+  notifications: { component: Notifications, breadcrumb: [{ label: 'Bildirimler', active: true }] },
+  about: { component: About, breadcrumb: [{ label: 'Hakkımızda', active: true }] },
 };
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {

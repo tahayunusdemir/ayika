@@ -4,7 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
+import MuiLink from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -12,7 +12,7 @@ export default function FAQ() {
   const [expanded, setExpanded] = React.useState<string[]>([]);
 
   const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(
         isExpanded
           ? [...expanded, panel]
@@ -55,7 +55,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="span" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              Bir sorum veya sorunum olursa müşteri desteğiyle nasıl iletişime geçebilirim?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -63,10 +63,9 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              You can reach our customer support team by emailing&nbsp;
-              <Link href="mailto:support@email.com">support@email.com</Link>
-              &nbsp;or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              Müşteri destek ekibimize support@email.com adresine e-posta göndererek veya ücretsiz numaramızı arayarak ulaşabilirsiniz. Size hızlı bir şekilde yardımcı olmak için buradayız.
+              <MuiLink href="mailto:support@email.com">support@email.com</MuiLink>
+              
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -80,7 +79,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+              Ürün beklentilerimi karşılamazsa iade edebilir miyim?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -88,9 +87,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              Kesinlikle! Sorunsuz bir iade politikası sunuyoruz. Tamamen memnun kalmazsanız, ürünü [gün sayısı] gün içinde tam para iadesi veya değişim için iade edebilirsiniz.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -104,7 +101,7 @@ export default function FAQ() {
             id="panel3d-header"
           >
             <Typography component="span" variant="subtitle2">
-              What makes your product stand out from others in the market?
+              Ürününüzü piyasadaki diğerlerinden ayıran nedir?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -112,9 +109,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              Ürünümüz uyarlanabilirliği, dayanıklılığı ve yenilikçi özellikleriyle öne çıkmaktadır. Kullanıcı memnuniyetini ön planda tutuyor ve her alanda beklentileri aşmak için sürekli çalışıyoruz.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -128,7 +123,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+              Ürünün garantisi var mı ve neleri kapsıyor?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -136,10 +131,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              Evet, ürünümüz [garanti süresi] garantilidir. Malzeme ve işçilik kusurlarını kapsar. Garanti kapsamındaki herhangi bir sorunla karşılaşırsanız, yardım için lütfen müşteri desteğimizle iletişime geçin.
             </Typography>
           </AccordionDetails>
         </Accordion>

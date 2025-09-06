@@ -150,17 +150,26 @@
 ### Kullanıcı Deneyimi (UX) İyileştirmeleri
 - [x] **"Ayika" logosuna tıklandığında sayfanın en üstüne kaydırma özelliği eklendi.**
     - `AppAppBar.tsx` bileşenindeki logoya tıklandığında, sayfanın en üstüne yumuşak bir şekilde kaydırma (smooth scroll) işlevi eklendi.
+- [x] **Giriş yap kısmına navigasyon eklendi.**
+    - `SignIn.tsx` sayfasındaki "Hesabınız yok mu? Gönüllü ol 💙" linkine tıklanınca Google Forms'a yönlendirme eklendi.
 
 ### Dashboard Routing
 - [x] **Dashboard sayfa yönlendirmesi eklendi.**
     - `App.tsx` dosyasına `/dashboard` route'u eklendi.
     - Dashboard bileşeni import edildi ve Routes içerisine tanımlandı.
     - Artık http://localhost:5173/dashboard URL'i ile dashboard sayfasına erişim sağlanabiliyor.
+- [x] **Dashboard'daki Ayika ikonuna tıklayınca dashboard anasayfasına yönlendirme eklendi.**
+    - `SitemarkIcon.tsx` bileşeni dashboard bağlamında ana sayfaya (`/dashboard`) yönlendirecek şekilde güncellendi.
 
 ### Dashboard Temizliği
 - [x] **Dashboard Header'dan Arama ve Takvim bileşenleri kaldırıldı.**
     - `Header.tsx` bileşeninden `Search` ve `CustomDatePicker` component'leri ve ilgili import'lar kaldırıldı.
     - Artık kullanılmayan `CustomDatePicker.tsx` dosyası projeden silindi.
+- [x] **"Tasks", "Settings", "Clients" sayfaları silindi.**
+    - İlgili dosya ve route tanımları projeden tamamen kaldırıldı.
+- [x] **"Feedback" sayfası silindi ve yerine Google Forms yönlendirmesi eklendi.**
+    - `pages/Feedback/Feedback.tsx` dosyası ve ilgili route tanımı kaldırıldı.
+    - `AppAppBar.tsx` ve `Footer.tsx` gibi ilgili menü ve linkler Google Forms'a yönlendirildi.
 
 ### Dashboard Breadcrumb Navigasyonu ve Sayfa Yapısı
 - [x] **Breadcrumb navigasyon sistemi eklendi.**
@@ -193,6 +202,18 @@
     - Ana menüler ile alt menüler arasına "Admin" bölüm başlığı eklendi.
     - Admin bölümü altında "Volunteers" (Gönüllüler) menü öğesi eklendi.
     - Admin sadece bölüm başlığı olarak tasarlandı (tıklanamaz metin).
+- [x] **Dashboarddaki sayfalar ve menü isimleri Türkçeleştirildi.**
+    - `MenuContent.tsx`, `SideMenu.tsx`, `SideMenuMobile.tsx` gibi navigasyon bileşenlerindeki sayfa ve menü isimleri Türkçeleştirildi.
+    - `pages/Home/Home.tsx` -> "Ana Sayfa"
+    - `pages/Analytics/Analytics.tsx` -> "Analitik"
+    - `pages/Volunteers/Volunteers.tsx` -> "Gönüllüler"
+    - `pages/Profile/Profile.tsx` -> "Profil"
+    - `pages/Notifications/Notifications.tsx` -> "Bildirimler"
+    - `pages/About/About.tsx` -> "Hakkımızda"
+    - `pages/Feedback/Feedback.tsx` -> "Geri Bildirim" (önceki silinmeden önce)
+- [x] **"Hakkımızda" ve "Geri Bildirim" üst menüye taşındı.**
+    - Bu sayfaların menüdeki konumları `MenuContent.tsx` içinde düzenlendi.
+
 - [x] **Yeni placeholder sayfalar oluşturuldu.**
     - `pages/Profile/Profile.tsx` - Kullanıcı profili yönetimi sayfası placeholder'ı oluşturuldu.
     - `pages/Volunteers/Volunteers.tsx` - Gönüllü yönetimi sayfası placeholder'ı oluşturuldu.
@@ -208,6 +229,8 @@
     - Dashboard routing sisteminden admin sayfa konfigürasyonu çıkarıldı.
 
 ### Dashboard Profil ve Bildirim Sistemi Geliştirmeleri
+- [x] **Profil sayfası şimdilik placeholder olarak ayarlandı.**
+    - `Profile.tsx` içeriği, sadece temel bilgileri gösterecek şekilde basitleştirildi ve ileriye dönük geliştirme için placeholder olarak bırakıldı.
 - [x] **Profil sayfası modernize edildi ve sadeleştirildi.**
     - Avatar/profil resmi, status chip'leri ve hızlı erişim menüsü kaldırıldı.
     - Telefon numarası alanı ve gereksiz butonlar kaldırıldı.
@@ -236,3 +259,11 @@
     - `AppNavbar.tsx` bileşeninden arama (Search) ve takvim (CustomDatePicker) bileşenleri kaldırıldı.
 - [x] **Sol alt çıkış butonu eklendi.**
     - Sol alttaki 3 nokta menüsü yerine "Çıkış Yap" butonu konumlandırıldı.
+
+### Pazarlama Sayfası (Marketing Page) İyileştirmeleri
+- [x] **Pazarlama sayfası tamamen Türkçeleştirildi.**
+    - `MarketingPage.tsx` ve alt bileşenleri (`Hero.tsx`, `Features.tsx`, `Highlights.tsx`, `FAQ.tsx`, `LogoCollection.tsx`) içerisindeki tüm metinler Türkçeye çevrildi.
+
+### Genel İyileştirmeler
+- [x] **Font değiştirildi ve yeni Google Fonts eklendi.**
+    - Proje genelinde kullanılan fontlar güncellendi ve `index.html` veya temaya ilgili Google Fonts linkleri eklendi.

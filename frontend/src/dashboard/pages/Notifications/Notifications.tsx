@@ -16,7 +16,7 @@ export default function Notifications() {
             </Typography>
           </Box>
           <Typography variant="body1" color="text.secondary">
-            Bildirimler sayfası placeholder. Burada bildirim ayarları, geçmiş bildirimler ve bildirim tercihlerinizi yönetebilirsiniz.
+            Bildirimler sayfası yer tutucusu. Burada bildirim ayarları, geçmiş bildirimler ve bildirim tercihlerinizi yönetebilirsiniz.
           </Typography>
         </CardContent>
       </Card>

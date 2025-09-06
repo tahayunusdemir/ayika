@@ -8,31 +8,25 @@ import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon />, key: 'home' },
-  { text: 'Analytics', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
-  { text: 'Clients', icon: <PeopleRoundedIcon />, key: 'clients' },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon />, key: 'tasks' },
+  { text: 'Ana Sayfa', icon: <HomeRoundedIcon />, key: 'home' },
+  { text: 'Analizler', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
+  { text: 'Hakkımızda', icon: <InfoRoundedIcon />, key: 'about' },
+  { text: 'Geri Bildirim', icon: <HelpRoundedIcon />, key: 'feedback', isExternal: true, url: 'https://forms.gle/SqSKAGdtF6CoU1Jd8' },
 ];
 
 const adminListItems = [
-  { text: 'Volunteers', icon: <VolunteerActivismRoundedIcon />, key: 'volunteers' },
+  { text: 'Gönüllüler', icon: <PeopleRoundedIcon />, key: 'volunteers' },
 ];
 
 const secondaryListItems = [
-  { text: 'Profile', icon: <AccountCircleRoundedIcon />, key: 'profile' },
-  { text: 'Notifications', icon: <NotificationsRoundedIcon />, key: 'notifications' },
-  { text: 'Settings', icon: <SettingsRoundedIcon />, key: 'settings' },
-  { text: 'About', icon: <InfoRoundedIcon />, key: 'about' },
-  { text: 'Feedback', icon: <HelpRoundedIcon />, key: 'feedback' },
+  { text: 'Profil', icon: <AccountCircleRoundedIcon />, key: 'profile' },
+  { text: 'Bildirimler', icon: <NotificationsRoundedIcon />, key: 'notifications' },
 ];
 
 interface MenuContentProps {
@@ -47,6 +41,10 @@ export default function MenuContent({ selectedPage = 'home', onPageSelect }: Men
     }
   };
 
+  const handleExternalLinkClick = (url: string) => {
+    window.open(url, '_blank');
+  };
+
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <Stack sx={{ flexGrow: 1 }}>
@@ -55,7 +53,13 @@ export default function MenuContent({ selectedPage = 'home', onPageSelect }: Men
             <ListItem key={index} disablePadding sx={{ display: 'block' }}>
               <ListItemButton 
                 selected={selectedPage === item.key}
-                onClick={() => handleItemClick(item.key)}
+                onClick={() => {
+                  if (item.isExternal && item.url) {
+                    handleExternalLinkClick(item.url);
+                  } else {
+                    handleItemClick(item.key);
+                  }
+                }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
@@ -63,7 +67,7 @@ export default function MenuContent({ selectedPage = 'home', onPageSelect }: Men
             </ListItem>
           ))}
         </List>
-        <List dense subheader={<ListSubheader>Admin</ListSubheader>}>
+        <List dense subheader={<ListSubheader>Yönetici</ListSubheader>}>
           {adminListItems.map((item, index) => (
             <ListItem key={index} disablePadding sx={{ display: 'block' }}>
               <ListItemButton

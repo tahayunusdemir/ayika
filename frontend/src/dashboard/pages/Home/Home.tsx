@@ -12,11 +12,11 @@ export default function Home() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <HomeRoundedIcon color="primary" />
             <Typography variant="h4" component="h1">
-              Home
+              Ana Sayfa
             </Typography>
           </Box>
           <Typography variant="body1" color="text.secondary">
-            Welcome to the dashboard home page. This is a placeholder content for the home section.
+            Kontrol paneli ana sayfasına hoş geldiniz. Bu, ana bölüm için bir yer tutucu içeriktir.
           </Typography>
         </CardContent>
       </Card>
