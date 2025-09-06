@@ -156,3 +156,8 @@
     - `App.tsx` dosyasına `/dashboard` route'u eklendi.
     - Dashboard bileşeni import edildi ve Routes içerisine tanımlandı.
     - Artık http://localhost:5173/dashboard URL'i ile dashboard sayfasına erişim sağlanabiliyor.
+
+### Dashboard Temizliği
+- [x] **Dashboard Header'dan Arama ve Takvim bileşenleri kaldırıldı.**
+    - `Header.tsx` bileşeninden `Search` ve `CustomDatePicker` component'leri ve ilgili import'lar kaldırıldı.
+    - Artık kullanılmayan `CustomDatePicker.tsx` dosyası projeden silindi.
