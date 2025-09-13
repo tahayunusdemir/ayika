@@ -1,87 +1,136 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import NotificationItem from './components/NotificationItem';
-import { Switch, FormControlLabel } from '@mui/material';
+import DashboardPageLayout from '../../components/DashboardPageLayout';
+import * as React from 'react';
+import { 
+  Grid, 
+  TextField, 
+  Button, 
+  InputAdornment, 
+  IconButton, 
+  Box, 
+  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Fade,
+} from '@mui/material';
+import NotificationList from './components/NotificationList';
+import NotificationPreferences from './components/NotificationPreferences';
+import { useNotifications } from './hooks/useNotifications';
+import { DeleteForeverOutlined as DeleteAllIcon, Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
 
-export default function Notifications() {
-  const [notifications, setNotifications] = React.useState([
-    { id: '1', message: 'Yeni bir etkinlik oluşturuldu: Gönüllü Toplantısı', timestamp: '2024-07-20 10:00' },
-    { id: '2', message: 'Profil bilgileriniz güncellendi.', timestamp: '2024-07-19 15:30' },
-    { id: '3', message: 'Yeni bir mesajınız var.', timestamp: '2024-07-18 09:00' },
-  ]);
+const Notifications: React.FC = React.memo(() => {
+  const { notifications, loading, error, deleteNotification, deleteAllNotifications } = useNotifications();
+  const [searchTerm, setSearchTerm] = React.useState('');
 
-  const [settings, setSettings] = React.useState({
-    emailNotifications: true,
-    smsNotifications: false,
-    pushNotifications: true,
-  });
-
-  const handleCloseNotification = (id: string) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.filter((notification) => notification.id !== id)
+  const filteredNotifications = React.useMemo(() => {
+    if (!searchTerm) return notifications;
+    return notifications.filter(notification =>
+      notification.message.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  };
+  }, [notifications, searchTerm]);
 
-  const handleSettingChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      [key]: event.target.checked,
-    }));
-  };
+  const handleClearSearch = React.useCallback(() => {
+    setSearchTerm('');
+  }, []);
+
+  const handleDeleteAll = React.useCallback(() => {
+    deleteAllNotifications();
+  }, [deleteAllNotifications]);
 
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '900px' }, mx: 'auto' }}>
-      <Card sx={{ mb: 2 }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-            <NotificationsIcon color="primary" sx={{ fontSize: 40 }} />
-            <Typography variant="h4" component="h1">
-              Bildirimler
-            </Typography>
-          </Box>
+    <DashboardPageLayout
+      title="Bildirimler"
+      description="Bildirimlerinizi yönetin ve ayarlarınızı güncelleyin."
+      icon={NotificationsIcon}
+    >
+      <Grid container spacing={3}>
+        {/* Main Content Column - Notification Management */}
+        <Grid size={{ xs: 12, md: 8 }}>
+          {/* Search and Controls */}
+          <Fade in timeout={300}>
+            <Card variant="outlined" sx={{ mb: 3 }}>
+              <CardHeader
+                title={
+                  <Typography variant="h6">
+                    Bildirim Yönetimi
+                  </Typography>
+                }
+              />
+              <CardContent>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid size={{ xs: 12, sm: 8, md: 9 }}>
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                          endAdornment: searchTerm ? (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="arama terimini temizle"
+                                onClick={handleClearSearch}
+                                edge="end"
+                                size="small"
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ) : null,
+                          placeholder: "Bildirim Ara",
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 4, md: 3 }}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      startIcon={<DeleteAllIcon />}
+                      onClick={handleDeleteAll}
+                      disabled={loading || notifications.length === 0}
+                      fullWidth
+                      size="small"
+                    >
+                      Tümünü Sil
+                    </Button>
+                  </Grid>
+                </Grid>
+                {searchTerm && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      "{searchTerm}" için {filteredNotifications.length} sonuç bulundu
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Fade>
 
-          <Typography variant="h5" component="h2" gutterBottom>
-            Bildirim Ayarları
-          </Typography>
-          <Box sx={{ mb: 4 }}>
-            <FormControlLabel
-              control={<Switch checked={settings.emailNotifications} onChange={handleSettingChange('emailNotifications')} />}
-              label="E-posta Bildirimleri"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.smsNotifications} onChange={handleSettingChange('smsNotifications')} />}
-              label="SMS Bildirimleri"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.pushNotifications} onChange={handleSettingChange('pushNotifications')} />}
-              label="Anlık Bildirimler (Push Notifications)"
-            />
-          </Box>
+          {/* Notifications List */}
+          <NotificationList
+            notifications={filteredNotifications}
+            loading={loading}
+            error={error}
+            onDelete={deleteNotification}
+          />
+        </Grid>
 
-          <Typography variant="h5" component="h2" gutterBottom>
-            Tüm Bildirimler
-          </Typography>
-          <Box>
-            {notifications.length > 0 ? (
-              notifications.map((notification) => (
-                <NotificationItem
-                  key={notification.id}
-                  id={notification.id}
-                  message={notification.message}
-                  timestamp={notification.timestamp}
-                  onClose={handleCloseNotification}
-                />
-              ))
-            ) : (
-              <Typography>Henüz bildirim bulunmamaktadır.</Typography>
-            )}
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+        {/* Notification Preferences Column */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <NotificationPreferences />
+        </Grid>
+      </Grid>
+    </DashboardPageLayout>
   );
-}
+});
+
+export default Notifications;

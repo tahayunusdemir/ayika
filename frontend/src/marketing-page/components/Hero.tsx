@@ -90,7 +90,7 @@ export default function Hero() {
               width: { sm: '100%', md: '80%' },
             }}
           >
-            İhtiyaçlarınıza özel olarak tasarlanmış, yüksek kaliteli çözümler sunan son teknoloji kontrol panelimizi keşfedin. Üst düzey özellikler ve hizmetlerle deneyiminizi yükseltin.
+            Kritik anlarda tek tıkla güç birliği! Acil durumları daha etkin yönetmek, kaynakları akıllıca dağıtmak ve toplulukları bir araya getirmek için tasarlanmış devrim niteliğinde bir platform. Geleceğin yardım ağını bugün deneyimleyin.
           </Typography>
         </Stack>
         <StyledBox id="image" />

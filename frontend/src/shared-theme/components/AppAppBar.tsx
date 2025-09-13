@@ -135,14 +135,12 @@ export default function AppAppBar() {
                 S.S.S
               </Button>
               <Button 
-                component={Link}
-                to="/blog"
                 variant="text" 
                 color="info" 
-                size="small" 
-                sx={{ minWidth: 0 }}
+                size="small"
+                onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
               >
-                Blog
+                Geri Bildirim
               </Button>
             </Box>
           </Box>
@@ -204,13 +202,12 @@ export default function AppAppBar() {
                 <MenuItem onClick={() => scrollToSection('faq')}>S.S.S</MenuItem>
                 <MenuItem>
                   <Button
-                    component={Link}
-                    to="/blog"
                     variant="text"
                     fullWidth
                     sx={{ textAlign: 'left', justifyContent: 'flex-start' }}
+                    onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
                   >
-                    Blog
+                    Geri Bildirim
                   </Button>
                 </MenuItem>
                 <Divider sx={{ my: 3 }} />

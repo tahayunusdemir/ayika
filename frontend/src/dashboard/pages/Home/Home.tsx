@@ -1,25 +1,23 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import * as React from 'react';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import DashboardPageLayout from '../../components/DashboardPageLayout';
+import { Box, Typography } from '@mui/material';
 
 export default function Home() {
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      <Card sx={{ mb: 2 }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <HomeRoundedIcon color="primary" />
-            <Typography variant="h4" component="h1">
-              Ana Sayfa
-            </Typography>
-          </Box>
-          <Typography variant="body1" color="text.secondary">
-            Kontrol paneli ana sayfasına hoş geldiniz. Bu, ana bölüm için bir yer tutucu içeriktir.
-          </Typography>
-        </CardContent>
-      </Card>
-    </Box>
+    <DashboardPageLayout
+      title="Ana Sayfa"
+      description="Kontrol paneli ana sayfasına hoş geldiniz. Bu, ana bölüm için bir yer tutucu içeriktir."
+      icon={HomeRoundedIcon}
+    >
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" gutterBottom>
+          Kontrol Paneli
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Ana sayfa içerikleri burada yer alacaktır. Yakında özet kartlar, hızlı erişim menüleri ve sistem durumu bilgileri eklenecektir.
+        </Typography>
+      </Box>
+    </DashboardPageLayout>
   );
 }

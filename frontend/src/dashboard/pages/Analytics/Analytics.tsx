@@ -1,25 +1,23 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import * as React from 'react';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
+import DashboardPageLayout from '../../components/DashboardPageLayout';
+import { Box, Typography } from '@mui/material';
 
 export default function Analytics() {
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      <Card sx={{ mb: 2 }}>
-        <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <AnalyticsRoundedIcon color="primary" />
-            <Typography variant="h4" component="h1">
-              Analizler
-            </Typography>
-          </Box>
-          <Typography variant="body1" color="text.secondary">
-            Analiz panosu yer tutucusu. Burada çizelgeleri, metrikleri ve veri analizlerini görebilirsiniz.
-          </Typography>
-        </CardContent>
-      </Card>
-    </Box>
+    <DashboardPageLayout
+      title="Analizler"
+      description="Analiz panosu yer tutucusu. Burada çizelgeleri, metrikleri ve veri analizlerini görebilirsiniz."
+      icon={AnalyticsRoundedIcon}
+    >
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" gutterBottom>
+          Analiz Panosu
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Analiz içerikleri burada yer alacaktır. Yakında detaylı raporlar, grafikler ve performans metrikleri eklenecektir.
+        </Typography>
+      </Box>
+    </DashboardPageLayout>
   );
 }

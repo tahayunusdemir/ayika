@@ -73,9 +73,6 @@ export default function Footer() {
           <Link color="text.secondary" variant="body2" href="/#faq">
             S.S.S
           </Link>
-          <Link color="text.secondary" variant="body2" href="/blog">
-            Blog
-          </Link>
         </Box>
       </Box>
       <Box

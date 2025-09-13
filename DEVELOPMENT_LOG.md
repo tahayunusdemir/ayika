@@ -184,7 +184,7 @@
     - `pages/Clients/Clients.tsx` - Müşteriler sayfası placeholder'ı oluşturuldu
     - `pages/Tasks/Tasks.tsx` - Görevler sayfası placeholder'ı oluşturuldu
     - `pages/Settings/Settings.tsx` - Ayarlar sayfası placeholder'ı oluşturuldu
-    - `pages/About/About.tsx` - Hakkında sayfası placeholder'ı oluşturuldu
+    - `pages/About/About.tsx` - Hakkımızda sayfası placeholder'ı oluşturuldu
     - `pages/Feedback/Feedback.tsx` - Geri bildirim sayfası placeholder'ı oluşturuldu
     - Her sayfa basit placeholder içerik, sayfa ikonu ve açıklama metni ile oluşturuldu.
 - [x] **Dashboard navigasyon sistemi geliştirildi.**
@@ -275,3 +275,71 @@
 ### Genel İyileştirmeler
 - [x] **Font değiştirildi ve yeni Google Fonts eklendi.**
     - Proje genelinde kullanılan fontlar güncellendi ve `index.html` veya temaya ilgili Google Fonts linkleri eklendi.
+
+### Son Güncellemeler ve İyileştirmeler
+
+#### Blog Sistemi Temizliği
+- [x] **Blog bölümü kullanılmayan dosyalar temizlendi.**
+    - Kullanılmayan blog bileşenleri ve dosyaları projeden kaldırıldı.
+    - Footer navigasyonundan "Blog" menü öğesi kaldırıldı.
+    - Blog ile ilgili gereksiz routing ve bağlantılar temizlendi.
+
+#### Logo Collection Güncellemeleri
+- [x] **Logo koleksiyonu TÜBİTAK ve DPÜ logoları ile güncellendi.**
+    - `LogoCollection.tsx` bileşeninde yer alan partner logoları güncellendi.
+    - TÜBİTAK (Türkiye Bilimsel ve Teknolojik Araştırma Kurumu) logosu eklendi.
+    - DPÜ (Dumlupınar Üniversitesi) logosu eklendi.
+    - Logo koleksiyonu daha yerel ve kurumsal bir görünüm kazandı.
+
+#### Profil Sayfası Kapsamlı Güncellemeleri
+- [x] **Profil sayfası tema entegrasyonu tamamlandı.**
+    - Tüm profil bileşenleri shared-theme sistemine entegre edildi.
+    - `Card variant="outlined"` kullanımı ile tutarlı tasarım sağlandı.
+    - `Fade` animasyonları ile smooth geçişler eklendi.
+    - Dialog, Alert, Button, TextField bileşenlerinde tema özelleştirmeleri uygulandı.
+- [x] **Profil sayfası bileşenleri modernize edildi.**
+    - `AccountDeleteDialog.tsx` - Hesap silme diyalogu tema entegrasyonu
+    - `PasswordResetDialog.tsx` - Şifre sıfırlama diyalogu tema entegrasyonu
+    - `PersonalInfo.tsx` - Kişisel bilgiler bölümü tema entegrasyonu
+    - `ProfileHeader.tsx` - Profil başlığı Card yapısına dönüştürüldü
+    - `SecuritySection.tsx` - Güvenlik bölümü Card yapısına dönüştürüldü
+    - `DangerZone.tsx` - Tehlikeli alan Card yapısına dönüştürüldü
+    - `VerificationStatusChip.tsx` - Doğrulama durumu chip'i tema entegrasyonu
+    - `ReadOnlyFormField.tsx` - Salt okunur form alanları tema entegrasyonu
+
+#### Bildirimler Sayfası Kapsamlı Güncellemeleri
+- [x] **Bildirimler sayfası tema entegrasyonu tamamlandı.**
+    - Tüm bildirim bileşenleri shared-theme sistemine entegre edildi.
+    - `Card variant="outlined"` kullanımı ile tutarlı tasarım sağlandı.
+    - `Chip` bileşenleri ile bildirim türü göstergeleri eklendi.
+    - `Fade` animasyonları ile smooth geçişler eklendi.
+- [x] **Bildirimler sayfası bileşenleri modernize edildi.**
+    - `NotificationDetailDialog.tsx` - Bildirim detay diyalogu tema entegrasyonu
+    - `NotificationItem.tsx` - Bildirim öğesi tema entegrasyonu ve Chip kullanımı
+    - `NotificationList.tsx` - Bildirim listesi Card yapısına dönüştürüldü
+    - `NotificationPreferences.tsx` - Bildirim tercihleri tema entegrasyonu
+    - `Notifications.tsx` - Ana bildirimler sayfası tema entegrasyonu
+
+#### Dashboard Sayfa Yapısı Standardizasyonu
+- [x] **DashboardPageLayout geçişi tamamlandı.**
+    - Tüm dashboard sayfaları (`Analytics`, `Home`, `Volunteers`) `DashboardPageLayout` bileşenini kullanacak şekilde güncellendi.
+    - Tutarlı sayfa yapısı: başlık, açıklama, ikon ve içerik alanı standardizasyonu sağlandı.
+    - `Card` yapısından `DashboardPageLayout` yapısına geçiş tamamlandı.
+- [x] **Dashboard sayfaları Türkçe içerik güncellemeleri.**
+    - `Home.tsx` - Ana sayfa için anlamlı Türkçe içerik eklendi
+    - `Volunteers.tsx` - Gönüllüler sayfası Türkçe açıklama metni güncellendi
+    - `Analytics.tsx` - Analitik sayfası Türkçe içerik iyileştirmeleri (kısmen)
+    - Tüm sayfalarda tutarlı Typography yapısı (h6 başlıklar, body1 açıklamalar)
+
+#### Tema Sistemi Kapsamlı Entegrasyonu
+- [x] **Shared-theme bileşenleri tam entegrasyonu.**
+    - `dataDisplay.tsx` - List, ListItem, ListItemText, Chip özelleştirmeleri
+    - `feedback.tsx` - Alert, Dialog, LinearProgress özelleştirmeleri
+    - `inputs.tsx` - Button, IconButton, TextField, FormLabel özelleştirmeleri
+    - `surfaces.tsx` - Card, CardContent, CardHeader özelleştirmeleri
+    - `navigation.tsx` - Menu, MenuItem, Link özelleştirmeleri
+- [x] **Responsive tasarım ve erişilebilirlik iyileştirmeleri.**
+    - Tüm sayfalarda responsive Grid sistemi kullanımı
+    - Proper ARIA etiketleri ve erişilebilirlik özellikleri
+    - Tema-aware renk şemaları ve hover efektleri
+    - Smooth animasyonlar ve geçişler

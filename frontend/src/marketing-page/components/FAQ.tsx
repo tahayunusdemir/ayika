@@ -42,7 +42,7 @@ export default function FAQ() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        Frequently asked questions
+        Sıkça Sorulan Sorular
       </Typography>
       <Box sx={{ width: '100%' }}>
         <Accordion
