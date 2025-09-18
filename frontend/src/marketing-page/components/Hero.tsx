@@ -3,11 +3,12 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import TurkeyMap from './TurkeyMap';
 
-const StyledBox = styled('div')(({ theme }) => ({
+const MapContainer = styled(Box)(({ theme }) => ({
   alignSelf: 'center',
   width: '100%',
-  height: 400,
+  height: 350,
   marginTop: theme.spacing(8),
   borderRadius: (theme.vars || theme).shape.borderRadius,
   outline: '6px solid',
@@ -15,17 +16,19 @@ const StyledBox = styled('div')(({ theme }) => ({
   border: '1px solid',
   borderColor: (theme.vars || theme).palette.grey[200],
   boxShadow: '0 0 12px 8px hsla(220, 25%, 80%, 0.2)',
-  backgroundImage: `url(${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/screenshots/material-ui/getting-started/templates/dashboard.jpg)`,
-  backgroundSize: 'cover',
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   [theme.breakpoints.up('sm')]: {
     marginTop: theme.spacing(10),
-    height: 700,
+    height: 625,
   },
   ...theme.applyStyles('dark', {
     boxShadow: '0 0 24px 12px hsla(210, 100%, 25%, 0.2)',
-    backgroundImage: `url(${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/screenshots/material-ui/getting-started/templates/dashboard-dark.jpg)`,
     outlineColor: 'hsla(220, 20%, 42%, 0.1)',
     borderColor: (theme.vars || theme).palette.grey[700],
+    backgroundColor: (theme.vars || theme).palette.background.paper,
   }),
 }));
 
@@ -90,10 +93,14 @@ export default function Hero() {
               width: { sm: '100%', md: '80%' },
             }}
           >
-            Kritik anlarda tek tıkla güç birliği! Acil durumları daha etkin yönetmek, kaynakları akıllıca dağıtmak ve toplulukları bir araya getirmek için tasarlanmış devrim niteliğinde bir platform. Geleceğin yardım ağını bugün deneyimleyin.
+            Afet anlarında hayat kurtaran dijital çözüm! Yardım malzemelerinin hızlı ve güvenli dağıtımını sağlayan, 
+            gönüllüleri koordine eden ve ihtiyaç sahiplerine anında ulaşım imkanı sunan akıllı platform. 
+            Türkiye'nin afet yönetiminde yeni bir dönem başlıyor.
           </Typography>
         </Stack>
-        <StyledBox id="image" />
+        <MapContainer id="turkey-map">
+          <TurkeyMap width={800} height={400} />
+        </MapContainer>
       </Container>
     </Box>
   );

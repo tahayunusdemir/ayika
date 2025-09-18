@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Box, Card, CardContent, Typography, SvgIconTypeMap } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 

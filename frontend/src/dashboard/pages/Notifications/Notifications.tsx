@@ -12,7 +12,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Fade,
 } from '@mui/material';
 import NotificationList from './components/NotificationList';
 import NotificationPreferences from './components/NotificationPreferences';
@@ -41,15 +40,14 @@ const Notifications: React.FC = React.memo(() => {
   return (
     <DashboardPageLayout
       title="Bildirimler"
-      description="Bildirimlerinizi yönetin ve ayarlarınızı güncelleyin."
+      description="Afet yardım koordinasyonu ile ilgili acil durum uyarıları, sistem bildirimleri ve operasyonel güncellemeleri yönetin."
       icon={NotificationsIcon}
     >
       <Grid container spacing={3}>
         {/* Main Content Column - Notification Management */}
         <Grid size={{ xs: 12, md: 8 }}>
           {/* Search and Controls */}
-          <Fade in timeout={300}>
-            <Card variant="outlined" sx={{ mb: 3 }}>
+          <Card variant="outlined" sx={{ mb: 3 }}>
               <CardHeader
                 title={
                   <Typography variant="h6">
@@ -113,7 +111,6 @@ const Notifications: React.FC = React.memo(() => {
                 )}
               </CardContent>
             </Card>
-          </Fade>
 
           {/* Notifications List */}
           <NotificationList

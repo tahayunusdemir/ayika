@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Box, Typography, Stack, Card, CardContent, Fade } from '@mui/material';
+import { Box, Typography, Card, CardContent, Fade, Stack } from '@mui/material';
 import { UserProfile } from '../types/profile.types';
+import { dateUtils } from '../../../theme/customizations/dateUtils';
 import VerificationStatusChip from './VerificationStatusChip';
 
 interface ProfileHeaderProps {
@@ -8,18 +9,6 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile }) => {
-  const formatJoinDate = React.useCallback((dateString: string) => {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }, []);
-
-  const formattedDate = React.useMemo(() => 
-    formatJoinDate(profile.joinDate), 
-    [formatJoinDate, profile.joinDate]
-  );
 
   return (
     <Fade in timeout={200}>
@@ -37,7 +26,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile }) => 
                 {profile.firstName} {profile.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Katılım Tarihi: {formattedDate}
+                Katılım Tarihi: {dateUtils.formatDateLong(profile.joinDate)}
               </Typography>
             </Box>
             

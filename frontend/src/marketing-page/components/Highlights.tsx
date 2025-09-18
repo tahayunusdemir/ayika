@@ -1,53 +1,52 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
-import QueryStatsRoundedIcon from '@mui/icons-material/QueryStatsRounded';
-import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
-import SupportAgentRoundedIcon from '@mui/icons-material/SupportAgentRounded';
-import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+import SpeedIcon from '@mui/icons-material/Speed';
+import ShieldIcon from '@mui/icons-material/Shield';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 
 const items = [
   {
-    icon: <SettingsSuggestRoundedIcon />,
-    title: 'Uyarlanabilir performans',
+    icon: <SpeedIcon />,
+    title: 'Hızlı Müdahale',
     description:
-      'Ürünümüz ihtiyaçlarınıza zahmetsizce uyum sağlayarak verimliliği artırır ve görevlerinizi basitleştirir.',
+      'Afet anlarında kritik olan zamanı en verimli şekilde kullanarak yardım malzemelerinin hızlı dağıtımını sağlıyoruz.',
   },
   {
-    icon: <ConstructionRoundedIcon />,
-    title: 'Uzun ömürlü',
+    icon: <ShieldIcon />,
+    title: 'Güvenli Sistem',
     description:
-      'Kalıcı yatırımla eşsiz dayanıklılığı deneyimleyin.',
+      'Kullanıcı verilerinin korunması ve güvenli iletişim için gelişmiş güvenlik sistemleri kullanıyoruz.',
   },
   {
-    icon: <ThumbUpAltRoundedIcon />,
-    title: 'Harika kullanıcı deneyimi',
+    icon: <VisibilityIcon />,
+    title: 'Şeffaf Süreç',
     description:
-      'Sezgisel ve kullanımı kolay bir arayüzle ürünümüzü rutininize entegre edin.',
+      'Yardım dağıtım sürecinin her aşaması şeffaf ve takip edilebilir. Hesap verebilirlik ilkesiyle hareket ediyoruz.',
   },
   {
-    icon: <AutoFixHighRoundedIcon />,
-    title: 'Yenilikçi işlevsellik',
+    icon: <GroupsIcon />,
+    title: 'Gönüllü Koordinasyonu',
     description:
-      'Yeni standartlar belirleyen, gelişen ihtiyaçlarınızı diğerlerinden daha iyi karşılayan özelliklerle önde olun.',
+      'Gönüllülerin yeteneklerine uygun görevlendirme ve etkili koordinasyon ile toplumsal dayanışmayı güçlendiriyoruz.',
   },
   {
-    icon: <SupportAgentRoundedIcon />,
-    title: 'Güvenilir destek',
+    icon: <PhoneInTalkIcon />,
+    title: 'Anlık İletişim',
     description:
-      'Satın alma ötesine geçen destek sunan duyarlı müşteri desteğimize güvenin.',
+      'Afetzedeler, gönüllüler ve yardım kuruluşları arasında kesintisiz iletişim ağı kuruyoruz.',
   },
   {
-    icon: <QueryStatsRoundedIcon />,
-    title: 'Her ayrıntıda hassasiyet',
+    icon: <PrecisionManufacturingIcon />,
+    title: 'Akıllı Lojistik',
     description:
-      'Küçük dokunuşların genel deneyiminiz üzerinde önemli bir etki yarattığı titizlikle hazırlanmış bir ürünün keyfini çıkarın.',
+      'Akıllı rota planlama ve stok yönetimi sistemi ile en verimli yardım dağıtımını sağlıyoruz.',
   },
 ];
 
@@ -58,8 +57,8 @@ export default function Highlights() {
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
-        color: 'white',
-        bgcolor: 'grey.900',
+        color: 'text.primary',
+        bgcolor: 'background.default',
       }}
     >
       <Container
@@ -78,12 +77,12 @@ export default function Highlights() {
           }}
         >
           <Typography component="h2" variant="h4" gutterBottom>
-            Öne Çıkanlar
+            Neden Ayika?
           </Typography>
-          <Typography variant="body1" sx={{ color: 'grey.400' }}>
-            Ürünümüzün neden öne çıktığını keşfedin: uyarlanabilirlik, dayanıklılık,
-            kullanıcı dostu tasarım ve yenilikçilik. Güvenilir müşteri desteği ve
-            her ayrıntıda hassasiyetin keyfini çıkarın.
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+            Ayika platformunun afet yönetiminde öne çıkan avantajlarını keşfedin: 
+            hızlı müdahale, güvenli sistem, şeffaf süreç ve akıllı koordinasyon. 
+            Türkiye'nin afet direncini artıran dijital çözüm.
           </Typography>
         </Box>
         <Grid container spacing={2}>
@@ -98,16 +97,20 @@ export default function Highlights() {
                   color: 'inherit',
                   p: 3,
                   height: '100%',
-                  borderColor: 'hsla(220, 25%, 25%, 0.3)',
-                  backgroundColor: 'grey.800',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  backgroundColor: 'background.paper',
+                  '&:hover': {
+                    boxShadow: 2,
+                  },
                 }}
               >
-                <Box sx={{ opacity: '50%' }}>{item.icon}</Box>
+                <Box sx={{ color: 'primary.main' }}>{item.icon}</Box>
                 <div>
                   <Typography gutterBottom sx={{ fontWeight: 'medium' }}>
                     {item.title}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'grey.400' }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {item.description}
                   </Typography>
                 </div>

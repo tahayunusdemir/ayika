@@ -11,7 +11,6 @@ import {
   CircularProgress,
   Divider,
   Stack,
-  Fade,
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -31,21 +30,18 @@ const NotificationPreferences: React.FC = React.memo(() => {
 
   if (error) {
     return (
-      <Fade in timeout={300}>
-        <Card variant="outlined" sx={{ mb: 3 }}>
-          <CardContent>
-            <Alert severity="error">
-              {error}
-            </Alert>
-          </CardContent>
-        </Card>
-      </Fade>
+      <Card variant="outlined" sx={{ mb: 3 }}>
+        <CardContent>
+          <Alert severity="error">
+            {error}
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Fade in timeout={300}>
-      <Card variant="outlined" sx={{ mb: 3 }}>
+    <Card variant="outlined" sx={{ mb: 3 }}>
         <CardHeader
           avatar={<SettingsIcon sx={{ color: 'primary.main' }} />}
           title={
@@ -135,10 +131,7 @@ const NotificationPreferences: React.FC = React.memo(() => {
           )}
         </CardContent>
       </Card>
-    </Fade>
   );
 });
-
-NotificationPreferences.displayName = 'NotificationPreferences';
 
 export default NotificationPreferences;

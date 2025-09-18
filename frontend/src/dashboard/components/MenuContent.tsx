@@ -10,21 +10,29 @@ import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 
-const mainListItems = [
+interface MenuItem {
+  text: string;
+  icon: React.ReactElement;
+  key: string;
+  isExternal?: boolean;
+  url?: string;
+}
+
+const mainListItems: MenuItem[] = [
   { text: 'Ana Sayfa', icon: <HomeRoundedIcon />, key: 'home' },
-  { text: 'Geri Bildirim', icon: <HelpRoundedIcon />, key: 'feedback', isExternal: true, url: 'https://forms.gle/SqSKAGdtF6CoU1Jd8' },
 ];
 
-const adminListItems = [
+const adminListItems: MenuItem[] = [
   { text: 'Gönüllüler', icon: <PeopleRoundedIcon />, key: 'volunteers' },
   { text: 'Analizler', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
 ];
 
-const secondaryListItems = [
+const secondaryListItems: MenuItem[] = [
   { text: 'Profil', icon: <AccountCircleRoundedIcon />, key: 'profile' },
   { text: 'Bildirimler', icon: <NotificationsIcon />, key: 'notifications' },
+  { text: 'İletişim', icon: <ContactSupportIcon />, key: 'contact', isExternal: true, url: 'https://forms.gle/SqSKAGdtF6CoU1Jd8' },
 ];
 
 interface MenuContentProps {
@@ -84,7 +92,13 @@ export default function MenuContent({ selectedPage = 'home', onPageSelect }: Men
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               selected={selectedPage === item.key}
-              onClick={() => handleItemClick(item.key)}
+              onClick={() => {
+                if (item.isExternal && item.url) {
+                  handleExternalLinkClick(item.url);
+                } else {
+                  handleItemClick(item.key);
+                }
+              }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />

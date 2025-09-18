@@ -2,25 +2,21 @@ import * as React from 'react';
 import {
   ListItem,
   ListItemText,
-  ListItemAvatar,
-  Avatar,
   Typography,
   IconButton,
   Box,
   Tooltip,
   Card,
   CardContent,
-  Fade,
 } from '@mui/material';
 import {
+  Warning as WarningIcon,
+  CheckCircle as CheckCircleIcon,
+  Delete as DeleteIcon,
   RemoveRedEyeOutlined as ViewDetailsIcon,
-  DeleteOutline as DeleteIcon,
-  InfoOutlined as InfoIcon,
-  WarningAmberOutlined as WarningIcon,
-  ErrorOutlineOutlined as ErrorIcon,
-  CheckCircleOutlineOutlined as SuccessIcon,
 } from '@mui/icons-material';
 import { Notification } from '../types/notification.types';
+import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -43,59 +39,33 @@ const NotificationItem: React.FC<NotificationItemProps> = React.memo(({
 
   const getTypeIcon = (type: Notification['type']) => {
     switch (type) {
-      case 'info':
-        return <InfoIcon />;
-      case 'warning':
-        return <WarningIcon />;
-      case 'error':
-        return <ErrorIcon />;
+      case 'error': 
+        return <WarningIcon color="error" sx={{ fontSize: 24 }} />;
+      case 'warning': 
+        return <WarningIcon color="warning" sx={{ fontSize: 24 }} />;
       case 'success':
-        return <SuccessIcon />;
-      default:
-        return <InfoIcon />;
-    }
-  };
-
-  const getAvatarColor = (type: Notification['type']) => {
-    switch (type) {
+        return <CheckCircleIcon color="success" sx={{ fontSize: 24 }} />;
       case 'info':
-        return 'primary';
-      case 'warning':
-        return 'warning';
-      case 'error':
-        return 'error';
-      case 'success':
-        return 'success';
-      default:
-        return 'primary';
+      default: 
+        return <CheckCircleIcon color="info" sx={{ fontSize: 24 }} />;
     }
   };
 
   const formattedTimestamp = React.useMemo(() => {
-    const date = new Date(notification.timestamp);
-    return date.toLocaleString('tr-TR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return dateUtils.formatDateTime(notification.timestamp);
   }, [notification.timestamp]);
 
   return (
-    <Fade in timeout={300}>
-      <Card 
-        variant="outlined" 
-        sx={{
-          mb: 1.5,
-          transition: 'all 200ms ease-in-out',
-          '&:hover': {
-            boxShadow: 2,
-            borderColor: 'primary.main',
-          },
-        }}
-      >
-        <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+    <Card 
+      variant="outlined" 
+      sx={{
+        mb: 1.5,
+        '&:hover': {
+          borderColor: 'primary.main',
+        },
+      }}
+    >
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
           <ListItem
             sx={{
               p: 0,
@@ -105,23 +75,22 @@ const NotificationItem: React.FC<NotificationItemProps> = React.memo(({
             aria-describedby={`notification-timestamp-${notification.id}`}
             role="listitem"
           >
-            <ListItemAvatar>
-              <Avatar
-                sx={{
-                  width: 40,
-                  height: 40,
-                  bgcolor: `${getAvatarColor(notification.type)}.main`,
-                  color: 'white',
-                }}
-              >
-                {getTypeIcon(notification.type)}
-              </Avatar>
-            </ListItemAvatar>
+            <Box sx={{ mr: 2, mt: 0.25, display: 'flex', alignItems: 'center' }}>
+              {getTypeIcon(notification.type)}
+            </Box>
             <ListItemText
               id={`notification-message-${notification.id}`}
               primary={
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 0.5 }}>
-                  <Typography variant="body1" sx={{ flex: 1, lineHeight: 1.5 }}>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      flex: 1, 
+                      lineHeight: 1.5,
+                      fontWeight: 600,
+                      color: 'text.primary',
+                    }}
+                  >
                     {notification.message}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, ml: 1 }}>
@@ -151,8 +120,12 @@ const NotificationItem: React.FC<NotificationItemProps> = React.memo(({
                 <Typography
                   id={`notification-timestamp-${notification.id}`}
                   variant="caption"
-                  color="text.secondary"
-                  sx={{ mt: 1, display: 'block' }}
+                  sx={{ 
+                    mt: 1, 
+                    display: 'block',
+                    color: 'text.secondary',
+                    fontWeight: 500,
+                  }}
                 >
                   {formattedTimestamp}
                 </Typography>
@@ -161,9 +134,8 @@ const NotificationItem: React.FC<NotificationItemProps> = React.memo(({
               onClick={handleViewDetails}
             />
           </ListItem>
-        </CardContent>
-      </Card>
-    </Fade>
+      </CardContent>
+    </Card>
   );
 });
 

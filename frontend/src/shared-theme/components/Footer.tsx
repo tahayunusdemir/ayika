@@ -5,8 +5,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TwitterIcon from '@mui/icons-material/X';
+import EmailIcon from '@mui/icons-material/Email';
 import SitemarkIcon from '../../shared-theme/components/SitemarkIcon';
 
 function Copyright() {
@@ -46,12 +45,44 @@ export default function Footer() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 4,
+            gap: 2,
             minWidth: { xs: '100%', sm: '60%' },
+            alignItems: { xs: 'center', sm: 'flex-start' },
           }}
         >
           <Box sx={{ width: { xs: '100%', sm: '60%' } }}>
             <SitemarkIcon />
+          </Box>
+          <Stack
+            direction="row"
+            spacing={1}
+            useFlexGap
+            sx={{ color: 'text.secondary' }}
+          >
+            <IconButton
+              color="inherit"
+              size="small"
+              href="https://github.com/tahayunusdemir/ayika"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <GitHubIcon />
+            </IconButton>
+            <IconButton
+              color="inherit"
+              size="small"
+              href="mailto:ayikadestek@gmail.com"
+              aria-label="E-posta"
+            >
+              <EmailIcon />
+            </IconButton>
+          </Stack>
+          <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+            <Link color="text.secondary" variant="body2" href="/">
+              Gizlilik Politikası
+            </Link>
+            <Copyright />
           </Box>
         </Box>
         <Box
@@ -62,7 +93,7 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-            Sayfa
+            Ana Sayfa
           </Typography>
           <Link color="text.secondary" variant="body2" href="/#features">
             Özellikler
@@ -70,67 +101,16 @@ export default function Footer() {
           <Link color="text.secondary" variant="body2" href="/#highlights">
             Öne Çıkanlar
           </Link>
+          <Link color="text.secondary" variant="body2" href="/#team">
+            Ekibimiz
+          </Link>
+          <Link color="text.secondary" variant="body2" href="/#contact">
+            İletişim
+          </Link>
           <Link color="text.secondary" variant="body2" href="/#faq">
             S.S.S
           </Link>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          pt: { xs: 4, sm: 8 },
-          width: '100%',
-          borderTop: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
-        <div>
-          <Link color="text.secondary" variant="body2" href="/">
-            Gizlilik Politikası
-          </Link>
-          <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
-            &nbsp;•&nbsp;
-          </Typography>
-          <Link color="text.secondary" variant="body2" href="/">
-            Kullanım Şartları
-          </Link>
-          <Copyright />
-        </div>
-        <Stack
-          direction="row"
-          spacing={1}
-          useFlexGap
-          sx={{ justifyContent: 'left', color: 'text.secondary' }}
-        >
-          <IconButton
-            color="inherit"
-            size="small"
-            href="/"
-            aria-label="GitHub"
-            sx={{ alignSelf: 'center' }}
-          >
-            <GitHubIcon />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            size="small"
-            href="/"
-            aria-label="X"
-            sx={{ alignSelf: 'center' }}
-          >
-            <TwitterIcon />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            size="small"
-            href="/"
-            aria-label="LinkedIn"
-            sx={{ alignSelf: 'center' }}
-          >
-            <LinkedInIcon />
-          </IconButton>
-        </Stack>
       </Box>
     </Container>
   );

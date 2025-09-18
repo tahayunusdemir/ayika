@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
   return (
     <DashboardPageLayout
       title="Profil"
-      description="Hesap bilgilerinizi görüntüleyin ve yönetin"
+      description="Gönüllü hesap bilgilerinizi görüntüleyin, güvenlik ayarlarınızı yönetin ve afet yardım koordinasyonu için profil bilgilerinizi güncelleyin."
       icon={AccountIcon}
     >
       <Fade in timeout={200}>

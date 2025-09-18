@@ -1,8 +1,6 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
-import MenuButton from './MenuButton';
+import NotificationDropdown from './NotificationDropdown';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 
 interface BreadcrumbItem {
@@ -12,9 +10,10 @@ interface BreadcrumbItem {
 
 interface HeaderProps {
   breadcrumbs?: BreadcrumbItem[];
+  onPageSelect?: (page: string) => void;
 }
 
-export default function Header({ breadcrumbs }: HeaderProps) {
+export default function Header({ breadcrumbs, onPageSelect }: HeaderProps) {
   return (
     <Stack
       direction="row"
@@ -30,9 +29,9 @@ export default function Header({ breadcrumbs }: HeaderProps) {
     >
       <NavbarBreadcrumbs breadcrumbs={breadcrumbs} />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
-        </MenuButton>
+        <NotificationDropdown 
+          onNavigateToNotifications={() => onPageSelect?.('notifications')}
+        />
         <ColorModeIconDropdown />
       </Stack>
     </Stack>

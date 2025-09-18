@@ -5,7 +5,6 @@ import {
   Alert,
   CircularProgress,
   Stack,
-  Fade,
   Card,
   CardContent,
 } from '@mui/material';
@@ -42,80 +41,71 @@ const NotificationList: React.FC<NotificationListProps> = React.memo(({
 
   if (loading) {
     return (
-      <Fade in timeout={300}>
-        <Card variant="outlined" sx={{ minHeight: 200 }}>
-          <CardContent>
-            <Stack spacing={2} alignItems="center" justifyContent="center" sx={{ minHeight: 160 }}>
-              <CircularProgress aria-label="bildirimler yüklüyor" />
-              <Typography variant="body2" color="text.secondary">
-                Bildirimler yüklüyor...
-              </Typography>
-            </Stack>
-          </CardContent>
-        </Card>
-      </Fade>
+      <Card variant="outlined" sx={{ minHeight: 200 }}>
+        <CardContent>
+          <Stack spacing={2} alignItems="center" justifyContent="center" sx={{ minHeight: 160 }}>
+            <CircularProgress aria-label="bildirimler yüklüyor" />
+            <Typography variant="body2" color="text.secondary">
+              Bildirimler yüklüyor...
+            </Typography>
+          </Stack>
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <Fade in timeout={300}>
-        <Card variant="outlined">
-          <CardContent>
-            <Alert severity="error" role="alert" aria-live="assertive">
-              <Typography variant="subtitle2" gutterBottom>
-                Hata Oluştu
-              </Typography>
-              <Typography variant="body2">
-                {error}
-              </Typography>
-            </Alert>
-          </CardContent>
-        </Card>
-      </Fade>
+      <Card variant="outlined">
+        <CardContent>
+          <Alert severity="error" role="alert" aria-live="assertive">
+            <Typography variant="subtitle2" gutterBottom>
+              Hata Oluştu
+            </Typography>
+            <Typography variant="body2">
+              {error}
+            </Typography>
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   if (notifications.length === 0) {
     return (
-      <Fade in timeout={300}>
-        <Card variant="outlined" sx={{ minHeight: 200 }}>
-          <CardContent>
-            <Stack
-              sx={{ minHeight: 160 }}
-              alignItems="center"
-              justifyContent="center"
-              spacing={2}
-              aria-live="polite"
-              aria-label="hiç bildirim yok"
-            >
-              <NotificationsOffIcon sx={{ fontSize: 60, color: 'text.disabled' }} aria-hidden="true" />
-              <Typography variant="h6" color="text.disabled">
-                Hiç bildiriminiz yok
-              </Typography>
-              <Typography variant="body2" color="text.secondary" textAlign="center">
-                Yeni bildirimler buraya düşecektir.
-              </Typography>
-            </Stack>
-          </CardContent>
-        </Card>
-      </Fade>
+      <Card variant="outlined" sx={{ minHeight: 200 }}>
+        <CardContent>
+          <Stack
+            sx={{ minHeight: 160 }}
+            alignItems="center"
+            justifyContent="center"
+            spacing={2}
+            aria-live="polite"
+            aria-label="hiç bildirim yok"
+          >
+            <NotificationsOffIcon sx={{ fontSize: 60, color: 'text.disabled' }} aria-hidden="true" />
+            <Typography variant="h6" color="text.disabled">
+              Hiç bildiriminiz yok
+            </Typography>
+            <Typography variant="body2" color="text.secondary" textAlign="center">
+              Yeni bildirimler buraya düşecektir.
+            </Typography>
+          </Stack>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-        {notifications.map((notification, index) => (
-          <Fade in={true} timeout={300 + index * 100} key={notification.id}>
-            <div>
-              <NotificationItem
-                notification={notification}
-                onDelete={onDelete}
-                onViewDetails={handleViewDetails}
-              />
-            </div>
-          </Fade>
+        {notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            notification={notification}
+            onDelete={onDelete}
+            onViewDetails={handleViewDetails}
+          />
         ))}
       </Box>
       <NotificationDetailDialog

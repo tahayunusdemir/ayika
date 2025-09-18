@@ -7,32 +7,32 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
-import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PeopleIcon from '@mui/icons-material/People';
+import SecurityIcon from '@mui/icons-material/Security';
 
 const items = [
   {
-    icon: <ViewQuiltRoundedIcon />,
-    title: 'Kontrol Paneli',
+    icon: <LocationOnIcon />,
+    title: 'Gerçek Zamanlı Konum Takibi',
     description:
-      'Bu öğe, ürünle ilgili en önemli metriklerin veya veri noktalarının bir anlık görüntüsünü sağlayabilir.',
+      'Yardım araçlarının ve malzemelerinin anlık konumunu harita üzerinde izleyin. Hassas konum sistemi ile güvenli ve hızlı teslimat sağlanır.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-dark.png")`,
   },
   {
-    icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobil entegrasyon',
+    icon: <PeopleIcon />,
+    title: 'Gönüllü Koordinasyonu',
     description:
-      'Bu öğe, ürünün mobil uygulama sürümü hakkında bilgi sağlayabilir.',
+      'Gönüllülerin yeteneklerine göre görevlendirilmesi, kayıt sistemi ve güvenlik doğrulaması ile etkili yardım organizasyonu.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-dark.png")`,
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Tüm platformlarda kullanılabilir',
+    icon: <SecurityIcon />,
+    title: 'Güvenli Veri Yönetimi',
     description:
-      'Bu öğe, kullanıcılara ürünün web, mobil ve masaüstü gibi tüm platformlarda mevcut olduğunu bildirebilir.',
+      'Kullanıcı verileriniz güvenli sistemlerde korunur. Kimlik doğrulama ve veri şifreleme teknolojileri ile maksimum güvenlik sağlanır.',
     imageLight: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-light.png")`,
     imageDark: `url("${import.meta.env.VITE_TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-dark.png")`,
   },
@@ -144,20 +144,21 @@ export default function Features() {
 
   return (
     <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
-      <Box sx={{ width: { sm: '100%', md: '60%' } }}>
+      <Box>
         <Typography
           component="h2"
           variant="h4"
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Ürün Özellikleri
+          Platform Özellikleri
         </Typography>
         <Typography
           variant="body1"
           sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
         >
-          Ürünün temel özelliklerine kısa bir genel bakış sağlayın. Örneğin, özelliklerin sayısını, türlerini veya faydalarını ve eklentilerini listeleyebilirsiniz.
+          Ayika platformunun afet yardım koordinasyonunda öne çıkan temel özellikleri. 
+          Gelişmiş sistemler ile güvenli, hızlı ve etkili yardım dağıtımı sağlıyoruz.
         </Typography>
       </Box>
       <Box

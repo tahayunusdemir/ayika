@@ -55,7 +55,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Bir sorum veya sorunum olursa müşteri desteğiyle nasıl iletişime geçebilirim?
+              Ayika platformu nasıl çalışır ve afet durumunda nasıl kullanılır?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -63,9 +63,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Müşteri destek ekibimize support@email.com adresine e-posta göndererek veya ücretsiz numaramızı arayarak ulaşabilirsiniz. Size hızlı bir şekilde yardımcı olmak için buradayız.
-              <MuiLink href="mailto:support@email.com">support@email.com</MuiLink>
-              
+              Ayika, afet anlarında yardım koordinasyonunu kolaylaştıran bir platformdur. Kullanıcılar mobil uygulama veya web sitesi üzerinden yardım talebinde bulunabilir, gönüllü olarak kayıt olabilir ve yardım malzemelerinin dağıtımını takip edebilir. GPS teknolojisi ile gerçek zamanlı konum takibi sağlanır.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -79,7 +77,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Ürün beklentilerimi karşılamazsa iade edebilir miyim?
+              Gönüllü olarak nasıl kayıt olabilirim ve hangi görevleri yapabilirim?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -87,7 +85,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Kesinlikle! Sorunsuz bir iade politikası sunuyoruz. Tamamen memnun kalmazsanız, ürünü [gün sayısı] gün içinde tam para iadesi veya değişim için iade edebilirsiniz.
+              Platform üzerinden kolayca gönüllü kaydı yapabilirsiniz. Yeteneklerinize ve konumunuza göre yardım toplama, dağıtım, lojistik destek, saha koordinasyonu gibi çeşitli görevlerde yer alabilirsiniz. Güvenlik doğrulaması sonrası görevlendirme yapılır.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -101,7 +99,7 @@ export default function FAQ() {
             id="panel3d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Ürününüzü piyasadaki diğerlerinden ayıran nedir?
+              Verilerim güvende mi? Hangi güvenlik önlemleri alınıyor?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -109,7 +107,7 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Ürünümüz uyarlanabilirliği, dayanıklılığı ve yenilikçi özellikleriyle öne çıkmaktadır. Kullanıcı memnuniyetini ön planda tutuyor ve her alanda beklentileri aşmak için sürekli çalışıyoruz.
+              Evet, verileriniz tamamen güvende. Güvenli şifreleme yöntemleri ile korunan iletişim sağlanır. Çok katmanlı güvenlik sistemi kullanılır ve tüm kişisel veriler en yüksek güvenlik standartlarında korunur.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -123,7 +121,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Ürünün garantisi var mı ve neleri kapsıyor?
+              Platform hangi afet türlerinde kullanılabilir?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -131,7 +129,31 @@ export default function FAQ() {
               variant="body2"
               gutterBottom
             >
-              Evet, ürünümüz [garanti süresi] garantilidir. Malzeme ve işçilik kusurlarını kapsar. Garanti kapsamındaki herhangi bir sorunla karşılaşırsanız, yardım için lütfen müşteri desteğimizle iletişime geçin.
+              Ayika platformu deprem, sel, yangın, heyelan gibi tüm doğal afetlerde kullanılabilir. Ayrıca büyük kazalar, salgın hastalıklar ve diğer acil durumlarda da yardım koordinasyonu için etkili bir şekilde kullanılabilir.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion
+          expanded={expanded.includes('panel5')}
+          onChange={handleChange('panel5')}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel5d-content"
+            id="panel5d-header"
+          >
+            <Typography component="span" variant="subtitle2">
+              Proje hakkında daha fazla bilgi almak için kimle iletişime geçebilirim?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              variant="body2"
+              gutterBottom
+            >
+              Ayika projesi hakkında detaylı bilgi almak için proje ekibiyle iletişime geçebilirsiniz. 
+              <MuiLink href="mailto:ayikadestek@gmail.com"> ayikadestek@gmail.com</MuiLink> adresinden 
+              veya ekip üyelerimizin LinkedIn profillerinden ulaşabilirsiniz.
             </Typography>
           </AccordionDetails>
         </Accordion>

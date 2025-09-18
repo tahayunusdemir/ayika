@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -18,7 +17,7 @@ export default function PageViewsBarChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Page views and downloads
+          Sayfa görüntülemeleri ve indirmeler
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -35,7 +34,7 @@ export default function PageViewsBarChart() {
             <Chip size="small" color="error" label="-8%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            Son 6 ay için sayfa görüntülemeleri ve indirmeler
           </Typography>
         </Stack>
         <BarChart
@@ -45,7 +44,7 @@ export default function PageViewsBarChart() {
             {
               scaleType: 'band',
               categoryGapRatio: 0.5,
-              data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+              data: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem'],
               height: 24,
             },
           ]}
@@ -53,19 +52,19 @@ export default function PageViewsBarChart() {
           series={[
             {
               id: 'page-views',
-              label: 'Page views',
+              label: 'Sayfa görüntülemeleri',
               data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
               stack: 'A',
             },
             {
               id: 'downloads',
-              label: 'Downloads',
+              label: 'İndirmeler',
               data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
               stack: 'A',
             },
             {
               id: 'conversions',
-              label: 'Conversions',
+              label: 'Dönüşümler',
               data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
               stack: 'A',
             },

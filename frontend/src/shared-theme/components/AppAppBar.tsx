@@ -128,6 +128,14 @@ export default function AppAppBar() {
               <Button 
                 variant="text" 
                 color="info" 
+                size="small"
+                onClick={() => scrollToSection('team')}
+              >
+                Ekibimiz
+              </Button>
+              <Button 
+                variant="text" 
+                color="info" 
                 size="small" 
                 sx={{ minWidth: 0 }}
                 onClick={() => scrollToSection('faq')}
@@ -140,7 +148,7 @@ export default function AppAppBar() {
                 size="small"
                 onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
               >
-                Geri Bildirim
+                İletişim
               </Button>
             </Box>
           </Box>
@@ -199,6 +207,7 @@ export default function AppAppBar() {
 
                 <MenuItem onClick={() => scrollToSection('features')}>Özellikler</MenuItem>
                 <MenuItem onClick={() => scrollToSection('highlights')}>Öne Çıkanlar</MenuItem>
+                <MenuItem onClick={() => scrollToSection('team')}>Ekibimiz</MenuItem>
                 <MenuItem onClick={() => scrollToSection('faq')}>S.S.S</MenuItem>
                 <MenuItem>
                   <Button
@@ -207,7 +216,7 @@ export default function AppAppBar() {
                     sx={{ textAlign: 'left', justifyContent: 'flex-start' }}
                     onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
                   >
-                    Geri Bildirim
+                    İletişim
                   </Button>
                 </MenuItem>
                 <Divider sx={{ my: 3 }} />

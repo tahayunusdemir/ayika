@@ -74,7 +74,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
               mt: { xs: 8, md: 0 },
             }}
           >
-            <Header breadcrumbs={currentPageConfig.breadcrumb} />
+            <Header 
+              breadcrumbs={currentPageConfig.breadcrumb} 
+              onPageSelect={handlePageSelect}
+            />
             <PageComponent />
           </Stack>
         </Box>

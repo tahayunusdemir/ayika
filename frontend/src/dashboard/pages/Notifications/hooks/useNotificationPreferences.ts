@@ -81,6 +81,5 @@ export const useNotificationPreferences = () => {
     updatePreferences,
     toggleEmailNotifications,
     toggleSmsNotifications,
-    refetchPreferences: fetchPreferences,
   };
 };

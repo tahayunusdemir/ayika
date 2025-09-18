@@ -10,14 +10,16 @@ import {
   IconButton,
   Card,
   CardContent,
-  Fade,
 } from '@mui/material';
 import {
   Close as CloseIcon,
-  DeleteOutline as DeleteIcon,
+  Delete as DeleteIcon,
   AccessTime as TimeIcon,
+  Warning as WarningIcon,
+  CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { Notification } from '../types/notification.types';
+import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 interface NotificationDetailDialogProps {
   open: boolean;
@@ -29,16 +31,22 @@ interface NotificationDetailDialogProps {
 const NotificationDetailDialog: React.FC<NotificationDetailDialogProps> = React.memo(({ open, onClose, notification, onDelete }) => {
   const formattedTimestamp = React.useMemo(() => {
     if (!notification) return '';
-    const date = new Date(notification.timestamp);
-    return date.toLocaleString('tr-TR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
+    return dateUtils.formatDateTime(notification.timestamp);
   }, [notification]);
+
+  const getTypeIcon = React.useCallback((type: Notification['type']) => {
+    switch (type) {
+      case 'error': 
+        return <WarningIcon color="error" sx={{ fontSize: 28 }} />;
+      case 'warning': 
+        return <WarningIcon color="warning" sx={{ fontSize: 28 }} />;
+      case 'success':
+        return <CheckCircleIcon color="success" sx={{ fontSize: 28 }} />;
+      case 'info':
+      default: 
+        return <CheckCircleIcon color="info" sx={{ fontSize: 28 }} />;
+    }
+  }, []);
 
   const handleDelete = React.useCallback(() => {
     if (notification && onDelete) {
@@ -58,15 +66,16 @@ const NotificationDetailDialog: React.FC<NotificationDetailDialogProps> = React.
       aria-labelledby="notification-detail-dialog-title" 
       maxWidth="md" 
       fullWidth
-      TransitionComponent={Fade}
-      TransitionProps={{ timeout: 300 }}
     >
       <DialogTitle id="notification-detail-dialog-title" sx={{ pb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" component="h2" fontWeight={600} sx={{ mb: 2 }}>
-              Bildirim Detayı
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              {getTypeIcon(notification.type)}
+              <Typography variant="h5" component="h2" fontWeight={600}>
+                Bildirim Detayı
+              </Typography>
+            </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
               <TimeIcon fontSize="small" />
               <Typography variant="body2" fontWeight={500}>

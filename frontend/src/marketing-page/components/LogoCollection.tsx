@@ -3,8 +3,8 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 
 // Local logos import
-import tubitakLogo from '../../assets/tubitak-logo.png';
-import dpuLogo from '../../assets/dpu-logo.png';
+import tubitakLogo from '../../assets/sponsors/tubitak-logo.png';
+import dpuLogo from '../../assets/sponsors/dpu-logo.png';
 
 // Partner institutions and organizations supporting the project
 const partnerLogos = [
@@ -39,9 +39,9 @@ export default function LogoCollection() {
         align="center"
         sx={{ color: 'text.secondary' }}
       >
-        Değerli iş ortaklarımız ve destekleyici kurumlarımız
+Ayika projesini destekleyen kurumlarımız
       </Typography>
-      <Grid container sx={{ justifyContent: 'center', mt: 0.5 }}>
+      <Grid container sx={{ justifyContent: 'center', mt: 2 }}>
         {partnerLogos.map((partner, index) => (
           <Grid key={index} sx={{ textAlign: 'center' }}>
             <a

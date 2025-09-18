@@ -4,9 +4,9 @@ import { Notification, NotificationsState } from '../types/notification.types';
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: '1',
-    message: 'Yeni bir etkinlik oluşturuldu: Kan Bağışı Kampanyası',
+    message: 'Acil yardım koordinasyon sistemi aktif edildi. Gönüllüler afet bölgesine yardım malzemesi taşımak için kayıt olabilir.',
     timestamp: new Date().toISOString(), // Changed to current time
-    type: 'info',
+    type: 'error',
   },
   {
     id: '2',
@@ -22,9 +22,9 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
   {
     id: '4',
-    message: 'Ödeme işleminiz başarısız oldu. Lütfen tekrar deneyin.',
+    message: 'Yardım malzemesi teslimatında gecikme yaşandı. Lojistik ekibi durumu inceliyor.',
     timestamp: new Date(Date.now() - 48 * 3600 * 1000).toISOString(),
-    type: 'error',
+    type: 'warning',
   },
 ];
 
