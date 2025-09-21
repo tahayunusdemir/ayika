@@ -38,13 +38,6 @@ export default function AppAppBar() {
     setOpen(newOpen);
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
-
   const scrollToSection = (sectionId: string) => {
     // If we're not on the home page, navigate to home page first
     if (window.location.pathname !== '/') {
@@ -129,6 +122,14 @@ export default function AppAppBar() {
                 variant="text" 
                 color="info" 
                 size="small"
+                onClick={() => scrollToSection('cargo-tracking')}
+              >
+                Kargo Takip
+              </Button>
+              <Button 
+                variant="text" 
+                color="info" 
+                size="small"
                 onClick={() => scrollToSection('team')}
               >
                 Ekibimiz
@@ -207,6 +208,7 @@ export default function AppAppBar() {
 
                 <MenuItem onClick={() => scrollToSection('features')}>Özellikler</MenuItem>
                 <MenuItem onClick={() => scrollToSection('highlights')}>Öne Çıkanlar</MenuItem>
+                <MenuItem onClick={() => scrollToSection('cargo-tracking')}>Kargo Takip</MenuItem>
                 <MenuItem onClick={() => scrollToSection('team')}>Ekibimiz</MenuItem>
                 <MenuItem onClick={() => scrollToSection('faq')}>S.S.S</MenuItem>
                 <MenuItem>

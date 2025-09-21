@@ -16,6 +16,7 @@ import Analytics from './pages/Analytics/Analytics';
 import { default as Volunteers } from './pages/Volunteers/Volunteers';
 import Profile from './pages/Profile/Profile';
 import Notifications from './pages/Notifications/Notifications';
+import Shipments from './pages/Shipments/Shipments';
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -34,6 +35,7 @@ const pageConfig = {
   home: { component: Home, breadcrumb: [{ label: 'Ana Sayfa', active: true }] },
   analytics: { component: Analytics, breadcrumb: [{ label: 'Analizler', active: true }] },
   volunteers: { component: Volunteers, breadcrumb: [{ label: 'Gönüllüler', active: true }] },
+  shipments: { component: Shipments, breadcrumb: [{ label: 'Kargo Yönetimi', active: true }] },
   profile: { component: Profile, breadcrumb: [{ label: 'Profil', active: true }] },
   notifications: { component: Notifications, breadcrumb: [{ label: 'Bildirimler', active: true }] },
 };

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
@@ -15,6 +17,7 @@ import {
   GridPaginationModel,
   GridSortModel,
   GridEventListener,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { trTR } from '@mui/x-data-grid/locales';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,12 +25,17 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import { useDialogs } from '../hooks/useDialogs/useDialogs';
 import useNotifications from '../hooks/useNotifications/useNotifications';
 import {
   deleteOne as deleteVolunteer,
   getMany as getVolunteers,
   type Volunteer,
+  type VolunteerType,
 } from '../data/volunteers';
 import VolunteerCreateDialog from './VolunteerCreateDialog';
 import VolunteerEditDialog from './VolunteerEditDialog';
@@ -35,6 +43,54 @@ import VolunteerShowDialog from './VolunteerShowDialog';
 import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 const INITIAL_PAGE_SIZE = 10;
+
+// Helper function to get volunteer type icon
+const getVolunteerTypeIcon = (type: VolunteerType) => {
+  switch (type) {
+    case 'toplama':
+      return <InventoryIcon fontSize="small" />;
+    case 'taşıma':
+      return <LocalShippingIcon fontSize="small" />;
+    case 'dağıtım':
+      return <DeliveryDiningIcon fontSize="small" />;
+    case 'karma':
+      return <GroupWorkIcon fontSize="small" />;
+    default:
+      return <GroupWorkIcon fontSize="small" />;
+  }
+};
+
+// Helper function to get volunteer type color
+const getVolunteerTypeColor = (type: VolunteerType) => {
+  switch (type) {
+    case 'toplama':
+      return 'primary';
+    case 'taşıma':
+      return 'secondary';
+    case 'dağıtım':
+      return 'success';
+    case 'karma':
+      return 'warning';
+    default:
+      return 'default';
+  }
+};
+
+// Helper function to get volunteer type label
+const getVolunteerTypeLabel = (type: VolunteerType) => {
+  switch (type) {
+    case 'toplama':
+      return 'Toplama';
+    case 'taşıma':
+      return 'Taşıma';
+    case 'dağıtım':
+      return 'Dağıtım';
+    case 'karma':
+      return 'Karma';
+    default:
+      return type;
+  }
+};
 
 export default function VolunteerList() {
   const dialogs = useDialogs();
@@ -230,30 +286,107 @@ export default function VolunteerList() {
   const initialState = React.useMemo(
     () => ({
       pagination: { paginationModel: { pageSize: INITIAL_PAGE_SIZE } },
+      columns: {
+        columnVisibilityModel: {
+          id: false, // Always hide ID
+          email: true, // Show email on desktop, can be toggled
+        },
+      },
     }),
     [],
   );
 
   const columns = React.useMemo<GridColDef[]>(
     () => [
-      { field: 'id', headerName: 'ID' },
-      { field: 'name', headerName: 'Ad', width: 140 },
-      { field: 'surname', headerName: 'Soyad', width: 140 },
-      { field: 'email', headerName: 'E-posta', width: 200 },
-      { field: 'phone', headerName: 'Telefon', width: 140 },
-      { field: 'city', headerName: 'Şehir', width: 120 },
+      { 
+        field: 'id', 
+        headerName: 'ID', 
+        width: 70,
+        hide: true // Hide ID column on mobile
+      },
+      { 
+        field: 'gonulluluk_no', 
+        headerName: 'Gönüllülük No', 
+        width: 130,
+        flex: 0.8
+      },
+      {
+        field: 'fullName',
+        headerName: 'Ad Soyad',
+        width: 180,
+        flex: 1,
+        renderCell: (params: GridRenderCellParams) => {
+          const volunteer = params.row as Volunteer;
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" fontWeight={500}>
+                {`${volunteer.name} ${volunteer.surname}`}
+              </Typography>
+            </Box>
+          );
+        },
+        sortComparator: (_v1, _v2, param1, param2) => {
+          const name1 = `${param1.api.getRow(param1.id)?.name} ${param1.api.getRow(param1.id)?.surname}`;
+          const name2 = `${param2.api.getRow(param2.id)?.name} ${param2.api.getRow(param2.id)?.surname}`;
+          return name1.localeCompare(name2);
+        },
+      },
+      {
+        field: 'volunteerType',
+        headerName: 'Gönüllü Tipi',
+        width: 140,
+        flex: 0.8,
+        renderCell: (params: GridRenderCellParams) => {
+          const type = params.value as VolunteerType;
+          return (
+            <Chip
+              icon={getVolunteerTypeIcon(type)}
+              label={getVolunteerTypeLabel(type)}
+              color={getVolunteerTypeColor(type) as any}
+              size="small"
+              variant="outlined"
+            />
+          );
+        },
+      },
+      { 
+        field: 'email', 
+        headerName: 'E-posta', 
+        width: 200,
+        flex: 1.2,
+        hide: false // Show on desktop, can be hidden on mobile via responsive design
+      },
+      { 
+        field: 'phone', 
+        headerName: 'Telefon', 
+        width: 140,
+        flex: 0.9
+      },
+      { 
+        field: 'city', 
+        headerName: 'Şehir', 
+        width: 120,
+        flex: 0.8
+      },
       {
         field: 'joinDate',
         headerName: 'Katılım Tarihi',
         width: 130,
-        renderCell: (params) => {
-          return dateUtils.formatDateTime(params.value);
+        flex: 0.9,
+        renderCell: (params: GridRenderCellParams) => {
+          return (
+            <Typography variant="body2">
+              {dateUtils.formatDateTime(params.value)}
+            </Typography>
+          );
         },
       },
       {
         field: 'actions',
         type: 'actions',
-        flex: 1,
+        headerName: 'İşlemler',
+        width: 120,
+        flex: 0.6,
         align: 'right',
         getActions: ({ row }) => [
           <GridActionsCellItem
@@ -326,9 +459,48 @@ export default function VolunteerList() {
               onRowClick={handleRowClick}
               loading={isLoading}
               initialState={initialState}
-              showToolbar
-              pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25]}
+              slots={{
+                toolbar: () => null, // Remove default toolbar for cleaner look
+              }}
+              pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25, 50]}
               localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
+              sx={{
+                // Responsive styling
+                '& .MuiDataGrid-root': {
+                  border: 'none',
+                },
+                '& .MuiDataGrid-cell': {
+                  borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                },
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                },
+                '& .MuiDataGrid-virtualScroller': {
+                  backgroundColor: 'white',
+                },
+                // Mobile responsive adjustments
+                '@media (max-width: 768px)': {
+                  '& .MuiDataGrid-columnHeader[data-field="email"]': {
+                    display: 'none',
+                  },
+                  '& .MuiDataGrid-cell[data-field="email"]': {
+                    display: 'none',
+                  },
+                },
+                '@media (max-width: 600px)': {
+                  '& .MuiDataGrid-columnHeader[data-field="joinDate"]': {
+                    display: 'none',
+                  },
+                  '& .MuiDataGrid-cell[data-field="joinDate"]': {
+                    display: 'none',
+                  },
+                },
+              }}
+              autoHeight
+              disableColumnMenu={false}
+              disableColumnSelector={false}
+              disableDensitySelector={false}
             />
           )}
         </CardContent>

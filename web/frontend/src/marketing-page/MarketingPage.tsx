@@ -7,6 +7,7 @@ import Hero from './components/Hero';
 import LogoCollection from './components/LogoCollection';
 import Highlights from './components/Highlights';
 import Features from './components/Features';
+import CargoTracking from './components/CargoTracking';
 import Team from './components/Team';
 import FAQ from './components/FAQ';
 import Footer from '../shared-theme/components/Footer';
@@ -40,6 +41,8 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
         <Features />
         <Divider />
         <Highlights />
+        <Divider />
+        <CargoTracking />
         <Divider />
         <Team />
         <Divider />

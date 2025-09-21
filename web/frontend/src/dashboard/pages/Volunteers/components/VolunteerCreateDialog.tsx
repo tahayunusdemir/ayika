@@ -17,6 +17,8 @@ import VolunteerForm, {
 
 const INITIAL_FORM_VALUES: Partial<VolunteerFormState['values']> = {
   joinDate: new Date().toISOString(),
+  gonulluluk_no: '',
+  volunteerType: undefined,
 };
 
 interface VolunteerCreateDialogProps {

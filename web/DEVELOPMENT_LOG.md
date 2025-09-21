@@ -413,3 +413,33 @@
     - Copyright bilgileri düzenlendi.
     - Responsive tasarım iyileştirmeleri yapıldı.
     - Türkçe lokalizasyon tamamlandı.
+
+#### Kargo Yönetimi ve Takip Sistemi
+- [x] **Kargo yönetimi menüsü dashboard'a eklendi.**
+    - Dashboard navigasyonuna "Kargo Yönetimi" menü öğesi eklendi.
+    - Kargo CRUD işlemleri için kapsamlı yönetim sistemi geliştirildi.
+    - DataGrid tabanlı liste görünümü ile filtreleme ve sayfalama özellikleri.
+    - Dialog tabanlı kargo oluşturma, düzenleme ve görüntüleme işlemleri.
+    - Form validasyonu ve Türkçe hata mesajları entegrasyonu.
+
+- [x] **Marketing page'e kargo takip bölümü eklendi.**
+    - Ana sayfaya interaktif kargo takip sistemi entegre edildi.
+    - AYK-123456789 formatında kargo numarası doğrulaması.
+    - Gerçek zamanlı arama simülasyonu ve loading durumları.
+    - Renk kodlu durum gösterimi (Hazırlanıyor, Yolda, Teslim Edildi).
+    - Konum bilgileri ve son güncelleme tarihlerinin gösterimi.
+    - Responsive tasarım ve hata yönetimi.
+
+#### Gönüllülük Sayfası Düzenlemeleri
+- [x] **Gönüllülük sayfası optimize edildi.**
+    - Gönüllü kayıt formları ve süreçleri sadeleştirildi.
+    - Kullanıcı deneyimi iyileştirmeleri yapıldı.
+    - Form validasyonları güncellendi.
+    - Responsive tasarım iyileştirmeleri uygulandı.
+
+#### Marketing Page Özellikler Bölümü Sadeleştirme
+- [x] **Özellikler bölümü sadeleştirildi.**
+    - Gereksiz özellik kartları kaldırıldı.
+    - Ana özellikler vurgulandı ve daha net sunuldu.
+    - İçerik düzenlenerek kullanıcı odaklı hale getirildi.
+    - Görsel hiyerarşi iyileştirilerek okunabilirlik artırıldı.

@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
@@ -26,6 +27,7 @@ const mainListItems: MenuItem[] = [
 
 const adminListItems: MenuItem[] = [
   { text: 'Gönüllüler', icon: <PeopleRoundedIcon />, key: 'volunteers' },
+  { text: 'Kargo Yönetimi', icon: <LocalShippingIcon />, key: 'shipments' },
   { text: 'Analizler', icon: <AnalyticsRoundedIcon />, key: 'analytics' },
 ];
 

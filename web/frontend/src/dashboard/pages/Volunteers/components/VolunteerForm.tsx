@@ -14,7 +14,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { trTR } from '@mui/x-date-pickers/locales';
 import type { Dayjs } from 'dayjs';
-import type { Volunteer } from '../data/volunteers';
+import type { Volunteer, VolunteerType } from '../data/volunteers';
 import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 export interface VolunteerFormState {
@@ -49,6 +49,13 @@ const TURKISH_CITIES = [
   'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale',
   'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis',
   'Osmaniye', 'Düzce'
+];
+
+const VOLUNTEER_TYPES: { value: VolunteerType; label: string; description: string }[] = [
+  { value: 'toplama', label: 'Toplama Gönüllüsü', description: 'Yardım malzemelerinin toplanması' },
+  { value: 'taşıma', label: 'Taşıma Görevlisi', description: 'Yardım malzemelerinin taşınması' },
+  { value: 'dağıtım', label: 'Dağıtım Görevlisi', description: 'Yardım malzemelerinin dağıtılması' },
+  { value: 'karma', label: 'Karma Görevli', description: 'Birden fazla alanda görev alabilir' },
 ];
 
 export default function VolunteerForm(props: VolunteerFormProps) {
@@ -133,8 +140,53 @@ export default function VolunteerForm(props: VolunteerFormProps) {
       >
         <Grid container spacing={2} mb={2} columns={12}>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+            <FormControl error={!!formErrors.gonulluluk_no} fullWidth>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllülük Numarası</FormLabel>
+              <TextField
+                value={formValues.gonulluluk_no ?? ''}
+                onChange={handleTextFieldChange}
+                name="gonulluluk_no"
+                placeholder="G0123456789"
+                error={!!formErrors.gonulluluk_no}
+                fullWidth
+                inputProps={{ maxLength: 11 }}
+              />
+              <FormHelperText>{formErrors.gonulluluk_no ?? ' '}</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+            <FormControl error={!!formErrors.volunteerType} fullWidth>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllü Tipi</FormLabel>
+              <Select
+                value={formValues.volunteerType ?? ''}
+                onChange={handleSelectFieldChange as SelectProps['onChange']}
+                name="volunteerType"
+                defaultValue=""
+                displayEmpty
+                fullWidth
+              >
+                <MenuItem value="" disabled>
+                  Gönüllü tipi seçin
+                </MenuItem>
+                {VOLUNTEER_TYPES.map((type) => (
+                  <MenuItem key={type.value} value={type.value}>
+                    <Box>
+                      <Box component="span" fontWeight={500}>
+                        {type.label}
+                      </Box>
+                      <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.875rem', ml: 1 }}>
+                        - {type.description}
+                      </Box>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{formErrors.volunteerType ?? ' '}</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.name} fullWidth>
-              <FormLabel>Ad</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Ad</FormLabel>
               <TextField
                 value={formValues.name ?? ''}
                 onChange={handleTextFieldChange}
@@ -148,7 +200,7 @@ export default function VolunteerForm(props: VolunteerFormProps) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.surname} fullWidth>
-              <FormLabel>Soyad</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Soyad</FormLabel>
               <TextField
                 value={formValues.surname ?? ''}
                 onChange={handleTextFieldChange}
@@ -162,7 +214,7 @@ export default function VolunteerForm(props: VolunteerFormProps) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.email} fullWidth>
-              <FormLabel>E-posta</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>E-posta</FormLabel>
               <TextField
                 type="email"
                 value={formValues.email ?? ''}
@@ -177,7 +229,7 @@ export default function VolunteerForm(props: VolunteerFormProps) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.phone} fullWidth>
-              <FormLabel>Telefon</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Telefon</FormLabel>
               <TextField
                 value={formValues.phone ?? ''}
                 onChange={handleTextFieldChange}
@@ -191,7 +243,7 @@ export default function VolunteerForm(props: VolunteerFormProps) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.city} fullWidth>
-              <FormLabel>Şehir</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Şehir</FormLabel>
               <Select
                 value={formValues.city ?? ''}
                 onChange={handleSelectFieldChange as SelectProps['onChange']}
@@ -214,7 +266,7 @@ export default function VolunteerForm(props: VolunteerFormProps) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.joinDate} fullWidth>
-              <FormLabel>Katılım Tarihi</FormLabel>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Katılım Tarihi</FormLabel>
               <DatePicker
                 value={dateUtils.toDayjs(formValues.joinDate)}
                 onChange={handleDateFieldChange('joinDate')}
