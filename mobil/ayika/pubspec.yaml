@@ -36,7 +36,24 @@ dependencies:
   cupertino_icons: ^1.0.8
   
   # Google Fonts for Inter font family
-  google_fonts: ^6.1.0
+  google_fonts: ^6.3.1
+  
+  # SharedPreferences for storing non-sensitive data
+  shared_preferences: ^2.5.3
+  
+  # URL Launcher for external links (registration form)
+  url_launcher: ^6.3.2
+  
+  # HTTP for API calls (for cargo tracking)
+  http: ^1.5.0
+  
+  # Map dependencies
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  
+  # Location services
+  geolocator: ^13.0.1
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

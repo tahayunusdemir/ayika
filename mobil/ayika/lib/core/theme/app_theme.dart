@@ -92,6 +92,18 @@ class AppTheme {
       ),
     ),
     
+    // FilledButton tema
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        textStyle: AppTypography.buttonText,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 0,
+      ),
+    ),
+    
     // Chip tema
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.lightColorScheme.surfaceContainerHighest,
@@ -228,6 +240,18 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+      ),
+    ),
+    
+    // FilledButton tema
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        textStyle: AppTypography.buttonText,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 0,
       ),
     ),
     

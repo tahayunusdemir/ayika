@@ -6,16 +6,16 @@ class AppColors {
   // Private constructor to prevent instantiation
   AppColors._();
 
-  // 🔵 Ana Renk Paleti (Brand Colors) - Koordinasyon
+  // Ana Renk Paleti (Brand Colors) - Koordinasyon
   static const Color brandLight400 = Color(0xFF2196F3); // Ana primary renk
   static const Color brandLight200 = Color(0xFF90CAF9); // Açık primary
   static const Color brandLight700 = Color(0xFF1565C0); // Koyu primary
 
-  // 🚨 Acil Yardım Renkleri
+  // Acil Yardım Renkleri
   static const Color emergencyPrimary = Color(0xFFD32F2F); // Acil durum ana
   static const Color emergencySecondary = Color(0xFFEF5350); // Acil durum ikincil
 
-  // 🟢 Sistem Durumu Renkleri
+  // Sistem Durumu Renkleri
   // Success - Yeşil tonları (Başarılı işlemler)
   static const Color successLight400 = Color(0xFF9CCC65); // Başarı ana rengi
   static const Color successLight500 = Color(0xFF689F38); // Başarı koyu tonu
@@ -28,7 +28,7 @@ class AppColors {
   static const Color errorLight400 = Color(0xFFEF5350); // Hata ana rengi
   static const Color errorLight500 = Color(0xFFF44336); // Hata koyu tonu
 
-  // ⚫ Nötr Renkler (Gray Scale)
+  // Nötr Renkler (Gray Scale)
   // Text Colors - Light Theme
   static const Color textPrimaryLight = Color(0xFF424242); // Ana metin (açık tema)
   static const Color textSecondaryLight = Color(0xFF757575); // İkincil metin (açık tema)
@@ -43,7 +43,7 @@ class AppColors {
   static const Color backgroundDark = Color(0xFF212121); // Ana arka plan (koyu)
   static const Color surfaceDark = Color(0xFF0F1419); // Yüzey rengi (koyu)
 
-  // 🎯 Özellik Bazlı Renkler
+  // Özellik Bazlı Renkler
   static const Map<String, Color> featureColors = {
     'volunteer': Color(0xFF2196F3), // Gönüllü işlemleri - Mavi
     'logistics': Color(0xFF4CAF50), // Lojistik takip - Yeşil

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
-import 'features/home/presentation/pages/home_page.dart';
+import 'features/splash/presentation/pages/splash_page.dart';
 
 void main() {
   runApp(const AyikaApp());
@@ -20,8 +20,8 @@ class AyikaApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       
-      // Ana sayfa
-      home: const HomePage(),
+      // Splash screen - onboarding kontrolü yapacak
+      home: const SplashPage(),
     );
   }
 }
