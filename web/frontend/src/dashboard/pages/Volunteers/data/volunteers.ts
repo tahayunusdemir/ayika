@@ -1,377 +1,92 @@
-import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
+export type VolunteerType = 'toplama' | 'tasima' | 'dagitim' | 'karma';
 
-export type VolunteerType = 'toplama' | 'dağıtım' | 'taşıma' | 'karma';
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  is_active: boolean;
+}
 
 export interface Volunteer {
   id: number;
-  gonulluluk_no: string; // Gönüllülük numarası (G ile başlayan)
+  user?: User; // Django User integration (optional for frontend)
+  gonulluluk_no: string; // Auto-generated G + 10 digits
+  ad: string; // First name (matches Django field)
+  soyad: string; // Last name (matches Django field)
+  full_name?: string; // Combined name from backend (read-only)
+  telefon: string; // Phone without leading 0 (5XXXXXXXXX)
+  sehir: string; // City (lowercase, matches Django choices)
+  sehir_display?: string; // City display name from backend (read-only)
+  gonullu_tipi: VolunteerType; // Volunteer type (matches Django field)
+  gonullu_tipi_display?: string; // Volunteer type display name from backend (read-only)
+  is_active: boolean; // Active status
+  created_at: string; // Creation date (matches Django field)
+  updated_at: string; // Update date (matches Django field)
+}
+
+// Legacy interface for backward compatibility during transition
+export interface LegacyVolunteer {
+  id: number;
+  gonulluluk_no: string;
   name: string;
   surname: string;
   email: string;
   phone: string;
   city: string;
   joinDate: string;
-  volunteerType: VolunteerType; // Gönüllü tipi
+  volunteerType: VolunteerType;
 }
 
-const INITIAL_VOLUNTEERS_STORE: Volunteer[] = [
-  // Toplama gönüllüleri
-  {
-    id: 1,
-    gonulluluk_no: 'G0123456789',
-    name: 'Kemal',
-    surname: 'Özdemir',
-    email: 'kemal.ozdemir@email.com',
-    phone: '+90 532 123 4567',
-    city: 'Ankara',
-    joinDate: '2024-01-15T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 2,
-    gonulluluk_no: 'G0123456792',
-    name: 'Zehra',
-    surname: 'Kılıç',
-    email: 'zehra.kilic@email.com',
-    phone: '+90 533 234 5678',
-    city: 'İzmir',
-    joinDate: '2024-02-20T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 3,
-    gonulluluk_no: 'G0123456795',
-    name: 'Osman',
-    surname: 'Çelik',
-    email: 'osman.celik@email.com',
-    phone: '+90 534 345 6789',
-    city: 'İstanbul',
-    joinDate: '2023-11-10T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 4,
-    gonulluluk_no: 'G0123456799',
-    name: 'Selin',
-    surname: 'Demir',
-    email: 'selin.demir@email.com',
-    phone: '+90 535 456 7890',
-    city: 'Bursa',
-    joinDate: '2024-03-05T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 5,
-    gonulluluk_no: 'G0123456803',
-    name: 'Emre',
-    surname: 'Yıldırım',
-    email: 'emre.yildirim@email.com',
-    phone: '+90 536 567 8901',
-    city: 'Antalya',
-    joinDate: '2024-04-12T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 6,
-    gonulluluk_no: 'G0123456806',
-    name: 'Ayşe',
-    surname: 'Güler',
-    email: 'ayse.guler@email.com',
-    phone: '+90 537 678 9012',
-    city: 'Gaziantep',
-    joinDate: '2024-05-18T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 7,
-    gonulluluk_no: 'G0123456808',
-    name: 'Cemil',
-    surname: 'Başaran',
-    email: 'cemil.basaran@email.com',
-    phone: '+90 538 789 0123',
-    city: 'Adana',
-    joinDate: '2024-06-25T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  {
-    id: 8,
-    gonulluluk_no: 'G0123456809',
-    name: 'Deniz',
-    surname: 'Korkmaz',
-    email: 'deniz.korkmaz@email.com',
-    phone: '+90 539 890 1234',
-    city: 'Trabzon',
-    joinDate: '2024-07-30T00:00:00.000Z',
-    volunteerType: 'toplama',
-  },
-  
-  // Taşıma görevlileri
-  {
-    id: 9,
-    gonulluluk_no: 'G0123456790',
-    name: 'Serkan',
-    surname: 'Acar',
-    email: 'serkan.acar@email.com',
-    phone: '+90 540 901 2345',
-    city: 'Ankara',
-    joinDate: '2024-01-20T00:00:00.000Z',
-    volunteerType: 'taşıma',
-  },
-  {
-    id: 10,
-    gonulluluk_no: 'G0123456796',
-    name: 'Mustafa',
-    surname: 'Kara',
-    email: 'mustafa.kara@email.com',
-    phone: '+90 541 012 3456',
-    city: 'İstanbul',
-    joinDate: '2024-02-14T00:00:00.000Z',
-    volunteerType: 'taşıma',
-  },
-  {
-    id: 11,
-    gonulluluk_no: 'G0123456800',
-    name: 'Oğuz',
-    surname: 'Şahin',
-    email: 'oguz.sahin@email.com',
-    phone: '+90 542 123 4567',
-    city: 'Bursa',
-    joinDate: '2024-03-10T00:00:00.000Z',
-    volunteerType: 'taşıma',
-  },
-  {
-    id: 12,
-    gonulluluk_no: 'G0123456804',
-    name: 'Burak',
-    surname: 'Öztürk',
-    email: 'burak.ozturk@email.com',
-    phone: '+90 543 234 5678',
-    city: 'Antalya',
-    joinDate: '2024-04-22T00:00:00.000Z',
-    volunteerType: 'taşıma',
-  },
-  {
-    id: 13,
-    gonulluluk_no: 'G0123456810',
-    name: 'Mert',
-    surname: 'Özgür',
-    email: 'mert.ozgur@email.com',
-    phone: '+90 544 345 6789',
-    city: 'Trabzon',
-    joinDate: '2024-08-05T00:00:00.000Z',
-    volunteerType: 'taşıma',
-  },
-  
-  // Dağıtım görevlileri
-  {
-    id: 14,
-    gonulluluk_no: 'G0123456793',
-    name: 'Hüseyin',
-    surname: 'Arslan',
-    email: 'huseyin.arslan@email.com',
-    phone: '+90 545 456 7890',
-    city: 'İzmir',
-    joinDate: '2024-02-28T00:00:00.000Z',
-    volunteerType: 'dağıtım',
-  },
-  {
-    id: 15,
-    gonulluluk_no: 'G0123456797',
-    name: 'Elif',
-    surname: 'Yıldız',
-    email: 'elif.yildiz@email.com',
-    phone: '+90 546 567 8901',
-    city: 'İstanbul',
-    joinDate: '2024-03-15T00:00:00.000Z',
-    volunteerType: 'dağıtım',
-  },
-  {
-    id: 16,
-    gonulluluk_no: 'G0123456801',
-    name: 'Aylin',
-    surname: 'Çelik',
-    email: 'aylin.celik@email.com',
-    phone: '+90 547 678 9012',
-    city: 'Bursa',
-    joinDate: '2024-04-08T00:00:00.000Z',
-    volunteerType: 'dağıtım',
-  },
-  
-  // Karma görevliler (birden fazla alanda çalışabilir)
-  {
-    id: 17,
-    gonulluluk_no: 'G0123456811',
-    name: 'Fatma',
-    surname: 'Koç',
-    email: 'fatma.koc@email.com',
-    phone: '+90 548 789 0123',
-    city: 'Ankara',
-    joinDate: '2023-12-10T00:00:00.000Z',
-    volunteerType: 'karma',
-  },
-  {
-    id: 18,
-    gonulluluk_no: 'G0123456812',
-    name: 'Mehmet',
-    surname: 'Yılmaz',
-    email: 'mehmet.yilmaz@email.com',
-    phone: '+90 549 890 1234',
-    city: 'İzmir',
-    joinDate: '2024-01-05T00:00:00.000Z',
-    volunteerType: 'karma',
-  },
-  {
-    id: 19,
-    gonulluluk_no: 'G0123456813',
-    name: 'Zeynep',
-    surname: 'Aktaş',
-    email: 'zeynep.aktas@email.com',
-    phone: '+90 550 901 2345',
-    city: 'İstanbul',
-    joinDate: '2024-02-12T00:00:00.000Z',
-    volunteerType: 'karma',
-  },
-  {
-    id: 20,
-    gonulluluk_no: 'G0123456814',
-    name: 'Can',
-    surname: 'Polat',
-    email: 'can.polat@email.com',
-    phone: '+90 551 012 3456',
-    city: 'Bursa',
-    joinDate: '2024-03-20T00:00:00.000Z',
-    volunteerType: 'karma',
-  },
+// Turkish cities matching Django SEHIR_CHOICES (lowercase)
+export const TURKISH_CITIES = [
+  'adana', 'adiyaman', 'afyonkarahisar', 'agri', 'amasya', 'ankara', 'antalya',
+  'artvin', 'aydin', 'balikesir', 'bilecik', 'bingol', 'bitlis', 'bolu',
+  'burdur', 'bursa', 'canakkale', 'cankiri', 'corum', 'denizli', 'diyarbakir',
+  'edirne', 'elazig', 'erzincan', 'erzurum', 'eskisehir', 'gaziantep', 'giresun',
+  'gumushane', 'hakkari', 'hatay', 'isparta', 'mersin', 'istanbul', 'izmir',
+  'kars', 'kastamonu', 'kayseri', 'kirklareli', 'kirsehir', 'kocaeli', 'konya',
+  'kutahya', 'malatya', 'manisa', 'kahramanmaras', 'mardin', 'mugla', 'mus',
+  'nevsehir', 'nigde', 'ordu', 'rize', 'sakarya', 'samsun', 'siirt', 'sinop',
+  'sivas', 'tekirdag', 'tokat', 'trabzon', 'tunceli', 'sanliurfa', 'usak',
+  'van', 'yozgat', 'zonguldak', 'aksaray', 'bayburt', 'karaman', 'kirikkale',
+  'batman', 'sirnak', 'bartin', 'ardahan', 'igdir', 'yalova', 'karabuk', 'kilis',
+  'osmaniye', 'duzce'
 ];
 
-export function getVolunteersStore(): Volunteer[] {
-  const stringifiedVolunteers = localStorage.getItem('volunteers-store');
-  return stringifiedVolunteers ? JSON.parse(stringifiedVolunteers) : INITIAL_VOLUNTEERS_STORE;
-}
+// City display names (capitalized for UI)
+export const CITY_DISPLAY_NAMES: Record<string, string> = {
+  'adana': 'Adana', 'adiyaman': 'Adıyaman', 'afyonkarahisar': 'Afyonkarahisar', 
+  'agri': 'Ağrı', 'amasya': 'Amasya', 'ankara': 'Ankara', 'antalya': 'Antalya',
+  'artvin': 'Artvin', 'aydin': 'Aydın', 'balikesir': 'Balıkesir', 'bilecik': 'Bilecik',
+  'bingol': 'Bingöl', 'bitlis': 'Bitlis', 'bolu': 'Bolu', 'burdur': 'Burdur',
+  'bursa': 'Bursa', 'canakkale': 'Çanakkale', 'cankiri': 'Çankırı', 'corum': 'Çorum',
+  'denizli': 'Denizli', 'diyarbakir': 'Diyarbakır', 'edirne': 'Edirne', 'elazig': 'Elazığ',
+  'erzincan': 'Erzincan', 'erzurum': 'Erzurum', 'eskisehir': 'Eskişehir', 'gaziantep': 'Gaziantep',
+  'giresun': 'Giresun', 'gumushane': 'Gümüşhane', 'hakkari': 'Hakkâri', 'hatay': 'Hatay',
+  'isparta': 'Isparta', 'mersin': 'Mersin', 'istanbul': 'İstanbul', 'izmir': 'İzmir',
+  'kars': 'Kars', 'kastamonu': 'Kastamonu', 'kayseri': 'Kayseri', 'kirklareli': 'Kırklareli',
+  'kirsehir': 'Kırşehir', 'kocaeli': 'Kocaeli', 'konya': 'Konya', 'kutahya': 'Kütahya',
+  'malatya': 'Malatya', 'manisa': 'Manisa', 'kahramanmaras': 'Kahramanmaraş', 'mardin': 'Mardin',
+  'mugla': 'Muğla', 'mus': 'Muş', 'nevsehir': 'Nevşehir', 'nigde': 'Niğde',
+  'ordu': 'Ordu', 'rize': 'Rize', 'sakarya': 'Sakarya', 'samsun': 'Samsun',
+  'siirt': 'Siirt', 'sinop': 'Sinop', 'sivas': 'Sivas', 'tekirdag': 'Tekirdağ',
+  'tokat': 'Tokat', 'trabzon': 'Trabzon', 'tunceli': 'Tunceli', 'sanliurfa': 'Şanlıurfa',
+  'usak': 'Uşak', 'van': 'Van', 'yozgat': 'Yozgat', 'zonguldak': 'Zonguldak',
+  'aksaray': 'Aksaray', 'bayburt': 'Bayburt', 'karaman': 'Karaman', 'kirikkale': 'Kırıkkale',
+  'batman': 'Batman', 'sirnak': 'Şırnak', 'bartin': 'Bartın', 'ardahan': 'Ardahan',
+  'igdir': 'Iğdır', 'yalova': 'Yalova', 'karabuk': 'Karabük', 'kilis': 'Kilis',
+  'osmaniye': 'Osmaniye', 'duzce': 'Düzce'
+};
 
-export function setVolunteersStore(volunteers: Volunteer[]) {
-  return localStorage.setItem('volunteers-store', JSON.stringify(volunteers));
-}
-
-export async function getMany({
-  paginationModel,
-  filterModel,
-  sortModel,
-}: {
-  paginationModel: GridPaginationModel;
-  sortModel: GridSortModel;
-  filterModel: GridFilterModel;
-}): Promise<{ items: Volunteer[]; itemCount: number }> {
-  const volunteersStore = getVolunteersStore();
-
-  let filteredVolunteers = [...volunteersStore];
-
-  // Apply filters
-  if (filterModel?.items?.length) {
-    filterModel.items.forEach(({ field, value, operator }) => {
-      if (!field || value == null) {
-        return;
-      }
-
-      filteredVolunteers = filteredVolunteers.filter((volunteer) => {
-        const volunteerValue = volunteer[field as keyof Volunteer];
-
-        switch (operator) {
-          case 'contains':
-            return String(volunteerValue).toLowerCase().includes(String(value).toLowerCase());
-          case 'equals':
-            return volunteerValue === value;
-          case 'startsWith':
-            return String(volunteerValue).toLowerCase().startsWith(String(value).toLowerCase());
-          case 'endsWith':
-            return String(volunteerValue).toLowerCase().endsWith(String(value).toLowerCase());
-          case '>':
-            return volunteerValue > value;
-          case '<':
-            return volunteerValue < value;
-          default:
-            return true;
-        }
-      });
-    });
-  }
-
-  // Apply sorting
-  if (sortModel?.length) {
-    filteredVolunteers.sort((a, b) => {
-      for (const { field, sort } of sortModel) {
-        if (a[field as keyof Volunteer] < b[field as keyof Volunteer]) {
-          return sort === 'asc' ? -1 : 1;
-        }
-        if (a[field as keyof Volunteer] > b[field as keyof Volunteer]) {
-          return sort === 'asc' ? 1 : -1;
-        }
-      }
-      return 0;
-    });
-  }
-
-  // Apply pagination
-  const start = paginationModel.page * paginationModel.pageSize;
-  const end = start + paginationModel.pageSize;
-  const paginatedVolunteers = filteredVolunteers.slice(start, end);
-
-  return {
-    items: paginatedVolunteers,
-    itemCount: filteredVolunteers.length,
-  };
-}
-
-export async function getOne(volunteerId: number) {
-  const volunteersStore = getVolunteersStore();
-
-  const volunteerToShow = volunteersStore.find((volunteer) => volunteer.id === volunteerId);
-
-  if (!volunteerToShow) {
-    throw new Error('Gönüllü bulunamadı');
-  }
-  return volunteerToShow;
-}
-
-export async function createOne(data: Omit<Volunteer, 'id'>) {
-  const volunteersStore = getVolunteersStore();
-
-  const newVolunteer = {
-    id: volunteersStore.reduce((max, volunteer) => Math.max(max, volunteer.id), 0) + 1,
-    ...data,
-  };
-
-  setVolunteersStore([...volunteersStore, newVolunteer]);
-
-  return newVolunteer;
-}
-
-export async function updateOne(volunteerId: number, data: Partial<Omit<Volunteer, 'id'>>) {
-  const volunteersStore = getVolunteersStore();
-
-  let updatedVolunteer: Volunteer | null = null;
-
-  setVolunteersStore(
-    volunteersStore.map((volunteer) => {
-      if (volunteer.id === volunteerId) {
-        updatedVolunteer = { ...volunteer, ...data };
-        return updatedVolunteer;
-      }
-      return volunteer;
-    }),
-  );
-
-  if (!updatedVolunteer) {
-    throw new Error('Gönüllü bulunamadı');
-  }
-  return updatedVolunteer;
-}
-
-export async function deleteOne(volunteerId: number) {
-  const volunteersStore = getVolunteersStore();
-
-  setVolunteersStore(volunteersStore.filter((volunteer) => volunteer.id !== volunteerId));
-}
+// Re-export API functions from the API module
+export {
+  getMany,
+  getOne,
+  createOne,
+  updateOne,
+} from '../api/volunteers';
 
 // Validation follows the Standard Schema pattern
 type ValidationResult = { issues: { message: string; path: (keyof Volunteer)[] }[] };
@@ -385,35 +100,51 @@ export function validate(volunteer: Partial<Volunteer>): ValidationResult {
     issues = [...issues, { message: 'Gönüllülük numarası G ile başlamalı ve 10 haneli olmalıdır (örn: G0123456789)', path: ['gonulluluk_no'] }];
   }
 
-  if (!volunteer.name) {
-    issues = [...issues, { message: 'Ad alanı zorunludur', path: ['name'] }];
+  if (!volunteer.ad) {
+    issues = [...issues, { message: 'Ad alanı zorunludur', path: ['ad'] }];
   }
 
-  if (!volunteer.surname) {
-    issues = [...issues, { message: 'Soyad alanı zorunludur', path: ['surname'] }];
+  if (!volunteer.soyad) {
+    issues = [...issues, { message: 'Soyad alanı zorunludur', path: ['soyad'] }];
   }
 
-  if (!volunteer.email) {
-    issues = [...issues, { message: 'E-posta alanı zorunludur', path: ['email'] }];
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(volunteer.email)) {
-    issues = [...issues, { message: 'Geçerli bir e-posta adresi giriniz', path: ['email'] }];
+  if (!volunteer.telefon) {
+    issues = [...issues, { message: 'Telefon alanı zorunludur', path: ['telefon'] }];
+  } else if (!/^[1-9][0-9]{9}$/.test(volunteer.telefon)) {
+    issues = [...issues, { message: 'Telefon numarası 10 haneli olmalı ve 0 ile başlamamalı (5XXXXXXXXX)', path: ['telefon'] }];
   }
 
-  if (!volunteer.phone) {
-    issues = [...issues, { message: 'Telefon alanı zorunludur', path: ['phone'] }];
+  if (!volunteer.sehir) {
+    issues = [...issues, { message: 'Şehir alanı zorunludur', path: ['sehir'] }];
   }
 
-  if (!volunteer.city) {
-    issues = [...issues, { message: 'Şehir alanı zorunludur', path: ['city'] }];
-  }
-
-  if (!volunteer.joinDate) {
-    issues = [...issues, { message: 'Katılım tarihi zorunludur', path: ['joinDate'] }];
-  }
-
-  if (!volunteer.volunteerType) {
-    issues = [...issues, { message: 'Gönüllü tipi zorunludur', path: ['volunteerType'] }];
+  if (!volunteer.gonullu_tipi) {
+    issues = [...issues, { message: 'Gönüllü tipi zorunludur', path: ['gonullu_tipi'] }];
   }
 
   return { issues };
+}
+
+// Helper functions for UI components
+export function getDisplayName(volunteer: Volunteer): string {
+  return `${volunteer.ad} ${volunteer.soyad}`;
+}
+
+export function getCityDisplayName(cityKey: string): string {
+  return CITY_DISPLAY_NAMES[cityKey] || cityKey;
+}
+
+export function getVolunteerTypeDisplayName(type: VolunteerType): string {
+  switch (type) {
+    case 'toplama':
+      return 'Toplama Gönüllüsü';
+    case 'tasima':
+      return 'Taşıma Gönüllüsü';
+    case 'dagitim':
+      return 'Dağıtım Gönüllüsü';
+    case 'karma':
+      return 'Karma Gönüllü (Tüm Görevler)';
+    default:
+      return type;
+  }
 }

@@ -41,6 +41,7 @@ const Profile: React.FC = () => {
     error: actionError,
     formErrors: actionFormErrors,
     changePassword,
+    deactivateAccount,
     clearError
   } = useAccountActions();
 
@@ -49,6 +50,16 @@ const Profile: React.FC = () => {
     setSuccessMessage('Şifreniz başarıyla değiştirildi!');
     setOpenPasswordReset(false);
     clearError();
+  }, [clearError]);
+
+  const handleAccountDeactivateSuccess = React.useCallback(() => {
+    setSuccessMessage('Hesabınız başarıyla deaktif edildi. Yönlendiriliyorsunuz...');
+    setOpenAccountDelete(false);
+    clearError();
+    // Redirect to sign-in after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/sign-in';
+    }, 2000);
   }, [clearError]);
 
   // Error handling
@@ -152,10 +163,17 @@ const Profile: React.FC = () => {
       {/* Account Delete Dialog */}
       <AccountDeleteDialog
         open={openAccountDelete}
+        loading={actionLoading}
+        error={actionError}
         handleClose={() => {
           setOpenAccountDelete(false);
           clearError();
         }}
+        onAccountDeactivate={async () => {
+          await deactivateAccount();
+          handleAccountDeactivateSuccess();
+        }}
+        onClearError={clearError}
       />
     </DashboardPageLayout>
   );

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -6,22 +7,22 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 
-function AreaGradient({ color, id }: { color: string; id: string }) {
-  return (
-    <defs>
-      <linearGradient id={id} x1="50%" y1="0%" x2="50%" y2="100%">
-        <stop offset="0%" stopColor={color} stopOpacity={0.5} />
-        <stop offset="100%" stopColor={color} stopOpacity={0} />
-      </linearGradient>
-    </defs>
-  );
+interface VolunteerActivityChartProps {
+  totalVolunteers: number;
+  activeVolunteers: number;
+  loading?: boolean;
 }
 
-function getDaysInMonth(month: number, year: number) {
-  const date = new Date(year, month, 0);
-  const monthName = date.toLocaleDateString('tr-TR', {
-    month: 'short',
-  });
+function getCurrentMonthDays() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth(); // 0-based month (0 = January, 8 = September)
+  const date = new Date(year, month + 1, 0); // Last day of current month
+  
+  // Manuel Türkçe ay isimleri
+  const monthNames = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+  const monthName = monthNames[month];
+  
   const daysInMonth = date.getDate();
   const days = [];
   let i = 1;
@@ -32,27 +33,36 @@ function getDaysInMonth(month: number, year: number) {
   return days;
 }
 
-interface SessionsChartProps {
-  loading?: boolean;
-}
-
-export default function SessionsChart({ loading }: SessionsChartProps) {
+export default function VolunteerActivityChart({ 
+  totalVolunteers, 
+  activeVolunteers, 
+  loading 
+}: VolunteerActivityChartProps) {
   const theme = useTheme();
-  const currentDate = new Date();
-  const data = getDaysInMonth(currentDate.getMonth() + 1, currentDate.getFullYear());
+  
+  // Force fresh data generation on each render
+  const data = React.useMemo(() => getCurrentMonthDays(), []);
 
   const colorPalette = [
-    theme.palette.primary.light,
-    theme.palette.primary.main,
-    theme.palette.primary.dark,
+    theme.palette.success.light,
+    theme.palette.success.main,
+    theme.palette.success.dark,
   ];
+
+  // Generate realistic activity data based on actual volunteer counts
+  const generateActivityData = (baseCount: number, variation: number = 0.1) => {
+    return data.map(() => {
+      const variance = Math.random() * variation * 2 - variation; // -variation to +variation
+      return Math.max(0, Math.round(baseCount * (1 + variance)));
+    });
+  };
 
   if (loading) {
     return (
       <Card variant="outlined" sx={{ width: '100%' }}>
         <CardContent>
           <Typography component="h2" variant="subtitle2" gutterBottom>
-            Oturumlar
+            Gönüllü Aktivitesi
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Veriler yükleniyor...
@@ -62,11 +72,13 @@ export default function SessionsChart({ loading }: SessionsChartProps) {
     );
   }
 
+  const activityPercentage = totalVolunteers > 0 ? Math.round((activeVolunteers / totalVolunteers) * 100) : 0;
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Oturumlar
+          Gönüllü Aktivitesi
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -78,15 +90,20 @@ export default function SessionsChart({ loading }: SessionsChartProps) {
             }}
           >
             <Typography variant="h4" component="p">
-              13,277
+              {activeVolunteers.toLocaleString('tr-TR')}
             </Typography>
-            <Chip size="small" color="success" label="+35%" />
+            <Chip 
+              size="small" 
+              color="success" 
+              label={`%${activityPercentage}`} 
+            />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Son 30 gün için günlük oturumlar
+            Bu ay aktif gönüllü sayısı
           </Typography>
         </Stack>
         <LineChart
+          key={`chart-${new Date().getMonth()}-${data.length}`}
           colors={colorPalette}
           xAxis={[
             {
@@ -99,68 +116,41 @@ export default function SessionsChart({ loading }: SessionsChartProps) {
           yAxis={[{ width: 50 }]}
           series={[
             {
-              id: 'direct',
-              label: 'Doğrudan',
+              id: 'active',
+              label: 'Aktif',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
-              data: [
-                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300,
-                3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800, 5700, 6000,
-                6300, 6600, 6900, 7200, 7500, 7800, 8100,
-              ],
+              data: generateActivityData(activeVolunteers * 0.4, 0.15),
             },
             {
-              id: 'referral',
-              label: 'Yönlendirme',
+              id: 'participating',
+              label: 'Katılımcı',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
-              data: [
-                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200,
-                3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600, 5900, 6200,
-                6500, 5600, 6800, 7100, 7400, 7700, 8000,
-              ],
+              data: generateActivityData(activeVolunteers * 0.35, 0.12),
             },
             {
-              id: 'organic',
-              label: 'Organik',
+              id: 'standby',
+              label: 'Hazır',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               stackOrder: 'ascending',
-              data: [
-                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500,
-                3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500, 4000, 4700,
-                5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-              ],
+              data: generateActivityData(activeVolunteers * 0.25, 0.1),
               area: true,
             },
           ]}
           height={250}
           margin={{ left: 0, right: 20, top: 20, bottom: 0 }}
           grid={{ horizontal: true }}
-          sx={{
-            '& .MuiAreaElement-series-organic': {
-              fill: "url('#organic')",
-            },
-            '& .MuiAreaElement-series-referral': {
-              fill: "url('#referral')",
-            },
-            '& .MuiAreaElement-series-direct': {
-              fill: "url('#direct')",
-            },
-          }}
           hideLegend
-        >
-          <AreaGradient color={theme.palette.primary.dark} id="organic" />
-          <AreaGradient color={theme.palette.primary.main} id="referral" />
-          <AreaGradient color={theme.palette.primary.light} id="direct" />
-        </LineChart>
+        />
       </CardContent>
     </Card>
   );

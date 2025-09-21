@@ -1,12 +1,16 @@
 import * as React from 'react';
 import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import {
@@ -23,35 +27,41 @@ import { trTR } from '@mui/x-data-grid/locales';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
-import { useDialogs } from '../hooks/useDialogs/useDialogs';
-import useNotifications from '../hooks/useNotifications/useNotifications';
 import {
-  deleteOne as deleteVolunteer,
   getMany as getVolunteers,
+  getDisplayName,
+  getCityDisplayName,
   type Volunteer,
   type VolunteerType,
 } from '../data/volunteers';
 import VolunteerCreateDialog from './VolunteerCreateDialog';
-import VolunteerEditDialog from './VolunteerEditDialog';
+import VolunteerStatusDialog from './VolunteerStatusDialog';
 import VolunteerShowDialog from './VolunteerShowDialog';
 import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 const INITIAL_PAGE_SIZE = 10;
+
+// Filter interface
+interface VolunteerFilters {
+  searchTerm: string;
+  volunteerTypeFilter: string;
+  cityFilter: string;
+  statusFilter: string;
+}
 
 // Helper function to get volunteer type icon
 const getVolunteerTypeIcon = (type: VolunteerType) => {
   switch (type) {
     case 'toplama':
       return <InventoryIcon fontSize="small" />;
-    case 'taşıma':
+    case 'tasima':
       return <LocalShippingIcon fontSize="small" />;
-    case 'dağıtım':
+    case 'dagitim':
       return <DeliveryDiningIcon fontSize="small" />;
     case 'karma':
       return <GroupWorkIcon fontSize="small" />;
@@ -65,9 +75,9 @@ const getVolunteerTypeColor = (type: VolunteerType) => {
   switch (type) {
     case 'toplama':
       return 'primary';
-    case 'taşıma':
+    case 'tasima':
       return 'secondary';
-    case 'dağıtım':
+    case 'dagitim':
       return 'success';
     case 'karma':
       return 'warning';
@@ -81,9 +91,9 @@ const getVolunteerTypeLabel = (type: VolunteerType) => {
   switch (type) {
     case 'toplama':
       return 'Toplama';
-    case 'taşıma':
+    case 'tasima':
       return 'Taşıma';
-    case 'dağıtım':
+    case 'dagitim':
       return 'Dağıtım';
     case 'karma':
       return 'Karma';
@@ -93,14 +103,20 @@ const getVolunteerTypeLabel = (type: VolunteerType) => {
 };
 
 export default function VolunteerList() {
-  const dialogs = useDialogs();
-  const notifications = useNotifications();
 
   // Dialog states
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [showDialogOpen, setShowDialogOpen] = React.useState(false);
   const [selectedVolunteerId, setSelectedVolunteerId] = React.useState<number | null>(null);
+
+  // Filter states
+  const [filters, setFilters] = React.useState<VolunteerFilters>({
+    searchTerm: '',
+    volunteerTypeFilter: '',
+    cityFilter: '',
+    statusFilter: '',
+  });
 
   const [paginationModel, setPaginationModel] = React.useState<GridPaginationModel>({
     page: 0,
@@ -117,8 +133,19 @@ export default function VolunteerList() {
     rowCount: 0,
   });
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+
+  // Filter handler
+  const handleFilterChange = React.useCallback((field: keyof VolunteerFilters, value: string) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  // Get unique values for filters
+  const uniqueCities = React.useMemo(() => 
+    Array.from(new Set(rowsState.rows.map(v => v.sehir))).filter(Boolean).sort(),
+    [rowsState.rows]
+  );
 
   const handlePaginationModelChange = React.useCallback(
     (model: GridPaginationModel) => {
@@ -152,16 +179,46 @@ export default function VolunteerList() {
         filterModel,
       });
 
+      // Apply local filters
+      let filteredItems = listData.items;
+
+      if (filters.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase();
+        filteredItems = filteredItems.filter(volunteer => 
+          getDisplayName(volunteer).toLowerCase().includes(searchLower) ||
+          volunteer.gonulluluk_no?.toLowerCase().includes(searchLower)
+        );
+      }
+
+      if (filters.volunteerTypeFilter) {
+        filteredItems = filteredItems.filter(volunteer => 
+          volunteer.gonullu_tipi === filters.volunteerTypeFilter
+        );
+      }
+
+      if (filters.cityFilter) {
+        filteredItems = filteredItems.filter(volunteer => 
+          volunteer.sehir === filters.cityFilter
+        );
+      }
+
+      if (filters.statusFilter) {
+        const isActive = filters.statusFilter === 'true';
+        filteredItems = filteredItems.filter(volunteer => 
+          volunteer.is_active === isActive
+        );
+      }
+
       setRowsState({
-        rows: listData.items,
-        rowCount: listData.itemCount,
+        rows: filteredItems,
+        rowCount: filteredItems.length,
       });
     } catch (listDataError) {
       setError(listDataError as Error);
     }
 
     setIsLoading(false);
-  }, [paginationModel, sortModel, filterModel]);
+  }, [paginationModel, sortModel, filterModel, filters]);
 
   React.useEffect(() => {
     loadData();
@@ -201,42 +258,6 @@ export default function VolunteerList() {
     [],
   );
 
-  const handleRowDelete = React.useCallback(
-    (volunteer: Volunteer) => async () => {
-      const confirmed = await dialogs.confirm(
-        `${volunteer.name} ${volunteer.surname} adlı gönüllüyü silmek istediğinizden emin misiniz?`,
-        {
-          title: `Gönüllüyü sil?`,
-          severity: 'error',
-          okText: 'Sil',
-          cancelText: 'İptal',
-        },
-      );
-
-      if (confirmed) {
-        setIsLoading(true);
-        try {
-          await deleteVolunteer(Number(volunteer.id));
-
-          notifications.show('Gönüllü başarıyla silindi.', {
-            severity: 'success',
-            autoHideDuration: 3000,
-          });
-          loadData();
-        } catch (deleteError) {
-          notifications.show(
-            `Gönüllü silinirken hata oluştu: ${(deleteError as Error).message}`,
-            {
-              severity: 'error',
-              autoHideDuration: 3000,
-            },
-          );
-        }
-        setIsLoading(false);
-      }
-    },
-    [dialogs, notifications, loadData],
-  );
 
   // Dialog handlers
   const handleCreateDialogClose = React.useCallback(() => {
@@ -269,19 +290,6 @@ export default function VolunteerList() {
     setEditDialogOpen(true);
   }, []);
 
-  const handleShowDialogDelete = React.useCallback(async () => {
-    if (!selectedVolunteerId) return;
-
-    const volunteer = rowsState.rows.find(v => v.id === selectedVolunteerId);
-    if (!volunteer) return;
-
-    // Use the existing handleRowDelete logic to avoid duplication
-    await handleRowDelete(volunteer)();
-    
-    // Close the show dialog after successful deletion
-    setShowDialogOpen(false);
-    setSelectedVolunteerId(null);
-  }, [selectedVolunteerId, rowsState.rows, handleRowDelete]);
 
   const initialState = React.useMemo(
     () => ({
@@ -289,7 +297,7 @@ export default function VolunteerList() {
       columns: {
         columnVisibilityModel: {
           id: false, // Always hide ID
-          email: true, // Show email on desktop, can be toggled
+          'user.email': true, // Show email on desktop, can be toggled
         },
       },
     }),
@@ -318,21 +326,21 @@ export default function VolunteerList() {
         renderCell: (params: GridRenderCellParams) => {
           const volunteer = params.row as Volunteer;
           return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" fontWeight={500}>
-                {`${volunteer.name} ${volunteer.surname}`}
-              </Typography>
-            </Box>
+            <Typography variant="body2" fontWeight={500} sx={{ lineHeight: 1.5 }}>
+              {getDisplayName(volunteer)}
+            </Typography>
           );
         },
         sortComparator: (_v1, _v2, param1, param2) => {
-          const name1 = `${param1.api.getRow(param1.id)?.name} ${param1.api.getRow(param1.id)?.surname}`;
-          const name2 = `${param2.api.getRow(param2.id)?.name} ${param2.api.getRow(param2.id)?.surname}`;
+          const volunteer1 = param1.api.getRow(param1.id) as Volunteer;
+          const volunteer2 = param2.api.getRow(param2.id) as Volunteer;
+          const name1 = getDisplayName(volunteer1);
+          const name2 = getDisplayName(volunteer2);
           return name1.localeCompare(name2);
         },
       },
       {
-        field: 'volunteerType',
+        field: 'gonullu_tipi',
         headerName: 'Gönüllü Tipi',
         width: 140,
         flex: 0.8,
@@ -345,39 +353,85 @@ export default function VolunteerList() {
               color={getVolunteerTypeColor(type) as any}
               size="small"
               variant="outlined"
+              sx={{ height: '24px', fontSize: '0.75rem' }}
             />
           );
         },
       },
       { 
-        field: 'email', 
+        field: 'user.email', 
         headerName: 'E-posta', 
         width: 200,
         flex: 1.2,
-        hide: false // Show on desktop, can be hidden on mobile via responsive design
+        hide: false,
+        renderCell: (params: GridRenderCellParams) => {
+          const volunteer = params.row as Volunteer;
+          return (
+            <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+              {volunteer.user?.email || '-'}
+            </Typography>
+          );
+        },
       },
       { 
-        field: 'phone', 
+        field: 'telefon', 
         headerName: 'Telefon', 
         width: 140,
-        flex: 0.9
+        flex: 0.9,
+        renderCell: (params: GridRenderCellParams) => {
+          const phone = params.value as string;
+          // Format phone number for display (5XXXXXXXXX -> 5XX XXX XX XX)
+          const formattedPhone = phone && phone.length === 10 
+            ? `${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6, 8)} ${phone.slice(8, 10)}`
+            : phone || '-';
+          return (
+            <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+              {formattedPhone}
+            </Typography>
+          );
+        },
       },
       { 
-        field: 'city', 
+        field: 'sehir', 
         headerName: 'Şehir', 
         width: 120,
-        flex: 0.8
+        flex: 0.8,
+        renderCell: (params: GridRenderCellParams) => {
+          return (
+            <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+              {getCityDisplayName(params.value as string)}
+            </Typography>
+          );
+        },
       },
       {
-        field: 'joinDate',
+        field: 'created_at',
         headerName: 'Katılım Tarihi',
         width: 130,
         flex: 0.9,
         renderCell: (params: GridRenderCellParams) => {
           return (
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
               {dateUtils.formatDateTime(params.value)}
             </Typography>
+          );
+        },
+      },
+      {
+        field: 'is_active',
+        headerName: 'Durum',
+        width: 100,
+        flex: 0.6,
+        renderCell: (params: GridRenderCellParams) => {
+          const isActive = params.value as boolean;
+          return (
+            <Chip
+              label={isActive ? 'Aktif' : 'Pasif'}
+              color={isActive ? 'success' : 'default'}
+              size="small"
+              variant="outlined"
+              sx={{ height: '24px', fontSize: '0.75rem' }}
+            />
           );
         },
       },
@@ -394,46 +448,103 @@ export default function VolunteerList() {
             icon={<VisibilityIcon />}
             label="Görüntüle"
             onClick={handleRowShow(row)}
+            color="inherit"
           />,
           <GridActionsCellItem
             key="edit-item"
             icon={<EditIcon />}
-            label="Düzenle"
+            label="Durum Düzenle"
             onClick={handleRowEdit(row)}
-          />,
-          <GridActionsCellItem
-            key="delete-item"
-            icon={<DeleteIcon />}
-            label="Sil"
-            onClick={handleRowDelete(row)}
+            color="inherit"
           />,
         ],
       },
     ],
-    [handleRowShow, handleRowEdit, handleRowDelete],
+    [handleRowShow, handleRowEdit],
   );
 
   return (
     <>
-      {/* Controls */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h6">Gönüllü Listesi</Typography>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Tooltip title="Verileri yenile">
-            <IconButton size="small" aria-label="refresh" onClick={handleRefresh}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-          <Button
-            variant="contained"
-            onClick={handleCreateClick}
-            startIcon={<AddIcon />}
-            size="large"
-          >
-            Oluştur
-          </Button>
-        </Stack>
-      </Stack>
+
+      {/* Filters */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Filtreler
+          </Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ flexWrap: 'wrap', gap: 2 }}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-end" sx={{ flex: 1 }}>
+              <FormControl sx={{ minWidth: 300 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Arama</FormLabel>
+                <TextField
+                  placeholder="Ad, soyad veya gönüllülük numarası ile arayın"
+                  value={filters.searchTerm}
+                  onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+                  size="small"
+                />
+              </FormControl>
+              <FormControl sx={{ minWidth: 150 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllü Tipi</FormLabel>
+                <Select
+                  value={filters.volunteerTypeFilter}
+                  onChange={(e) => handleFilterChange('volunteerTypeFilter', e.target.value)}
+                  size="small"
+                >
+                  <MenuItem value="">Tümü</MenuItem>
+                  <MenuItem value="toplama">Toplama Gönüllüsü</MenuItem>
+                  <MenuItem value="tasima">Taşıma Gönüllüsü</MenuItem>
+                  <MenuItem value="dagitim">Dağıtım Gönüllüsü</MenuItem>
+                  <MenuItem value="karma">Karma Gönüllü</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl sx={{ minWidth: 150 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Şehir</FormLabel>
+                <Select
+                  value={filters.cityFilter}
+                  onChange={(e) => handleFilterChange('cityFilter', e.target.value)}
+                  size="small"
+                >
+                  <MenuItem value="">Tümü</MenuItem>
+                  {uniqueCities.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      {getCityDisplayName(city)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ minWidth: 120 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Durum</FormLabel>
+                <Select
+                  value={filters.statusFilter}
+                  onChange={(e) => handleFilterChange('statusFilter', e.target.value)}
+                  size="small"
+                >
+                  <MenuItem value="">Tümü</MenuItem>
+                  <MenuItem value="true">Aktif</MenuItem>
+                  <MenuItem value="false">Pasif</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+            
+            {/* Action Buttons - Separated on the right */}
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ ml: 2 }}>
+              <Tooltip title="Verileri yenile">
+                <IconButton size="small" aria-label="refresh" onClick={handleRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </Tooltip>
+              <Button
+                variant="contained"
+                onClick={handleCreateClick}
+                startIcon={<AddIcon />}
+                size="medium"
+              >
+                Oluştur
+              </Button>
+            </Stack>
+          </Stack>
+        </CardContent>
+      </Card>
 
       {/* Table Content */}
       <Card variant="outlined">
@@ -464,6 +575,7 @@ export default function VolunteerList() {
               }}
               pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25, 50]}
               localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
+              rowHeight={60}
               sx={{
                 // Responsive styling
                 '& .MuiDataGrid-root': {
@@ -471,6 +583,9 @@ export default function VolunteerList() {
                 },
                 '& .MuiDataGrid-cell': {
                   borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '8px 16px',
                 },
                 '& .MuiDataGrid-columnHeaders': {
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -481,18 +596,18 @@ export default function VolunteerList() {
                 },
                 // Mobile responsive adjustments
                 '@media (max-width: 768px)': {
-                  '& .MuiDataGrid-columnHeader[data-field="email"]': {
+                  '& .MuiDataGrid-columnHeader[data-field="user.email"]': {
                     display: 'none',
                   },
-                  '& .MuiDataGrid-cell[data-field="email"]': {
+                  '& .MuiDataGrid-cell[data-field="user.email"]': {
                     display: 'none',
                   },
                 },
                 '@media (max-width: 600px)': {
-                  '& .MuiDataGrid-columnHeader[data-field="joinDate"]': {
+                  '& .MuiDataGrid-columnHeader[data-field="created_at"]': {
                     display: 'none',
                   },
-                  '& .MuiDataGrid-cell[data-field="joinDate"]': {
+                  '& .MuiDataGrid-cell[data-field="created_at"]': {
                     display: 'none',
                   },
                 },
@@ -515,7 +630,7 @@ export default function VolunteerList() {
 
       {selectedVolunteerId && (
         <>
-          <VolunteerEditDialog
+          <VolunteerStatusDialog
             open={editDialogOpen}
             volunteerId={selectedVolunteerId}
             onClose={handleEditDialogClose}
@@ -527,7 +642,6 @@ export default function VolunteerList() {
             volunteerId={selectedVolunteerId}
             onClose={handleShowDialogClose}
             onEdit={handleShowDialogEdit}
-            onDelete={handleShowDialogDelete}
           />
         </>
       )}

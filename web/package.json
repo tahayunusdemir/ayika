@@ -21,7 +21,10 @@
     "migrate": "docker exec -it ayika-backend python manage.py migrate",
     "makemigrations": "docker exec -it ayika-backend python manage.py makemigrations",
     "createsuperuser": "docker exec -it ayika-backend python manage.py createsuperuser",
-    "collectstatic": "docker exec -it ayika-backend python manage.py collectstatic --noinput"
+    "collectstatic": "docker exec -it ayika-backend python manage.py collectstatic --noinput",
+    "create-test-volunteer": "docker exec -it ayika-backend python create_test_volunteer.py",
+    "setup": "npm run makemigrations && npm run migrate && npm run create-test-volunteer",
+    "full-setup": "npm run dev:down && npm run dev && timeout /t 10 && npm run setup"
   },
   "repository": {
     "type": "git",

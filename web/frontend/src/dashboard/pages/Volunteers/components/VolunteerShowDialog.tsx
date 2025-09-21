@@ -8,25 +8,24 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { getOne as getVolunteer, type Volunteer, type VolunteerType } from '../data/volunteers';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import { getOne as getVolunteer, getDisplayName, getCityDisplayName, type Volunteer, type VolunteerType } from '../data/volunteers';
 import { dateUtils } from '../../../theme/customizations/dateUtils';
+import VolunteerBusinessCard from './VolunteerBusinessCard';
 
 // Helper function to get volunteer type color
 const getVolunteerTypeColor = (type: VolunteerType) => {
   switch (type) {
     case 'toplama':
       return 'primary';
-    case 'taşıma':
+    case 'tasima':
       return 'secondary';
-    case 'dağıtım':
+    case 'dagitim':
       return 'success';
     case 'karma':
       return 'warning';
@@ -40,12 +39,12 @@ const getVolunteerTypeLabel = (type: VolunteerType) => {
   switch (type) {
     case 'toplama':
       return 'Toplama Gönüllüsü';
-    case 'taşıma':
-      return 'Taşıma Görevlisi';
-    case 'dağıtım':
-      return 'Dağıtım Görevlisi';
+    case 'tasima':
+      return 'Taşıma Gönüllüsü';
+    case 'dagitim':
+      return 'Dağıtım Gönüllüsü';
     case 'karma':
-      return 'Karma Görevli';
+      return 'Karma Gönüllü';
     default:
       return type;
   }
@@ -56,7 +55,6 @@ interface VolunteerShowDialogProps {
   volunteerId: number;
   onClose: () => void;
   onEdit: () => void;
-  onDelete: () => void;
 }
 
 export default function VolunteerShowDialog({
@@ -64,11 +62,11 @@ export default function VolunteerShowDialog({
   volunteerId,
   onClose,
   onEdit,
-  onDelete,
 }: VolunteerShowDialogProps) {
   const [volunteer, setVolunteer] = React.useState<Volunteer | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const [businessCardOpen, setBusinessCardOpen] = React.useState(false);
 
   const loadData = React.useCallback(async () => {
     if (!open || !volunteerId) return;
@@ -103,107 +101,53 @@ export default function VolunteerShowDialog({
 
     return volunteer ? (
       <Box>
-        {/* Header Section */}
-        <Box sx={{ mb: 3, textAlign: 'center' }}>
-          <Typography variant="h5" fontWeight={600} gutterBottom>
-            {volunteer.name} {volunteer.surname}
-          </Typography>
-          <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" sx={{ mb: 2 }}>
-            <Chip
-              label={getVolunteerTypeLabel(volunteer.volunteerType)}
-              color={getVolunteerTypeColor(volunteer.volunteerType) as any}
-              variant="filled"
-              size="medium"
-            />
+        {/* Compact Header */}
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h6" fontWeight={600}>
+              {getDisplayName(volunteer)}
+            </Typography>
             <Typography variant="body2" color="text.secondary">
               {volunteer.gonulluluk_no}
             </Typography>
-          </Stack>
-          <Divider />
-        </Box>
+          </Box>
+          <Chip
+            label={getVolunteerTypeLabel(volunteer.gonullu_tipi)}
+            color={getVolunteerTypeColor(volunteer.gonullu_tipi) as any}
+            size="small"
+          />
+          <Chip
+            label={volunteer.is_active ? 'Aktif' : 'Pasif'}
+            color={volunteer.is_active ? 'success' : 'default'}
+            size="small"
+            variant="outlined"
+          />
+        </Stack>
 
-        {/* Information Grid */}
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Gönüllülük Numarası
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {volunteer.gonulluluk_no}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Ad Soyad
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {volunteer.name} {volunteer.surname}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                E-posta
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {volunteer.email}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Telefon
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {volunteer.phone}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Şehir
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {volunteer.city}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Katılım Tarihi
-              </Typography>
-              <Typography variant="body1" fontWeight={500}>
-                {dateUtils.formatDateLong(volunteer.joinDate)}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={12} sx={{ mt: 1 }}>
-            <Box sx={{ p: 2, bgcolor: 'primary.50', borderRadius: 1, border: '1px solid', borderColor: 'primary.200' }}>
-              <Typography variant="h6" fontWeight={600} color="primary.main" gutterBottom>
-                {getVolunteerTypeLabel(volunteer.volunteerType)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {volunteer.volunteerType === 'toplama' && 'Yardım malzemelerinin toplanması ve organize edilmesi'}
-                {volunteer.volunteerType === 'taşıma' && 'Yardım malzemelerinin güvenli bir şekilde taşınması'}
-                {volunteer.volunteerType === 'dağıtım' && 'Yardım malzemelerinin ihtiyaç sahiplerine dağıtılması'}
-                {volunteer.volunteerType === 'karma' && 'Birden fazla alanda görev alabilir ve esnek çalışma imkanı'}
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
+        {/* Compact Information */}
+        <Stack spacing={2}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary">E-posta</Typography>
+            <Typography variant="body2" fontWeight={500}>{volunteer.user?.email || '-'}</Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary">Telefon</Typography>
+            <Typography variant="body2" fontWeight={500}>
+              {volunteer.telefon ? `${volunteer.telefon.slice(0, 3)} ${volunteer.telefon.slice(3, 6)} ${volunteer.telefon.slice(6, 8)} ${volunteer.telefon.slice(8, 10)}` : '-'}
+            </Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary">Şehir</Typography>
+            <Typography variant="body2" fontWeight={500}>{getCityDisplayName(volunteer.sehir)}</Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+            <Typography variant="body2" color="text.secondary">Katılım Tarihi</Typography>
+            <Typography variant="body2" fontWeight={500}>{dateUtils.formatDateLong(volunteer.created_at)}</Typography>
+          </Box>
+        </Stack>
       </Box>
     ) : null;
   }, [isLoading, error, volunteer]);
@@ -212,11 +156,11 @@ export default function VolunteerShowDialog({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
     >
       <DialogTitle>
-        {volunteer ? `${volunteer.name} ${volunteer.surname} - Gönüllü Detayları` : 'Gönüllü Detayları'}
+        {volunteer ? `${getDisplayName(volunteer)} - Gönüllü Detayları` : 'Gönüllü Detayları'}
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -231,22 +175,31 @@ export default function VolunteerShowDialog({
       <DialogActions>
         <Stack direction="row" spacing={2} sx={{ ml: 'auto' }}>
           <Button
+            variant="outlined"
+            startIcon={<QrCodeIcon />}
+            onClick={() => setBusinessCardOpen(true)}
+            disabled={!volunteer}
+          >
+            Kartvizit Oluştur
+          </Button>
+          <Button
             variant="contained"
             startIcon={<EditIcon />}
             onClick={onEdit}
           >
-            Düzenle
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={onDelete}
-          >
-            Sil
+            Durum Düzenle
           </Button>
         </Stack>
       </DialogActions>
+      
+      {/* Business Card Dialog */}
+      {volunteer && (
+        <VolunteerBusinessCard
+          open={businessCardOpen}
+          volunteer={volunteer}
+          onClose={() => setBusinessCardOpen(false)}
+        />
+      )}
     </Dialog>
   );
 }

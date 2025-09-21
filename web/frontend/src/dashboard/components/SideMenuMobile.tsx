@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
@@ -8,6 +7,8 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface SideMenuMobileProps {
   open: boolean | undefined;
@@ -17,6 +18,20 @@ interface SideMenuMobileProps {
 }
 
 export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPageSelect }: SideMenuMobileProps) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/sign-in', { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout fails, redirect to sign-in
+      navigate('/sign-in', { replace: true });
+    }
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -42,7 +57,7 @@ export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPag
             sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
           >
             <Typography variant="body1" sx={{ fontWeight: 500 }}>
-              Örnek Kullanıcı
+              {user?.volunteer_profile?.full_name || user?.first_name || user?.email || 'Kullanıcı'}
             </Typography>
           </Stack>
           <MenuButton showBadge>
@@ -55,7 +70,7 @@ export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPag
           <Divider />
         </Stack>
         <Stack sx={{ p: 2 }}>
-          <Button component={Link} to="/sign-in" variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          <Button onClick={handleLogout} variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
             Çıkış
           </Button>
         </Stack>

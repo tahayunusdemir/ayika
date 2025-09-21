@@ -5,10 +5,11 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import SitemarkIcon from '../../shared-theme/components/SitemarkIcon';
 import MenuContent from './MenuContent';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -29,6 +30,20 @@ interface SideMenuProps {
 }
 
 export default function SideMenu({ selectedPage, onPageSelect }: SideMenuProps) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/sign-in', { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout fails, redirect to sign-in
+      navigate('/sign-in', { replace: true });
+    }
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -72,10 +87,10 @@ export default function SideMenu({ selectedPage, onPageSelect }: SideMenuProps) 
       >
         <Box sx={{ mr: 'auto', display: 'flex', alignItems: 'center' }}>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            Örnek Kullanıcı
+            {user?.volunteer_profile?.full_name || user?.first_name || user?.email || 'Kullanıcı'}
           </Typography>
         </Box>
-        <Button component={Link} to="/sign-in" variant="outlined" startIcon={<LogoutRoundedIcon />} color="error">
+        <Button onClick={handleLogout} variant="outlined" startIcon={<LogoutRoundedIcon />} color="error">
           Çıkış
         </Button>
       </Stack>

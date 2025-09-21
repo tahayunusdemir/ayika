@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { PasswordChangeData, ProfileFormErrors } from '../types/profile.types';
+import { authService } from '../../../../services/authService';
 
 interface AccountActionsState {
   loading: boolean;
@@ -74,20 +75,30 @@ export const useAccountActions = () => {
         return Promise.reject(new Error('Validation failed'));
       }
 
-      // Simulate API call
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulate wrong current password error
-          if (data.currentPassword !== 'dummyPassword') {
-            reject(new Error('Mevcut şifre yanlış'));
-            return;
-          }
-          resolve(true);
-        }, 2000);
-      });
+      // Call backend API
+      const response = await authService.changePassword(data.currentPassword, data.newPassword);
+      
+      if (!response.success) {
+        if (response.errors) {
+          setState(prev => ({
+            ...prev,
+            formErrors: {
+              currentPassword: response.errors?.current_password?.[0],
+              newPassword: response.errors?.new_password?.[0]
+            },
+            loading: false
+          }));
+        } else {
+          setState(prev => ({
+            ...prev,
+            error: response.message || 'Şifre değiştirilemedi',
+            loading: false
+          }));
+        }
+        return Promise.reject(new Error(response.message));
+      }
       
       setState(prev => ({ ...prev, loading: false }));
-      
       return Promise.resolve();
       
     } catch (error: any) {
@@ -101,6 +112,35 @@ export const useAccountActions = () => {
   }, []);
 
 
+  // Deactivate account
+  const deactivateAccount = React.useCallback(async () => {
+    setState(prev => ({ ...prev, loading: true, error: null }));
+    
+    try {
+      const response = await authService.deactivateAccount();
+      
+      if (!response.success) {
+        setState(prev => ({
+          ...prev,
+          error: response.message || 'Hesap deaktif edilemedi',
+          loading: false
+        }));
+        return Promise.reject(new Error(response.message));
+      }
+      
+      setState(prev => ({ ...prev, loading: false }));
+      return Promise.resolve();
+      
+    } catch (error: any) {
+      setState(prev => ({
+        ...prev,
+        error: error.message || 'Hesap deaktif edilemedi',
+        loading: false
+      }));
+      return Promise.reject(error);
+    }
+  }, []);
+
   // Clear errors
   const clearError = React.useCallback(() => {
     setState(prev => ({ ...prev, error: null, formErrors: {} }));
@@ -109,6 +149,7 @@ export const useAccountActions = () => {
   return {
     ...state,
     changePassword,
+    deactivateAccount,
     clearError
   };
 };

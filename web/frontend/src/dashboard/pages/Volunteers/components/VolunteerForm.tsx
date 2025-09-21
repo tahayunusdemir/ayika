@@ -14,11 +14,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { trTR } from '@mui/x-date-pickers/locales';
 import type { Dayjs } from 'dayjs';
+import { TURKISH_CITIES, getCityDisplayName } from '../data/volunteers';
 import type { Volunteer, VolunteerType } from '../data/volunteers';
 import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 export interface VolunteerFormState {
-  values: Partial<Omit<Volunteer, 'id'>>;
+  values: Partial<Omit<Volunteer, 'id' | 'user' | 'updated_at'>>;
   errors: Partial<Record<keyof VolunteerFormState['values'], string>>;
 }
 
@@ -36,26 +37,11 @@ export interface VolunteerFormProps {
   submitButtonLabel: string;
 }
 
-const TURKISH_CITIES = [
-  'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya',
-  'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu',
-  'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır',
-  'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun',
-  'Gümüşhane', 'Hakkâri', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir',
-  'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya',
-  'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş',
-  'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop',
-  'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak',
-  'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale',
-  'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis',
-  'Osmaniye', 'Düzce'
-];
-
 const VOLUNTEER_TYPES: { value: VolunteerType; label: string; description: string }[] = [
   { value: 'toplama', label: 'Toplama Gönüllüsü', description: 'Yardım malzemelerinin toplanması' },
-  { value: 'taşıma', label: 'Taşıma Görevlisi', description: 'Yardım malzemelerinin taşınması' },
-  { value: 'dağıtım', label: 'Dağıtım Görevlisi', description: 'Yardım malzemelerinin dağıtılması' },
-  { value: 'karma', label: 'Karma Görevli', description: 'Birden fazla alanda görev alabilir' },
+  { value: 'tasima', label: 'Taşıma Gönüllüsü', description: 'Yardım malzemelerinin taşınması' },
+  { value: 'dagitim', label: 'Dağıtım Gönüllüsü', description: 'Yardım malzemelerinin dağıtılması' },
+  { value: 'karma', label: 'Karma Gönüllü', description: 'Birden fazla alanda görev alabilir' },
 ];
 
 export default function VolunteerForm(props: VolunteerFormProps) {
@@ -155,12 +141,12 @@ export default function VolunteerForm(props: VolunteerFormProps) {
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.volunteerType} fullWidth>
+            <FormControl error={!!formErrors.gonullu_tipi} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllü Tipi</FormLabel>
               <Select
-                value={formValues.volunteerType ?? ''}
+                value={formValues.gonullu_tipi ?? ''}
                 onChange={handleSelectFieldChange as SelectProps['onChange']}
-                name="volunteerType"
+                name="gonullu_tipi"
                 defaultValue=""
                 displayEmpty
                 fullWidth
@@ -181,73 +167,59 @@ export default function VolunteerForm(props: VolunteerFormProps) {
                   </MenuItem>
                 ))}
               </Select>
-              <FormHelperText>{formErrors.volunteerType ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.gonullu_tipi ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.name} fullWidth>
+            <FormControl error={!!formErrors.ad} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Ad</FormLabel>
               <TextField
-                value={formValues.name ?? ''}
+                value={formValues.ad ?? ''}
                 onChange={handleTextFieldChange}
-                name="name"
+                name="ad"
                 placeholder="Adınızı girin"
-                error={!!formErrors.name}
+                error={!!formErrors.ad}
                 fullWidth
               />
-              <FormHelperText>{formErrors.name ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.ad ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.surname} fullWidth>
+            <FormControl error={!!formErrors.soyad} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Soyad</FormLabel>
               <TextField
-                value={formValues.surname ?? ''}
+                value={formValues.soyad ?? ''}
                 onChange={handleTextFieldChange}
-                name="surname"
+                name="soyad"
                 placeholder="Soyadınızı girin"
-                error={!!formErrors.surname}
+                error={!!formErrors.soyad}
                 fullWidth
               />
-              <FormHelperText>{formErrors.surname ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.soyad ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.email} fullWidth>
-              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>E-posta</FormLabel>
-              <TextField
-                type="email"
-                value={formValues.email ?? ''}
-                onChange={handleTextFieldChange}
-                name="email"
-                placeholder="ornek@email.com"
-                error={!!formErrors.email}
-                fullWidth
-              />
-              <FormHelperText>{formErrors.email ?? ' '}</FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.phone} fullWidth>
+            <FormControl error={!!formErrors.telefon} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Telefon</FormLabel>
               <TextField
-                value={formValues.phone ?? ''}
+                value={formValues.telefon ?? ''}
                 onChange={handleTextFieldChange}
-                name="phone"
-                placeholder="+90 5XX XXX XX XX"
-                error={!!formErrors.phone}
+                name="telefon"
+                placeholder="5XXXXXXXXX"
+                error={!!formErrors.telefon}
                 fullWidth
+                inputProps={{ maxLength: 10 }}
               />
-              <FormHelperText>{formErrors.phone ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.telefon ?? 'Başında 0 olmadan 10 haneli telefon numarası'}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.city} fullWidth>
+            <FormControl error={!!formErrors.sehir} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Şehir</FormLabel>
               <Select
-                value={formValues.city ?? ''}
+                value={formValues.sehir ?? ''}
                 onChange={handleSelectFieldChange as SelectProps['onChange']}
-                name="city"
+                name="sehir"
                 defaultValue=""
                 displayEmpty
                 fullWidth
@@ -257,32 +229,48 @@ export default function VolunteerForm(props: VolunteerFormProps) {
                 </MenuItem>
                 {TURKISH_CITIES.map((city) => (
                   <MenuItem key={city} value={city}>
-                    {city}
+                    {getCityDisplayName(city)}
                   </MenuItem>
                 ))}
               </Select>
-              <FormHelperText>{formErrors.city ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.sehir ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.joinDate} fullWidth>
+            <FormControl error={!!formErrors.created_at} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Katılım Tarihi</FormLabel>
               <DatePicker
-                value={dateUtils.toDayjs(formValues.joinDate)}
-                onChange={handleDateFieldChange('joinDate')}
-                name="joinDate"
+                value={dateUtils.toDayjs(formValues.created_at)}
+                onChange={handleDateFieldChange('created_at')}
+                name="created_at"
                 {...dateUtils.getDatePickerProps()}
                 maxDate={dateUtils.now()}
                 shouldDisableDate={(date) => dateUtils.isAfter(date, dateUtils.now())}
                 slotProps={{
                   textField: {
-                    error: !!formErrors.joinDate,
+                    error: !!formErrors.created_at,
                     variant: 'outlined',
                   },
                 }}
                 disabled={isSubmitting}
               />
-              <FormHelperText>{formErrors.joinDate ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.created_at ?? ' '}</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+            <FormControl error={!!formErrors.is_active} fullWidth>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Aktif Durum</FormLabel>
+              <Select
+                value={String(formValues.is_active ?? true)}
+                onChange={handleSelectFieldChange as SelectProps['onChange']}
+                name="is_active"
+                defaultValue="true"
+                fullWidth
+              >
+                <MenuItem value="true">Aktif</MenuItem>
+                <MenuItem value="false">Pasif</MenuItem>
+              </Select>
+              <FormHelperText>{formErrors.is_active ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>

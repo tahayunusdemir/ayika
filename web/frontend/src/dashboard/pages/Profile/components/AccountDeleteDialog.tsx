@@ -19,7 +19,7 @@ import {
   Typography
 } from '@mui/material';
 import {
-  Warning as WarningIcon,
+  PauseCircle as PauseIcon,
   Person as PersonIcon,
   History as HistoryIcon,
   Event as EventIcon,
@@ -28,37 +28,50 @@ import {
 
 interface AccountDeleteDialogProps {
   open: boolean;
+  loading?: boolean;
+  error?: string | null;
   handleClose: () => void;
+  onAccountDeactivate?: () => Promise<void>;
+  onClearError?: () => void;
 }
 
-export default function AccountDeleteDialog({ open, handleClose }: AccountDeleteDialogProps) {
-  const [confirmDelete, setConfirmDelete] = React.useState(false);
+export default function AccountDeleteDialog({ 
+  open, 
+  loading = false, 
+  error = null, 
+  handleClose, 
+  onAccountDeactivate, 
+  onClearError 
+}: AccountDeleteDialogProps) {
+  const [confirmDeactivate, setConfirmDeactivate] = React.useState(false);
 
-  const handleSubmit = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = React.useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (confirmDelete) {
-      // Here you would typically send a request to your backend to delete the account
-      alert('Hesap silme işlemi başlatıldı.');
-      handleClose();
+    if (confirmDeactivate && onAccountDeactivate) {
+      try {
+        await onAccountDeactivate();
+      } catch (error) {
+        // Error is handled by the hook
+      }
     } else {
-      alert('Lütfen hesap silme işlemini onaylayın.');
+      alert('Lütfen hesap deaktif etme işlemini onaylayın.');
     }
-  }, [confirmDelete, handleClose]);
+  }, [confirmDeactivate, onAccountDeactivate]);
 
   const handleCheckboxChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmDelete(event.target.checked);
+    setConfirmDeactivate(event.target.checked);
   }, []);
 
   const handleClose_ = React.useCallback(() => {
-    setConfirmDelete(false);
+    setConfirmDeactivate(false);
     handleClose();
   }, [handleClose]);
 
-  const deletionItems = [
-    { icon: <PersonIcon />, text: 'Kişisel bilgileriniz (ad, soyad, e-posta, konum, katılma tarihi)' },
-    { icon: <StorageIcon />, text: 'Hesabınıza bağlı tüm veriler ve ayarlar' },
-    { icon: <HistoryIcon />, text: 'Gönüllülük geçmişiniz ve ilgili kayıtlar' },
-    { icon: <EventIcon />, text: 'Geçmiş etkinlikleriniz ve log kayıtları' }
+  const deactivationItems = [
+    { icon: <PersonIcon />, text: 'Hesabınız pasif duruma geçecek, giriş yapamazsınız' },
+    { icon: <StorageIcon />, text: 'Verileriniz korunur, silinmez' },
+    { icon: <HistoryIcon />, text: 'Gönüllülük geçmişiniz ve kayıtlarınız saklanır' },
+    { icon: <EventIcon />, text: 'İstediğiniz zaman hesabınızı yeniden aktif edebilirsiniz' }
   ];
 
   return (
@@ -79,28 +92,34 @@ export default function AccountDeleteDialog({ open, handleClose }: AccountDelete
     >
       <DialogTitle id="account-delete-title">
         <Typography variant="h6" component="h2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <WarningIcon color="error" />
-          Hesabı Sil
+          <PauseIcon color="warning" />
+          Hesabı Deaktif Et
         </Typography>
       </DialogTitle>
       
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
-        <Alert severity="error" sx={{ mb: 2 }}>
+        {error && (
+          <Alert severity="error" onClose={onClearError} sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        
+        <Alert severity="warning" sx={{ mb: 2 }}>
           <Typography variant="body2" sx={{ fontWeight: 500 }}>
-            Bu işlem geri alınamaz!
+            Hesabınız geçici olarak deaktif edilecek!
           </Typography>
         </Alert>
 
         <DialogContentText id="account-delete-description">
-          Hesabınızı silmek üzeresiniz. Aşağıdaki bilgiler kalıcı olarak silinecektir:
+          Hesabınızı deaktif etmek üzeresiniz. Bu işlemin sonuçları:
         </DialogContentText>
 
         <Card variant="outlined">
           <CardContent>
             <List dense>
-              {deletionItems.map((item, index) => (
+              {deactivationItems.map((item: any, index: number) => (
                 <ListItem key={index}>
-                  <ListItemIcon sx={{ color: 'error.main' }}>
+                  <ListItemIcon sx={{ color: 'warning.main' }}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText 
@@ -119,15 +138,15 @@ export default function AccountDeleteDialog({ open, handleClose }: AccountDelete
         <FormControlLabel
           control={
             <Checkbox 
-              checked={confirmDelete} 
+              checked={confirmDeactivate} 
               onChange={handleCheckboxChange}
               aria-describedby="account-delete-description"
-              color="error"
+              color="warning"
             />
           }
           label={
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Hesabı silmek için onaylıyorum ve sonuçlarını kabul ediyorum.
+              Hesabımı deaktif etmek istiyorum ve sonuçlarını kabul ediyorum.
             </Typography>
           }
         />
@@ -139,12 +158,12 @@ export default function AccountDeleteDialog({ open, handleClose }: AccountDelete
         </Button>
         <Button 
           variant="contained" 
-          color="error" 
+          color="warning" 
           type="submit" 
-          disabled={!confirmDelete}
+          disabled={!confirmDeactivate || loading}
           sx={{ minWidth: 120 }}
         >
-          Hesabı Sil
+          {loading ? 'Deaktif ediliyor...' : 'Hesabı Deaktif Et'}
         </Button>
       </DialogActions>
     </Dialog>

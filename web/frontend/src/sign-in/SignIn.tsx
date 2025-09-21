@@ -11,10 +11,13 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
 import AppAppBar from '../shared-theme/components/AppAppBar';
+import { useAuth } from '../contexts/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -58,12 +61,15 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn(props: { disableCustomTheme?: boolean }) {
+export default function SignIn(props: { disableCustomTheme?: boolean; onLoginSuccess?: () => void }) {
+  const { login, isLoading } = useAuth();
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [loginError, setLoginError] = React.useState('');
+  const [rememberMe, setRememberMe] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -73,16 +79,45 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    if (!validateInputs()) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email') as string;
+    const password = data.get('password') as string;
+
+    try {
+      setLoginError('');
+      const response = await login({ email, password });
+      
+      if (response.success) {
+        // Login successful - parent component will handle navigation
+        if (props.onLoginSuccess) {
+          props.onLoginSuccess();
+        }
+      } else {
+        // Show error message
+        setLoginError(response.message || 'Giriş başarısız.');
+        
+        // Handle field-specific errors
+        if (response.errors) {
+          if (response.errors.email) {
+            setEmailError(true);
+            setEmailErrorMessage(response.errors.email[0]);
+          }
+          if (response.errors.password) {
+            setPasswordError(true);
+            setPasswordErrorMessage(response.errors.password[0]);
+          }
+        }
+      }
+    } catch (error) {
+      setLoginError('Bağlantı hatası. Lütfen tekrar deneyiniz.');
+    }
   };
 
   const validateInputs = () => {
@@ -100,9 +135,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password.value || password.value.length < 8) {
       setPasswordError(true);
-      setPasswordErrorMessage('Şifre en az 6 karakter olmalıdır.');
+      setPasswordErrorMessage('Şifre en az 8 karakter olmalıdır.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -125,6 +160,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           >
             Giriş Yap
           </Typography>
+          {loginError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {loginError}
+            </Alert>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -151,6 +191,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 variant="outlined"
                 color={emailError ? 'error' : 'primary'}
+                disabled={isLoading}
               />
             </FormControl>
             <FormControl>
@@ -159,19 +200,26 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 name="password"
-                placeholder="••••••"
+                placeholder="••••••••"
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                autoFocus
                 required
                 fullWidth
                 variant="outlined"
                 color={passwordError ? 'error' : 'primary'}
+                disabled={isLoading}
               />
             </FormControl>
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox 
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  color="primary" 
+                  disabled={isLoading}
+                />
+              }
               label="Beni hatırla"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
@@ -179,14 +227,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              disabled={isLoading}
+              startIcon={isLoading ? <CircularProgress size={20} /> : null}
             >
-              Giriş Yap
+              {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </Button>
             <Link
               onClick={handleClickOpen}
               variant="body2"
-              sx={{ alignSelf: 'center', cursor: 'pointer' }}
+              sx={{ 
+                alignSelf: 'center', 
+                cursor: isLoading ? 'default' : 'pointer',
+                opacity: isLoading ? 0.5 : 1
+              }}
             >
               Şifrenizi mi unuttunuz?
             </Link>

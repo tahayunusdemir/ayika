@@ -165,10 +165,10 @@ export default function PasswordResetDialog({
       }}
     >
       <DialogTitle id="password-dialog-title">
-        <Typography variant="h6" component="h2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <SecurityIcon color="primary" />
           Şifre Değiştir
-        </Typography>
+        </Box>
       </DialogTitle>
       
       {loading && <LinearProgress />}

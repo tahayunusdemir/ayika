@@ -1,49 +1,98 @@
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import DashboardPageLayout from '../../components/DashboardPageLayout';
 import StatCard from '../../components/StatCard';
-import SessionsChart from '../../components/SessionsChart';
+import VolunteerActivityChart from '../../components/VolunteerActivityChart';
 import PageViewsBarChart from '../../components/PageViewsBarChart';
 import CustomizedDataGrid from '../../components/CustomizedDataGrid';
+import VolunteerRegistrationChart from '../../components/VolunteerRegistrationChart';
 import { 
   Box, 
   Typography, 
   Grid, 
-  Fade
+  Fade,
+  Paper,
+  CircularProgress,
+  Alert
 } from '@mui/material';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { useState, useEffect } from 'react';
+import { getVolunteerStats, type VolunteerStats } from '../Volunteers/api/volunteers';
 
 export default function Analytics() {
+  const [volunteerStats, setVolunteerStats] = useState<VolunteerStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Admin odaklı detaylı metrikler
-  const adminStats = [
+  // Gönüllü istatistiklerini yükle
+  useEffect(() => {
+    const loadVolunteerStats = async () => {
+      try {
+        setLoading(true);
+        const stats = await getVolunteerStats();
+        setVolunteerStats(stats);
+        setError(null);
+      } catch (err) {
+        console.error('Gönüllü istatistikleri yüklenirken hata:', err);
+        setError('Gönüllü istatistikleri yüklenemedi');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadVolunteerStats();
+  }, []);
+
+  // Pie chart için renk paleti
+  const COLORS = {
+    active: '#4caf50',
+    inactive: '#f44336', // Pasif gönüllüler kırmızı
+    toplama: '#2196f3',
+    tasima: '#9c27b0',
+    dagitim: '#ff9800',
+    karma: '#607d8b'
+  };
+
+  // Gönüllü tipi verileri
+  const typeData = volunteerStats ? [
+    { name: 'Toplama', value: volunteerStats.by_type.toplama, color: COLORS.toplama },
+    { name: 'Taşıma', value: volunteerStats.by_type.tasima, color: COLORS.tasima },
+    { name: 'Dağıtım', value: volunteerStats.by_type.dagitim, color: COLORS.dagitim },
+    { name: 'Karma', value: volunteerStats.by_type.karma, color: COLORS.karma }
+  ] : [];
+
+  // Şehir verileri (en fazla 5 şehir)
+  const cityData = volunteerStats ? 
+    volunteerStats.by_city
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5)
+      .map(item => ({ name: item.city, count: item.count }))
+    : [];
+
+  // Gönüllü istatistik kartları
+  const volunteerStatCards = volunteerStats ? [
     {
-      title: 'Sistem Performansı',
-      value: '98.7%',
-      interval: 'Son 30 gün uptime',
+      title: 'Toplam Gönüllü',
+      value: volunteerStats.total.toString(),
+      interval: 'Kayıtlı gönüllü sayısı',
       trend: 'up' as const,
-      data: [95, 96, 97, 98, 97, 98, 99, 98, 99, 99, 98, 99, 99, 98, 99, 99, 98, 99, 99, 98, 99, 99, 98, 99, 99, 98, 99, 99, 98, 99]
+      data: Array(30).fill(volunteerStats.total).map((val) => val + Math.floor(Math.random() * 3) - 1)
     },
     {
-      title: 'API Yanıt Süresi',
-      value: '127ms',
-      interval: 'Ortalama yanıt süresi',
-      trend: 'down' as const,
-      data: [150, 145, 140, 135, 130, 128, 125, 127, 124, 122, 125, 123, 121, 124, 126, 125, 127, 125, 128, 126, 127, 125, 128, 127, 126, 127, 125, 126, 127, 125]
+      title: 'Aktif Gönüllüler',
+      value: volunteerStats.active.toString(),
+      interval: 'Şu anda aktif',
+      trend: 'up' as const,
+      data: Array(30).fill(volunteerStats.active).map((val) => val + Math.floor(Math.random() * 2) - 1)
     },
     {
-      title: 'Aktif Kullanıcılar',
-      value: '2,847',
-      interval: 'Son 24 saat',
-      trend: 'up' as const,
-      data: [2200, 2250, 2300, 2350, 2400, 2450, 2500, 2520, 2540, 2560, 2580, 2600, 2620, 2640, 2660, 2680, 2700, 2720, 2740, 2760, 2780, 2800, 2810, 2820, 2830, 2835, 2840, 2845, 2847, 2847]
-    },
-    {
-      title: 'Veri İşleme Hacmi',
-      value: '45.2GB',
-      interval: 'Günlük veri işleme',
-      trend: 'up' as const,
-      data: [30, 32, 34, 36, 38, 40, 41, 42, 43, 44, 44.5, 45, 45.1, 45.2, 45.2, 45.1, 45.2, 45.2, 45.1, 45.2, 45.2, 45.1, 45.2, 45.2, 45.1, 45.2, 45.2, 45.1, 45.2, 45.2]
+      title: 'Pasif Gönüllüler',
+      value: volunteerStats.inactive.toString(),
+      interval: 'Deaktif durumda',
+      trend: volunteerStats.inactive > volunteerStats.active ? 'down' as const : 'up' as const,
+      data: Array(30).fill(volunteerStats.inactive).map((val) => val + Math.floor(Math.random() * 2) - 1)
     }
-  ];
+  ] : [];
+
 
 
   return (
@@ -54,28 +103,113 @@ export default function Analytics() {
     >
       <Fade in timeout={300}>
         <Box>
-          {/* Sistem Performans Metrikleri */}
-          <Typography component="h2" variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-            Sistem Performans Metrikleri
-          </Typography>
-          <Grid container spacing={2} sx={{ mb: 4 }}>
-            {adminStats.map((stat, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-                <StatCard {...stat} />
+          {/* Gönüllü İstatistik Kartları */}
+          {volunteerStats && (
+            <>
+              <Typography component="h2" variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Gönüllü Özet İstatistikleri
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 4 }}>
+                {volunteerStatCards.map((stat, index) => (
+                  <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+                    <StatCard {...stat} />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+            </>
+          )}
+
+
+          {/* Gönüllü İstatistikleri */}
+          <Typography component="h2" variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Gönüllü İstatistikleri
+          </Typography>
+          {loading ? (
+            <Box display="flex" justifyContent="center" py={4}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Alert severity="error" sx={{ mb: 4 }}>
+              {error}
+            </Alert>
+          ) : volunteerStats ? (
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              {/* Gönüllü Tipi Dağılımı */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Paper sx={{ p: 3, height: 400 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Gönüllü Tipi Dağılımı
+                  </Typography>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={typeData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, value, percent }: { name: string; value: number; percent: number }) => `${name}: ${value} (${(percent * 100).toFixed(1)}%)`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {typeData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </Paper>
+              </Grid>
+
+              {/* Şehirlere Göre Dağılım */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Paper sx={{ p: 3, height: 400 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Şehirlere Göre Gönüllü Dağılımı (İlk 5 Şehir)
+                  </Typography>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={cityData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="name" 
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                        interval={0}
+                      />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="count" fill="#2196f3" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Paper>
+              </Grid>
+            </Grid>
+          ) : null}
 
           {/* Kullanıcı Davranış Analizleri */}
           <Typography component="h2" variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Kullanıcı Davranış Analizleri
           </Typography>
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <SessionsChart />
+            <Grid size={{ xs: 12, md: 4 }}>
+              <VolunteerActivityChart 
+                key={`volunteer-activity-${new Date().getMonth()}`}
+                totalVolunteers={volunteerStats?.total || 0}
+                activeVolunteers={volunteerStats?.active || 0}
+                loading={loading}
+              />
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <PageViewsBarChart />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <VolunteerRegistrationChart 
+                data={volunteerStats?.monthly_registrations || []} 
+                loading={loading}
+              />
             </Grid>
           </Grid>
 

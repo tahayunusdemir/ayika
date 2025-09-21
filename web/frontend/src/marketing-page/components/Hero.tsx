@@ -101,6 +101,17 @@ export default function Hero() {
         <MapContainer id="turkey-map">
           <TurkeyMap width={800} height={400} />
         </MapContainer>
+        <Typography
+          variant="caption"
+          sx={{
+            textAlign: 'center',
+            color: 'text.secondary',
+            mt: 1,
+            fontStyle: 'italic',
+          }}
+        >
+          * Haritadaki noktalar geçici olarak yerleştirilmiş olup temsilidir
+        </Typography>
       </Container>
     </Box>
   );

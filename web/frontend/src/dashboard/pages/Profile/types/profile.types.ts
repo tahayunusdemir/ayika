@@ -1,16 +1,30 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 
-// User Profile Types
+// User Profile Types - Updated for Volunteer Backend
 export interface UserProfile {
-  id: string;
-  firstName: string;
-  lastName: string;
+  id: number;
   email: string;
-  phoneNumber: string;
-  location: string;
-  joinDate: string;
-  isVerified: boolean;
+  first_name: string;
+  last_name: string;
+  is_active: boolean;
+  volunteer_profile?: VolunteerProfile;
+}
+
+export interface VolunteerProfile {
+  id: number;
+  gonulluluk_no: string;
+  ad: string;
+  soyad: string;
+  telefon: string;
+  sehir: string;
+  sehir_display: string;
+  gonullu_tipi: string;
+  gonullu_tipi_display: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  full_name: string;
 }
 
 // Component Props Extensions

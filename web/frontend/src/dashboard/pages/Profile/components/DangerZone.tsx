@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Typography, Box, Card, CardContent, CardHeader, Fade } from '@mui/material';
-import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
+import { PauseCircle as PauseIcon } from '@mui/icons-material';
 
 interface DangerZoneProps {
   loading: boolean;
@@ -13,39 +13,39 @@ const DangerZone: React.FC<DangerZoneProps> = React.memo(({
 }) => {
   return (
     <Fade in timeout={400}>
-      <Card variant="outlined" sx={{ borderColor: 'error.main', backgroundColor: 'error.50' }}>
+      <Card variant="outlined" sx={{ borderColor: 'warning.main', backgroundColor: 'warning.50' }}>
         <CardHeader
-          avatar={<DeleteForeverIcon color="error" />}
+          avatar={<PauseIcon color="warning" />}
           title={
-            <Typography variant="h6" color="error.main" sx={{ fontWeight: 600 }}>
-              Tehlikeli Alan
+            <Typography variant="h6" color="warning.main" sx={{ fontWeight: 600 }}>
+              Hesap Yönetimi
             </Typography>
           }
           sx={{ pb: 1 }}
         />
         <CardContent sx={{ pt: 0 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Hesabınızı kalıcı olarak silmek istiyorsanız bu işlemi gerçekleştirebilirsiniz.
-            Bu işlem geri alınamaz ve tüm verileriniz silinir.
+            Hesabınızı geçici olarak deaktif etmek istiyorsanız bu işlemi gerçekleştirebilirsiniz.
+            Verileriniz korunur ve istediğiniz zaman hesabınızı yeniden aktif edebilirsiniz.
           </Typography>
 
           <Button
             variant="outlined"
-            color="error"
+            color="warning"
             onClick={onOpenAccountDelete}
-            startIcon={<DeleteForeverIcon />}
+            startIcon={<PauseIcon />}
             disabled={loading}
             size="medium"
             sx={{
               fontWeight: 500,
               '&:hover': {
-                backgroundColor: 'error.main',
+                backgroundColor: 'warning.main',
                 color: 'white',
-                borderColor: 'error.main'
+                borderColor: 'warning.main'
               }
             }}
           >
-            Hesabı Kalıcı Olarak Sil
+            Hesabı Deaktif Et
           </Button>
         </CardContent>
       </Card>

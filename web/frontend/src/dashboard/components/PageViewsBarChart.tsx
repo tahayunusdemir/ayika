@@ -8,6 +8,24 @@ import { useTheme } from '@mui/material/styles';
 
 export default function PageViewsBarChart() {
   const theme = useTheme();
+  
+  // Son 7 ayı dinamik olarak oluştur
+  const getLastSevenMonths = () => {
+    const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const result = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const monthIndex = (currentMonth - i + 12) % 12;
+      result.push(months[monthIndex]);
+    }
+    
+    return result;
+  };
+  
+  const monthLabels = getLastSevenMonths();
+  
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
     (theme.vars || theme).palette.primary.main,
@@ -44,7 +62,7 @@ export default function PageViewsBarChart() {
             {
               scaleType: 'band',
               categoryGapRatio: 0.5,
-              data: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem'],
+              data: monthLabels,
               height: 24,
             },
           ]}
