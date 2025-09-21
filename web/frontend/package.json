@@ -7,7 +7,17 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:dev": "docker-compose --profile dev up --build",
+    "docker:dev:down": "docker-compose --profile dev down",
+    "docker:prod": "docker-compose --profile prod up --build",
+    "docker:prod:down": "docker-compose --profile prod down",
+    "docker:build:dev": "docker build --target development -t ayika-frontend:dev .",
+    "docker:build:prod": "docker build --target production -t ayika-frontend:prod .",
+    "docker:clean": "docker system prune -f && docker volume prune -f",
+    "docker:health": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'",
+    "docker:logs:dev": "docker-compose --profile dev logs -f",
+    "docker:logs:prod": "docker-compose --profile prod logs -f"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

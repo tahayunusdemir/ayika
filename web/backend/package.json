@@ -1,0 +1,33 @@
+{
+  "name": "ayika-backend",
+  "version": "1.0.0",
+  "description": "Ayika Django Backend - Emergency Aid and Needs Coordination Network",
+  "scripts": {
+    "docker:dev": "docker-compose --profile dev up --build",
+    "docker:dev:down": "docker-compose --profile dev down",
+    "docker:prod": "docker-compose --profile prod up --build",
+    "docker:prod:down": "docker-compose --profile prod down",
+    "docker:build:dev": "docker build --target development -t ayika-backend:dev .",
+    "docker:build:prod": "docker build --target production -t ayika-backend:prod .",
+    "docker:clean": "docker system prune -f && docker volume prune -f",
+    "docker:logs": "docker-compose logs -f",
+    "docker:shell": "docker exec -it ayika-backend-dev python manage.py shell",
+    "docker:migrate": "docker exec -it ayika-backend-dev python manage.py migrate",
+    "docker:makemigrations": "docker exec -it ayika-backend-dev python manage.py makemigrations",
+    "docker:createsuperuser": "docker exec -it ayika-backend-dev python manage.py createsuperuser",
+    "docker:collectstatic": "docker exec -it ayika-backend-dev python manage.py collectstatic --noinput"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tahayunusdemir/ayika.git"
+  },
+  "keywords": [
+    "django",
+    "emergency-aid",
+    "disaster-relief",
+    "volunteer-management",
+    "cargo-tracking"
+  ],
+  "author": "Ayika Team",
+  "license": "MIT"
+}

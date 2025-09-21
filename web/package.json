@@ -1,0 +1,45 @@
+{
+  "name": "ayika-fullstack",
+  "version": "1.0.0",
+  "description": "Ayika Full-Stack Application - Emergency Aid and Needs Coordination Network",
+  "scripts": {
+    "dev": "docker-compose up --build",
+    "dev:down": "docker-compose down",
+    "prod": "docker-compose -f docker-compose.prod.yml up --build",
+    "prod:down": "docker-compose -f docker-compose.prod.yml down",
+    "frontend:dev": "cd frontend && npm run docker:dev",
+    "frontend:prod": "cd frontend && npm run docker:prod",
+    "backend:dev": "cd backend && npm run docker:dev",
+    "backend:prod": "cd backend && npm run docker:prod",
+    "logs": "docker-compose logs -f",
+    "logs:frontend": "docker-compose logs -f frontend",
+    "logs:backend": "docker-compose logs -f backend",
+    "clean": "docker system prune -f && docker volume prune -f",
+    "reset": "docker-compose down -v && docker system prune -f",
+    "health": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'",
+    "shell:backend": "docker exec -it ayika-backend python manage.py shell",
+    "migrate": "docker exec -it ayika-backend python manage.py migrate",
+    "makemigrations": "docker exec -it ayika-backend python manage.py makemigrations",
+    "createsuperuser": "docker exec -it ayika-backend python manage.py createsuperuser",
+    "collectstatic": "docker exec -it ayika-backend python manage.py collectstatic --noinput"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tahayunusdemir/ayika.git"
+  },
+  "keywords": [
+    "emergency-aid",
+    "disaster-relief",
+    "volunteer-management",
+    "cargo-tracking",
+    "react",
+    "django",
+    "full-stack"
+  ],
+  "author": "Ayika Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.11.0"
+  }
+}

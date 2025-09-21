@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ayika-postgres
+    environment:
+      POSTGRES_DB: ayika_db
+      POSTGRES_USER: ayika_user
+      POSTGRES_PASSWORD: ayika_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ayika-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ayika_user -d ayika_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for Caching and Celery
+  redis:
+    image: redis:7-alpine
+    container_name: ayika-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ayika-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Django Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: ayika-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - media_volume:/app/media
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgresql://ayika_user:ayika_password@postgres:5432/ayika_db
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ayika-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: ayika-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - ayika-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5173/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  media_volume:
+
+networks:
+  ayika-network:
+    driver: bridge
