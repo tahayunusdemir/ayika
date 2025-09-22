@@ -21,6 +21,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile }) => 
       gonulluluk_no: profile.volunteer_profile.gonulluluk_no,
       ad: profile.volunteer_profile.ad,
       soyad: profile.volunteer_profile.soyad,
+      email: profile.email, // Add email field from user profile
       telefon: profile.volunteer_profile.telefon,
       sehir: profile.volunteer_profile.sehir,
       gonullu_tipi: profile.volunteer_profile.gonullu_tipi as any,
@@ -78,7 +79,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = React.memo(({ profile }) => 
                     onClick={() => setBusinessCardOpen(true)}
                     sx={{ minWidth: 'auto' }}
                   >
-                    Kartvizit Oluştur
+                    Gönüllü Kartı Oluştur
                   </Button>
                 )}
               </Stack>

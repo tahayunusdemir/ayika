@@ -4,7 +4,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import useNotifications from '../hooks/useNotifications/useNotifications';
 import {
   createOne as createVolunteer,
   validate as validateVolunteer,
@@ -16,8 +15,11 @@ import VolunteerForm, {
 } from './VolunteerForm';
 
 const INITIAL_FORM_VALUES: Partial<VolunteerFormState['values']> = {
-  created_at: new Date().toISOString(),
-  gonulluluk_no: '',
+  ad: '',
+  soyad: '',
+  email: '',
+  telefon: '',
+  sehir: '',
   gonullu_tipi: undefined,
   is_active: true,
 };
@@ -33,7 +35,6 @@ export default function VolunteerCreateDialog({
   onClose,
   onSuccess,
 }: VolunteerCreateDialogProps) {
-  const notifications = useNotifications();
 
   const [formState, setFormState] = React.useState<VolunteerFormState>(() => ({
     values: INITIAL_FORM_VALUES,
@@ -106,23 +107,11 @@ export default function VolunteerCreateDialog({
 
     try {
       await createVolunteer(formValues as Omit<Volunteer, 'id'>);
-      notifications.show('Gönüllü başarıyla oluşturuldu.', {
-        severity: 'success',
-        autoHideDuration: 3000,
-      });
-
       onSuccess();
     } catch (createError) {
-      notifications.show(
-        `Gönüllü oluşturulurken hata oluştu: ${(createError as Error).message}`,
-        {
-          severity: 'error',
-          autoHideDuration: 3000,
-        },
-      );
       throw createError;
     }
-  }, [formValues, notifications, setFormErrors, onSuccess]);
+  }, [formValues, setFormErrors, onSuccess]);
 
   return (
     <Dialog

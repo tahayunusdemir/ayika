@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../onboarding/presentation/pages/onboarding_page.dart';
-import '../../../home/presentation/pages/home_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -18,31 +16,18 @@ class _SplashPageState extends State<SplashPage> {
     _checkOnboardingStatus();
   }
 
-  // Onboarding durumunu kontrol et ve uygun sayfaya yönlendir
+  // Her açılışta onboarding göster
   Future<void> _checkOnboardingStatus() async {
     // Splash ekranını 2 saniye göster
     await Future.delayed(const Duration(seconds: 2));
     
     if (!mounted) return;
     
-    final prefs = await SharedPreferences.getInstance();
-    final bool onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-    
-    if (!mounted) return;
-    
-    if (onboardingCompleted) {
-      // Onboarding tamamlanmışsa direkt ana sayfaya git
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const HomePage()),
-        (route) => false,
-      );
-    } else {
-      // Onboarding tamamlanmamışsa onboarding sayfasına git
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const OnboardingPage()),
-        (route) => false,
-      );
-    }
+    // Her zaman onboarding sayfasına git
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const OnboardingPage()),
+      (route) => false,
+    );
   }
 
   @override

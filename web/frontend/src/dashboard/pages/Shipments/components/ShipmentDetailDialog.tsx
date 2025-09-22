@@ -9,15 +9,17 @@ import {
   Grid,
   Card,
   CardContent,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   IconButton,
+  Chip,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { Shipment } from '../types';
-import { getStatusLabel, getCargoTypeLabel, getSecurityApprovalLabel } from '../data/contentOptions';
+import { getCargoTypeLabel } from '../data/contentOptions';
 
 interface ShipmentDetailDialogProps {
   open: boolean;
@@ -25,8 +27,6 @@ interface ShipmentDetailDialogProps {
   onClose: () => void;
   onEdit?: (shipment: Shipment) => void;
 }
-
-
 
 export default function ShipmentDetailDialog({
   open,
@@ -54,6 +54,41 @@ export default function ShipmentDetailDialog({
     });
   };
 
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case 'hazirlaniyor':
+        return {
+          color: 'primary' as const,
+          icon: <InventoryIcon sx={{ fontSize: 18 }} />,
+          label: 'Hazırlanıyor'
+        };
+      case 'yolda':
+        return {
+          color: 'secondary' as const,
+          icon: <LocalShippingIcon sx={{ fontSize: 18 }} />,
+          label: 'Yolda'
+        };
+      case 'teslim_edildi':
+        return {
+          color: 'success' as const,
+          icon: <CheckCircleIcon sx={{ fontSize: 18 }} />,
+          label: 'Teslim Edildi'
+        };
+      case 'iptal_edildi':
+        return {
+          color: 'error' as const,
+          icon: <CancelIcon sx={{ fontSize: 18 }} />,
+          label: 'İptal Edildi'
+        };
+      default:
+        return {
+          color: 'default' as const,
+          icon: <InventoryIcon sx={{ fontSize: 18 }} />,
+          label: 'Bilinmiyor'
+        };
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -74,7 +109,7 @@ export default function ShipmentDetailDialog({
               Kargo Detayları
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {shipment.takip_no}
+              {shipment.kargo_no}
             </Typography>
           </Box>
           <IconButton
@@ -90,7 +125,7 @@ export default function ShipmentDetailDialog({
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Temel Bilgiler */}
-          <Grid size={4}>
+          <Grid size={6}>
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -101,43 +136,53 @@ export default function ShipmentDetailDialog({
                     <Typography variant="body2" color="text.secondary">
                       Durum
                     </Typography>
-                    <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {getStatusLabel(shipment.kargo_durumu)}
-                    </Typography>
+                    <Box sx={{ mt: 0.5 }}>
+                      {(() => {
+                        const config = getStatusConfig(shipment.durum);
+                        return (
+                          <Chip 
+                            icon={config.icon}
+                            label={config.label}
+                            color={config.color}
+                            size="small"
+                            variant="filled"
+                            sx={{
+                              fontWeight: 500,
+                              '& .MuiChip-icon': {
+                                marginLeft: '4px',
+                                marginRight: '-2px'
+                              }
+                            }}
+                          />
+                        );
+                      })()}
+                    </Box>
                   </Box>
                   <Box>
                     <Typography variant="body2" color="text.secondary">
                       İçerik
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {shipment.icerik.icerik_adi}
+                      {shipment.icerik}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {getCargoTypeLabel(shipment.icerik.kargo_tipi)}
+                      {getCargoTypeLabel(shipment.kargo_tipi)}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Konum
+                      Rota
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {shipment.konum.sehir}
+                      {shipment.cikis_yeri_display} → {shipment.ulasacagi_yer_display}
                     </Typography>
                   </Box>
                   <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Ağırlık/Hacim
+                      Ağırlık / Hacim / Miktar
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {shipment.icerik.agirlik_hacim || 'Belirtilmemiş'}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Güvenlik Onayı
-                    </Typography>
-                    <Typography variant="body1" sx={{ mt: 0.5 }} color={shipment.guvenlik_onayi === 'kontrol edildi' ? 'success.main' : 'error.main'}>
-                      {getSecurityApprovalLabel(shipment.guvenlik_onayi)}
+                      {shipment.agirlik} kg / {shipment.hacim} m³ / {shipment.miktar} adet
                     </Typography>
                   </Box>
                 </Stack>
@@ -145,31 +190,8 @@ export default function ShipmentDetailDialog({
             </Card>
           </Grid>
 
-          {/* Durum Geçmişi */}
-          <Grid size={4}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Durum Geçmişi
-                </Typography>
-                <List dense sx={{ mt: 1 }}>
-                  {shipment.durum_gecmisi.map((history, index) => (
-                    <ListItem key={index} sx={{ px: 0, py: 0.5 }}>
-                      <ListItemText
-                        primary={`${index + 1}. ${history.aciklama}`}
-                        secondary={formatDate(history.tarih)}
-                        primaryTypographyProps={{ variant: 'body2', fontSize: '0.875rem' }}
-                        secondaryTypographyProps={{ variant: 'caption', fontSize: '0.75rem' }}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
           {/* Zaman Bilgisi */}
-          <Grid size={4}>
+          <Grid size={6}>
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -178,10 +200,10 @@ export default function ShipmentDetailDialog({
                 <Stack spacing={2}>
                   <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Gönderim Tarihi
+                      Oluşturulma Tarihi
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {formatDate(shipment.gonderim_tarihi)}
+                      {formatDate(shipment.olusturulma_tarihi)}
                     </Typography>
                   </Box>
                   <Box>
@@ -189,7 +211,7 @@ export default function ShipmentDetailDialog({
                       Son Güncelleme
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {formatDate(shipment.son_guncelleme_tarihi)}
+                      {formatDate(shipment.son_degisiklik)}
                     </Typography>
                   </Box>
                 </Stack>
@@ -197,14 +219,14 @@ export default function ShipmentDetailDialog({
             </Card>
           </Grid>
 
-          {/* Sender Info with Location */}
+          {/* Gönderici Bilgileri */}
           <Grid size={12}>
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Gönderici Bilgileri
                 </Typography>
-                {shipment.gonderici.gizlilik_durumu ? (
+                {shipment.anonim_gonderici ? (
                   <Box sx={{ 
                     textAlign: 'center', 
                     py: 2,
@@ -219,34 +241,34 @@ export default function ShipmentDetailDialog({
                   </Box>
                 ) : (
                   <Grid container spacing={2}>
-                    <Grid size={4}>
+                    <Grid size={3}>
                       <Typography variant="body2" color="text.secondary">
                         Ad Soyad
                       </Typography>
                       <Typography variant="body1" sx={{ mt: 0.5 }}>
-                        {shipment.gonderici.ad} {shipment.gonderici.soyad}
+                        {shipment.gonderici_ad} {shipment.gonderici_soyad}
                       </Typography>
                     </Grid>
-                    <Grid size={4}>
-                      {shipment.gonderici.telefon && (
+                    <Grid size={3}>
+                      {shipment.gonderici_telefon && (
                         <Box>
                           <Typography variant="body2" color="text.secondary">
                             Telefon
                           </Typography>
                           <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {shipment.gonderici.telefon}
+                            {shipment.gonderici_telefon}
                           </Typography>
                         </Box>
                       )}
                     </Grid>
-                    <Grid size={4}>
-                      {shipment.gonderici.email && (
+                    <Grid size={6}>
+                      {shipment.gonderici_email && (
                         <Box>
                           <Typography variant="body2" color="text.secondary">
                             E-posta
                           </Typography>
                           <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {shipment.gonderici.email}
+                            {shipment.gonderici_email}
                           </Typography>
                         </Box>
                       )}
@@ -257,7 +279,7 @@ export default function ShipmentDetailDialog({
             </Card>
           </Grid>
 
-          {/* Volunteers Info */}
+          {/* Gönüllü Bilgileri */}
           <Grid size={12}>
             <Card variant="outlined">
               <CardContent>
@@ -269,26 +291,38 @@ export default function ShipmentDetailDialog({
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       Toplama Gönüllüsü
                     </Typography>
-                    <Box>
-                      <Typography variant="body1">
-                        {shipment.gorevliler.yardim_toplama_gonullusu.ad} {shipment.gorevliler.yardim_toplama_gonullusu.soyad}
+                    {shipment.toplama_gonullusu_detail ? (
+                      <Box>
+                        <Typography variant="body1">
+                          {shipment.toplama_gonullusu_detail.full_name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {shipment.toplama_gonullusu_detail.gonulluluk_no}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {shipment.toplama_gonullusu_detail.sehir}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                        Atanmamış
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {shipment.gorevliler.yardim_toplama_gonullusu.gonulluluk_no}
-                      </Typography>
-                    </Box>
+                    )}
                   </Grid>
                   <Grid size={4}>
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       Taşıma Gönüllüsü
                     </Typography>
-                    {shipment.gorevliler.yardim_tasima_gorevlisi ? (
+                    {shipment.tasima_gonullusu_detail ? (
                       <Box>
                         <Typography variant="body1">
-                          {shipment.gorevliler.yardim_tasima_gorevlisi.ad} {shipment.gorevliler.yardim_tasima_gorevlisi.soyad}
+                          {shipment.tasima_gonullusu_detail.full_name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {shipment.gorevliler.yardim_tasima_gorevlisi.gonulluluk_no}
+                          {shipment.tasima_gonullusu_detail.gonulluluk_no}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {shipment.tasima_gonullusu_detail.sehir}
                         </Typography>
                       </Box>
                     ) : (
@@ -301,13 +335,16 @@ export default function ShipmentDetailDialog({
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       Dağıtım Gönüllüsü
                     </Typography>
-                    {shipment.gorevliler.yardim_dagitim_gorevlisi ? (
+                    {shipment.dagitim_gonullusu_detail ? (
                       <Box>
                         <Typography variant="body1">
-                          {shipment.gorevliler.yardim_dagitim_gorevlisi.ad} {shipment.gorevliler.yardim_dagitim_gorevlisi.soyad}
+                          {shipment.dagitim_gonullusu_detail.full_name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {shipment.gorevliler.yardim_dagitim_gorevlisi.gonulluluk_no}
+                          {shipment.dagitim_gonullusu_detail.gonulluluk_no}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {shipment.dagitim_gonullusu_detail.sehir}
                         </Typography>
                       </Box>
                     ) : (
@@ -321,7 +358,7 @@ export default function ShipmentDetailDialog({
             </Card>
           </Grid>
 
-          {/* Special Notes */}
+          {/* Özel Notlar */}
           {shipment.ozel_not && (
             <Grid size={12}>
               <Card variant="outlined">

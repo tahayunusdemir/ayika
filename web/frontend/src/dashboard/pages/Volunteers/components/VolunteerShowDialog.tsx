@@ -128,7 +128,7 @@ export default function VolunteerShowDialog({
         <Stack spacing={2}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
             <Typography variant="body2" color="text.secondary">E-posta</Typography>
-            <Typography variant="body2" fontWeight={500}>{volunteer.user?.email || '-'}</Typography>
+            <Typography variant="body2" fontWeight={500}>{volunteer.email || '-'}</Typography>
           </Box>
           
           <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
@@ -180,7 +180,7 @@ export default function VolunteerShowDialog({
             onClick={() => setBusinessCardOpen(true)}
             disabled={!volunteer}
           >
-            Kartvizit Oluştur
+            Gönüllü Kartı Oluştur
           </Button>
           <Button
             variant="contained"

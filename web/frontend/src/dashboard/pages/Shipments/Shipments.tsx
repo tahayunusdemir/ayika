@@ -16,8 +16,8 @@ import {
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import DashboardPageLayout from '../../components/DashboardPageLayout';
 import { Shipment, ShipmentFormData, ShipmentFilters } from './types';
-import { mockShipments } from './mockData';
-import { statusOptions, cargoTypes, securityApprovalOptions } from './data/contentOptions';
+// Mock data import removed - now using real API data
+import { cargoTypes, statusOptions } from './data/contentOptions';
 import { useShipments } from './hooks/useShipments';
 import { useShipmentDialogs } from './hooks/useShipmentDialogs';
 import ShipmentList from './components/ShipmentList';
@@ -38,7 +38,7 @@ export default function Shipments() {
     // deleteShipment, // Will be used for delete functionality later
     loading,
     error,
-  } = useShipments(mockShipments);
+  } = useShipments();
 
   const {
     isCreateDialogOpen,
@@ -62,20 +62,30 @@ export default function Shipments() {
   }>({ open: false, message: '', severity: 'success' });
 
   // Get unique values for filters
+  const uniqueOriginCities = React.useMemo(() => {
+    const cities = new Set<string>();
+    shipments.forEach(s => {
+      if (s.cikis_yeri) cities.add(s.cikis_yeri);
+    });
+    return Array.from(cities).filter(Boolean);
+  }, [shipments]);
 
-  const uniqueCities = React.useMemo(() => 
-    Array.from(new Set(shipments.map(s => s.konum.sehir))).filter(Boolean),
-    [shipments]
-  );
+  const uniqueDestinationCities = React.useMemo(() => {
+    const cities = new Set<string>();
+    shipments.forEach(s => {
+      if (s.ulasacagi_yer) cities.add(s.ulasacagi_yer);
+    });
+    return Array.from(cities).filter(Boolean);
+  }, [shipments]);
 
   // Event handlers
   const handleRowClick = (shipment: Shipment) => {
     openDetailDrawer(shipment);
   };
 
-  const handleCreateShipment = (formData: ShipmentFormData) => {
+  const handleCreateShipment = async (formData: ShipmentFormData) => {
     try {
-      addShipment(formData);
+      await addShipment(formData);
       closeCreateDialog();
       setSnackbar({
         open: true,
@@ -91,9 +101,9 @@ export default function Shipments() {
     }
   };
 
-  const handleUpdateShipment = (id: string, formData: ShipmentFormData) => {
+  const handleUpdateShipment = async (id: number, formData: ShipmentFormData) => {
     try {
-      updateShipment(id, formData);
+      await updateShipment(id, formData);
       closeEditDialog();
       setSnackbar({
         open: true,
@@ -134,6 +144,66 @@ export default function Shipments() {
       description="Afet yardım malzemelerinin kargo takip sistemi. Yardım malzemelerinin gönderim, taşıma ve teslimat süreçlerinin koordinasyonu ve izlenmesi."
       icon={LocalShippingRoundedIcon}
     >
+      {/* Error Display */}
+      {error && (
+        <Alert 
+          severity="error" 
+          sx={{ mb: 3 }}
+          action={
+            <Stack direction="row" spacing={1}>
+              <Button 
+                color="inherit" 
+                size="small" 
+                onClick={async () => {
+                  try {
+                    const { cargoApi } = await import('./data/apiService');
+                    await cargoApi.healthCheck();
+                    setSnackbar({
+                      open: true,
+                      message: 'Backend bağlantısı başarılı! ✅',
+                      severity: 'success'
+                    });
+                  } catch (err: any) {
+                    setSnackbar({
+                      open: true,
+                      message: `Bağlantı testi başarısız: ${err.message}`,
+                      severity: 'error'
+                    });
+                  }
+                }}
+              >
+                Test Et
+              </Button>
+              <Button 
+                color="inherit" 
+                size="small" 
+                onClick={() => window.location.reload()}
+              >
+                Yenile
+              </Button>
+            </Stack>
+          }
+        >
+          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+            Bağlantı Hatası
+          </Typography>
+          {error}
+          <Typography variant="body2" sx={{ mt: 1, opacity: 0.8 }}>
+            💡 Backend sunucusunun çalıştığından emin olun: <code>npm run dev</code>
+          </Typography>
+        </Alert>
+      )}
+
+      {/* Connection Status */}
+      {loading && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="subtitle2">
+            🔄 Backend sunucusuna bağlanılıyor...
+          </Typography>
+          Kargo verileri yükleniyor. Lütfen bekleyin.
+        </Alert>
+      )}
+
       {/* Filters */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
@@ -142,7 +212,7 @@ export default function Shipments() {
           </Typography>
           <Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ flexWrap: 'wrap', gap: 2 }}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-end" sx={{ flex: 1 }}>
-              <FormControl sx={{ minWidth: 350 }}>
+              <FormControl sx={{ minWidth: 280 }}>
                 <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Arama</FormLabel>
                 <TextField
                   placeholder="AYK-123456789 formatında kargo kodu arayın"
@@ -151,37 +221,7 @@ export default function Shipments() {
                   size="small"
                 />
               </FormControl>
-              <FormControl sx={{ minWidth: 150 }}>
-                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Durum</FormLabel>
-                <Select
-                  value={filters.statusFilter}
-                  onChange={(e) => handleFilterChange('statusFilter', e.target.value)}
-                  size="small"
-                >
-                  <MenuItem value="">Tümü</MenuItem>
-                  {statusOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ minWidth: 150 }}>
-                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Şehir</FormLabel>
-                <Select
-                  value={filters.cityFilter}
-                  onChange={(e) => handleFilterChange('cityFilter', e.target.value)}
-                  size="small"
-                >
-                  <MenuItem value="">Tümü</MenuItem>
-                  {uniqueCities.map((city) => (
-                    <MenuItem key={city} value={city}>
-                      {city}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ minWidth: 150 }}>
+              <FormControl sx={{ minWidth: 140 }}>
                 <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Kargo Tipi</FormLabel>
                 <Select
                   value={filters.cargoTypeFilter}
@@ -196,15 +236,45 @@ export default function Shipments() {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl sx={{ minWidth: 150 }}>
-                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Güvenlik Onayı</FormLabel>
+              <FormControl sx={{ minWidth: 140 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Çıkış Yeri</FormLabel>
                 <Select
-                  value={filters.securityFilter}
-                  onChange={(e) => handleFilterChange('securityFilter', e.target.value)}
+                  value={filters.originCityFilter}
+                  onChange={(e) => handleFilterChange('originCityFilter', e.target.value)}
                   size="small"
                 >
                   <MenuItem value="">Tümü</MenuItem>
-                  {securityApprovalOptions.map((option) => (
+                  {uniqueOriginCities.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      {city.charAt(0).toUpperCase() + city.slice(1)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ minWidth: 140 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Varış Yeri</FormLabel>
+                <Select
+                  value={filters.destinationCityFilter}
+                  onChange={(e) => handleFilterChange('destinationCityFilter', e.target.value)}
+                  size="small"
+                >
+                  <MenuItem value="">Tümü</MenuItem>
+                  {uniqueDestinationCities.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      {city.charAt(0).toUpperCase() + city.slice(1)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ minWidth: 130 }}>
+                <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Durum</FormLabel>
+                <Select
+                  value={filters.statusFilter}
+                  onChange={(e) => handleFilterChange('statusFilter', e.target.value)}
+                  size="small"
+                >
+                  <MenuItem value="">Tümü</MenuItem>
+                  {statusOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -257,7 +327,7 @@ export default function Shipments() {
         onEdit={openEditDialog}
       />
 
-      {/* Snackbar for notifications */}
+      {/* Snackbar for feedback */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}

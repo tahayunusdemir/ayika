@@ -22,8 +22,11 @@
     "makemigrations": "docker exec -it ayika-backend python manage.py makemigrations",
     "createsuperuser": "docker exec -it ayika-backend python manage.py createsuperuser",
     "collectstatic": "docker exec -it ayika-backend python manage.py collectstatic --noinput",
-    "create-test-volunteer": "docker exec -it ayika-backend python create_test_volunteer.py",
-    "setup": "npm run makemigrations && npm run migrate && npm run create-test-volunteer",
+    "create-test-volunteers": "docker exec -it ayika-backend python manage.py create_test_volunteers --skip-existing",
+    "create-sample-cargo": "docker exec -it ayika-backend python manage.py create_sample_cargo --skip-existing",
+    "create-admin": "docker exec -it ayika-backend python manage.py create_admin_user",
+    "create-admin-custom": "docker exec -it ayika-backend python manage.py create_admin_user --email",
+    "setup": "npm run makemigrations && npm run migrate && npm run create-admin && npm run create-test-volunteers && npm run create-sample-cargo",
     "full-setup": "npm run dev:down && npm run dev && timeout /t 10 && npm run setup"
   },
   "repository": {

@@ -2,8 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import MarketingPage from './marketing-page/MarketingPage';
 import SignIn from './sign-in/SignIn';
+import SignUp from './sign-up/SignUp';
 import Dashboard from './dashboard/Dashboard';
 import PasswordResetPage from './password-reset/PasswordResetPage';
+import Contact from './contact/Contact';
 import './App.css';
 
 // Protected Route Component
@@ -41,7 +43,9 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<MarketingPage />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/sign-in" element={<SignInRoute />} />
+      <Route path="/sign-up" element={<SignUp />} />
       <Route path="/password-reset/:uidb64/:token" element={<PasswordResetPage />} />
       <Route 
         path="/dashboard" 

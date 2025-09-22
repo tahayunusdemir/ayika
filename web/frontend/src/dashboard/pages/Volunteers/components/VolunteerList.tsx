@@ -359,7 +359,7 @@ export default function VolunteerList() {
         },
       },
       { 
-        field: 'user.email', 
+        field: 'email', 
         headerName: 'E-posta', 
         width: 200,
         flex: 1.2,
@@ -368,7 +368,7 @@ export default function VolunteerList() {
           const volunteer = params.row as Volunteer;
           return (
             <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-              {volunteer.user?.email || '-'}
+              {volunteer.email || '-'}
             </Typography>
           );
         },

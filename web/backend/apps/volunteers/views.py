@@ -12,12 +12,39 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, BasePermission
 from rest_framework.response import Response
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+
+class IsAdminOrReadOnly(BasePermission):
+    """
+    Custom permission to only allow admin users to edit objects.
+    Regular users can only read.
+    """
+    def has_permission(self, request, view):
+        # Read permissions are allowed to any authenticated user
+        if request.method in ['GET', 'HEAD', 'OPTIONS']:
+            return request.user and request.user.is_authenticated
+        
+        # Write permissions are only allowed to admin users
+        return request.user and request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser)
+
+
+class IsStaffOrSuperuser(BasePermission):
+    """
+    Custom permission to only allow staff or superuser access.
+    """
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser)
+
+
 from rest_framework.pagination import PageNumberPagination
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from rest_framework import serializers
 import re
 from .models import Volunteer
 from .serializers import (
@@ -31,11 +58,11 @@ from .serializers import (
 # Create your views here.
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])  # Temporarily allow all for testing
+@permission_classes([IsStaffOrSuperuser])  # Only admin users can access volunteer list
 def volunteer_list(request):
     """
     List all volunteers with pagination, filtering, and search.
-    Create new volunteer.
+    Admin-only volunteer creation.
     """
     if request.method == 'POST':
         return create_volunteer(request)
@@ -115,92 +142,84 @@ def volunteer_list(request):
     })
 
 
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Allow anyone to register as volunteer
+def volunteer_register(request):
+    """
+    Public volunteer registration endpoint.
+    Anyone can register as a volunteer without authentication.
+    """
+    return create_volunteer(request)
+
+
 def create_volunteer(request):
     """
-    Create a new volunteer with associated Django User.
+    Create a new volunteer with associated Django User and password.
     """
     try:
-        # Validate required fields
-        required_fields = ['ad', 'soyad', 'telefon', 'sehir', 'gonullu_tipi']
-        missing_fields = []
-        
-        for field in required_fields:
-            if not request.data.get(field):
-                missing_fields.append(field)
-        
-        if missing_fields:
-            return Response({
-                'error': 'Eksik alanlar.',
-                'missing_fields': missing_fields,
-                'detail': f'Şu alanlar gereklidir: {", ".join(missing_fields)}'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Get volunteer data
-        ad = request.data.get('ad').strip()
-        soyad = request.data.get('soyad').strip()
-        telefon = request.data.get('telefon').strip()
-        sehir = request.data.get('sehir')
-        gonullu_tipi = request.data.get('gonullu_tipi')
-        is_active = request.data.get('is_active', True)
-        
-        # Create a dummy user for the volunteer
-        # Generate unique username from name and phone
-        base_username = f"{ad.lower()}{soyad.lower()}{telefon[-4:]}"
-        username = base_username
-        counter = 1
-        
-        # Ensure username is unique
-        while User.objects.filter(username=username).exists():
-            username = f"{base_username}{counter}"
-            counter += 1
-        
-        # Create Django User
-        user = User.objects.create_user(
-            username=username,
-            first_name=ad,
-            last_name=soyad,
-            is_active=True
-        )
-        
-        # Create volunteer data
-        volunteer_data = {
-            'user': user.id,
-            'ad': ad,
-            'soyad': soyad,
-            'telefon': telefon,
-            'sehir': sehir,
-            'gonullu_tipi': gonullu_tipi,
-            'is_active': is_active
-        }
-        
-        # Create serializer and validate
-        serializer = VolunteerCreateSerializer(data=volunteer_data)
+        # Use the serializer for validation
+        serializer = VolunteerCreateSerializer(data=request.data)
         
         if serializer.is_valid():
-            # Save volunteer
-            volunteer = serializer.save()
+            # Extract validated data
+            validated_data = serializer.validated_data
+            email = validated_data.pop('email')
+            password = validated_data.pop('password')
+            validated_data.pop('password_confirm')  # Remove password_confirm, not needed for creation
+            
+            # Generate unique username from name and phone
+            ad = validated_data['ad']
+            soyad = validated_data['soyad']
+            telefon = validated_data['telefon']
+            
+            base_username = f"{ad.lower()}{soyad.lower()}{telefon[-4:]}"
+            username = base_username
+            counter = 1
+            
+            # Ensure username is unique
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            
+            # Create Django User with email and password
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,  # This will hash the password automatically
+                first_name=ad,
+                last_name=soyad,
+                is_active=True
+            )
+            
+            # Create volunteer and link to user
+            volunteer = Volunteer.objects.create(
+                user=user,
+                **validated_data
+            )
             
             return Response({
-                'message': 'Gönüllü başarıyla oluşturuldu.',
+                'success': True,
+                'message': 'Gönüllü kaydınız başarıyla tamamlandı! Artık giriş yapabilirsiniz.',
                 'volunteer': VolunteerSerializer(volunteer).data
             }, status=status.HTTP_201_CREATED)
         else:
-            # If volunteer creation fails, delete the created user
-            user.delete()
             return Response({
-                'error': 'Geçersiz veri.',
+                'success': False,
+                'message': 'Kayıt bilgilerinde hata var.',
                 'errors': serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
             
     except Exception as e:
         return Response({
-            'error': 'Gönüllü oluşturulurken hata oluştu.',
+            'success': False,
+            'message': 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyiniz.',
             'detail': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET', 'PATCH'])
-@permission_classes([AllowAny])  # Temporarily allow all for testing
+@permission_classes([IsStaffOrSuperuser])  # Only admin users can access volunteer details
 def volunteer_detail(request, pk):
     """
     Retrieve, update or delete a volunteer instance.
@@ -234,7 +253,7 @@ def volunteer_detail(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsStaffOrSuperuser])  # Only admin users can access volunteer stats
 def volunteer_stats(request):
     """
     Get volunteer statistics for analytics dashboard.
@@ -521,28 +540,7 @@ def deactivate_account(request):
 
 # Password Reset Views
 
-def validate_password_strength(password):
-    """
-    Validate password strength according to requirements
-    """
-    errors = []
-    
-    if len(password) < 8:
-        errors.append('Şifre en az 8 karakter olmalıdır.')
-    
-    if not re.search(r'[a-z]', password):
-        errors.append('Şifre en az bir küçük harf içermelidir.')
-    
-    if not re.search(r'[A-Z]', password):
-        errors.append('Şifre en az bir büyük harf içermelidir.')
-    
-    if not re.search(r'\d', password):
-        errors.append('Şifre en az bir rakam içermelidir.')
-    
-    if not re.search(r'[@$!%*?&]', password):
-        errors.append('Şifre en az bir özel karakter (@$!%*?&) içermelidir.')
-    
-    return errors
+# Password validation is now handled by VolunteerCreateSerializer
 
 
 @api_view(['POST'])
@@ -715,14 +713,17 @@ def password_reset_confirm(request, uidb64, token):
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Validate password strength
-        password_errors = validate_password_strength(new_password)
-        if password_errors:
+        # Validate password strength using serializer logic
+        from .serializers import VolunteerCreateSerializer
+        temp_serializer = VolunteerCreateSerializer()
+        try:
+            temp_serializer.validate_password(new_password)
+        except serializers.ValidationError as e:
             return Response({
                 'success': False,
                 'message': 'Şifre güvenlik gereksinimlerini karşılamıyor.',
                 'errors': {
-                    'new_password': password_errors
+                    'new_password': [str(e)]
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
         

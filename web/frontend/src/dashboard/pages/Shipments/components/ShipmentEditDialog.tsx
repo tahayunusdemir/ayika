@@ -10,14 +10,14 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Shipment, ShipmentFormData } from '../types';
+import { Shipment, ShipmentFormData, CargoType } from '../types';
 import ShipmentForm from './ShipmentForm';
 
 interface ShipmentEditDialogProps {
   open: boolean;
   shipment: Shipment | null;
   onClose: () => void;
-  onSubmit: (id: string, data: ShipmentFormData) => void;
+  onSubmit: (id: number, data: ShipmentFormData) => void;
   loading?: boolean;
 }
 
@@ -29,54 +29,46 @@ export default function ShipmentEditDialog({
   loading = false,
 }: ShipmentEditDialogProps) {
   const [formData, setFormData] = React.useState<ShipmentFormData>({
+    anonim_gonderici: false,
     gonderici_ad: '',
     gonderici_soyad: '',
-    gonderici_telefon: undefined,
-    gonderici_email: undefined,
-    gizlilik_durumu: false,
-    icerik_adi: '',
-    kargo_tipi: 'gıda',
-    agirlik_hacim: undefined,
-    sehir: '',
-    toplama_gonullusu_ad: '',
-    toplama_gonullusu_soyad: '',
-    toplama_gonullusu_no: '',
-    tasima_gorevlisi_ad: undefined,
-    tasima_gorevlisi_soyad: undefined,
-    tasima_gorevlisi_no: undefined,
-    dagitim_gorevlisi_ad: undefined,
-    dagitim_gorevlisi_soyad: undefined,
-    dagitim_gorevlisi_no: undefined,
-    kargo_durumu: 'hazırlanıyor',
-    guvenlik_onayi: 'kontrol edilmedi',
-    ozel_not: undefined,
+    gonderici_telefon: '',
+    gonderici_email: '',
+    cikis_yeri: '',
+    ulasacagi_yer: '',
+    agirlik: '',
+    hacim: '',
+    miktar: 1,
+    durum: 'hazirlaniyor',
+    kargo_tipi: '' as CargoType,
+    icerik: '',
+    toplama_gonullusu: undefined,
+    tasima_gonullusu: undefined,
+    dagitim_gonullusu: undefined,
+    ozel_not: '',
   });
   const [errors, setErrors] = React.useState<Partial<Record<keyof ShipmentFormData, string>>>({});
 
   React.useEffect(() => {
     if (open && shipment) {
       setFormData({
-        gonderici_ad: shipment.gonderici.ad,
-        gonderici_soyad: shipment.gonderici.soyad,
-        gonderici_telefon: shipment.gonderici.telefon,
-        gonderici_email: shipment.gonderici.email,
-        gizlilik_durumu: shipment.gonderici.gizlilik_durumu,
-        icerik_adi: shipment.icerik.icerik_adi,
-        kargo_tipi: shipment.icerik.kargo_tipi,
-        agirlik_hacim: shipment.icerik.agirlik_hacim?.toString(),
-        sehir: shipment.konum.sehir,
-        toplama_gonullusu_ad: shipment.gorevliler.yardim_toplama_gonullusu.ad,
-        toplama_gonullusu_soyad: shipment.gorevliler.yardim_toplama_gonullusu.soyad,
-        toplama_gonullusu_no: shipment.gorevliler.yardim_toplama_gonullusu.gonulluluk_no,
-        tasima_gorevlisi_ad: shipment.gorevliler.yardim_tasima_gorevlisi?.ad,
-        tasima_gorevlisi_soyad: shipment.gorevliler.yardim_tasima_gorevlisi?.soyad,
-        tasima_gorevlisi_no: shipment.gorevliler.yardim_tasima_gorevlisi?.gonulluluk_no,
-        dagitim_gorevlisi_ad: shipment.gorevliler.yardim_dagitim_gorevlisi?.ad,
-        dagitim_gorevlisi_soyad: shipment.gorevliler.yardim_dagitim_gorevlisi?.soyad,
-        dagitim_gorevlisi_no: shipment.gorevliler.yardim_dagitim_gorevlisi?.gonulluluk_no,
-        kargo_durumu: shipment.kargo_durumu,
-        guvenlik_onayi: shipment.guvenlik_onayi,
-        ozel_not: shipment.ozel_not,
+        anonim_gonderici: shipment.anonim_gonderici,
+        gonderici_ad: shipment.gonderici_ad || '',
+        gonderici_soyad: shipment.gonderici_soyad || '',
+        gonderici_telefon: shipment.gonderici_telefon || '',
+        gonderici_email: shipment.gonderici_email || '',
+        cikis_yeri: shipment.cikis_yeri,
+        ulasacagi_yer: shipment.ulasacagi_yer,
+        agirlik: shipment.agirlik,
+        hacim: shipment.hacim,
+        miktar: shipment.miktar,
+        durum: shipment.durum,
+        kargo_tipi: shipment.kargo_tipi,
+        icerik: shipment.icerik,
+        toplama_gonullusu: shipment.toplama_gonullusu,
+        tasima_gonullusu: shipment.tasima_gonullusu,
+        dagitim_gonullusu: shipment.dagitim_gonullusu,
+        ozel_not: shipment.ozel_not || '',
       });
       setErrors({});
     }
@@ -85,32 +77,36 @@ export default function ShipmentEditDialog({
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof ShipmentFormData, string>> = {};
 
-    if (!formData.gizlilik_durumu && !formData.gonderici_ad.trim()) {
+    if (!formData.anonim_gonderici && !formData.gonderici_ad?.trim()) {
       newErrors.gonderici_ad = 'Gönderici adı gereklidir';
     }
 
-    if (!formData.gizlilik_durumu && !formData.gonderici_soyad.trim()) {
+    if (!formData.anonim_gonderici && !formData.gonderici_soyad?.trim()) {
       newErrors.gonderici_soyad = 'Gönderici soyadı gereklidir';
     }
 
-    if (!formData.toplama_gonullusu_ad.trim()) {
-      newErrors.toplama_gonullusu_ad = 'Toplama gönüllüsü adı gereklidir';
+    if (!formData.cikis_yeri.trim()) {
+      newErrors.cikis_yeri = 'Çıkış yeri seçilmelidir';
     }
 
-    if (!formData.toplama_gonullusu_soyad.trim()) {
-      newErrors.toplama_gonullusu_soyad = 'Toplama gönüllüsü soyadı gereklidir';
+    if (!formData.ulasacagi_yer.trim()) {
+      newErrors.ulasacagi_yer = 'Varış yeri seçilmelidir';
     }
 
-    if (!formData.toplama_gonullusu_no.trim()) {
-      newErrors.toplama_gonullusu_no = 'Gönüllülük numarası gereklidir';
+    if (!formData.icerik.trim()) {
+      newErrors.icerik = 'İçerik açıklaması gereklidir';
     }
 
-    if (!formData.sehir.trim()) {
-      newErrors.sehir = 'Şehir seçilmelidir';
+    if (!formData.agirlik.trim()) {
+      newErrors.agirlik = 'Ağırlık gereklidir';
     }
 
-    if (!formData.icerik_adi.trim()) {
-      newErrors.icerik_adi = 'İçerik adı gereklidir';
+    if (!formData.hacim.trim()) {
+      newErrors.hacim = 'Hacim gereklidir';
+    }
+
+    if (!formData.kargo_tipi) {
+      newErrors.kargo_tipi = 'Kargo tipi seçilmelidir';
     }
 
     // Email validation if provided
@@ -156,7 +152,7 @@ export default function ShipmentEditDialog({
               Kargo Düzenle
             </Typography>
             <Typography variant="body2" sx={{ fontWeight: 600, mt: 0.5 }}>
-              {shipment.takip_no} - {shipment.kargo_durumu}
+              {shipment.kargo_no} - {shipment.durum_display}
             </Typography>
           </Box>
           <IconButton

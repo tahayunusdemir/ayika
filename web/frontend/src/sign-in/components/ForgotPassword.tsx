@@ -33,13 +33,13 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
     setEmailError('');
     
     // Validate email
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
       setEmailError('E-posta adresi gereklidir.');
       return;
     }
     
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    if (!/\S+@\S+\.\S+/.test(trimmedEmail)) {
       setEmailError('Geçerli bir e-posta adresi giriniz.');
       return;
     }
@@ -47,7 +47,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
     setLoading(true);
     
     try {
-      const response = await authService.passwordResetRequest(email.trim());
+      const response = await authService.passwordResetRequest(trimmedEmail);
       
       if (response.success) {
         setSuccess(response.message);
@@ -66,7 +66,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
     }
   };
 
-  const handleClose_ = () => {
+  const handleCloseDialog = () => {
     setEmail('');
     setError('');
     setSuccess('');
@@ -77,7 +77,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
   return (
     <Dialog
       open={open}
-      onClose={handleClose_}
+      onClose={handleCloseDialog}
       maxWidth="sm"
       fullWidth
       slotProps={{
@@ -133,7 +133,7 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         </FormControl>
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3, gap: 1 }}>
-        <Button onClick={handleClose_} disabled={loading} variant="outlined">
+        <Button onClick={handleCloseDialog} disabled={loading} variant="outlined">
           İptal
         </Button>
         <Button 

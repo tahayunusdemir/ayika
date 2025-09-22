@@ -8,6 +8,9 @@ export interface User {
   first_name: string;
   last_name: string;
   is_active: boolean;
+  is_staff: boolean;
+  is_superuser: boolean;
+  is_admin: boolean;
   volunteer_profile?: VolunteerProfile;
 }
 
@@ -30,6 +33,17 @@ export interface VolunteerProfile {
 export interface LoginCredentials {
   email: string;
   password: string;
+}
+
+export interface SignUpData {
+  ad: string;
+  soyad: string;
+  email: string;
+  password: string;
+  password_confirm: string;
+  telefon: string;
+  sehir: string;
+  gonullu_tipi: string;
 }
 
 export interface AuthResponse {
@@ -95,6 +109,49 @@ class AuthService {
     }
 
     return headers;
+  }
+
+  // Sign up new user
+  async signUp(signUpData: SignUpData): Promise<AuthResponse> {
+    try {
+      // Use simple headers for registration (no CSRF token required)
+      const response = await fetch(`${this.baseUrl}/register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for session
+        body: JSON.stringify(signUpData),
+      });
+
+      const data: AuthResponse = await response.json();
+      
+      // Handle different response status codes
+      if (!response.ok) {
+        if (response.status === 400) {
+          // Validation errors
+          return data;
+        } else if (response.status === 403) {
+          return {
+            success: false,
+            message: 'Kayıt işlemi için yetki hatası. Lütfen tekrar deneyiniz.',
+          };
+        } else {
+          return {
+            success: false,
+            message: 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyiniz.',
+          };
+        }
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return {
+        success: false,
+        message: 'Kayıt sırasında bağlantı hatası oluştu. Lütfen tekrar deneyiniz.',
+      };
+    }
   }
 
   // Login user

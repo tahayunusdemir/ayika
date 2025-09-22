@@ -4,7 +4,6 @@ import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import { useAuth } from '../../contexts/AuthContext';
@@ -60,9 +59,6 @@ export default function SideMenuMobile({ open, toggleDrawer, selectedPage, onPag
               {user?.volunteer_profile?.full_name || user?.first_name || user?.email || 'Kullanıcı'}
             </Typography>
           </Stack>
-          <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton>
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>

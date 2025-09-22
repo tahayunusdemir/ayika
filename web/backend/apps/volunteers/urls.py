@@ -9,6 +9,7 @@ app_name = 'volunteers'
 urlpatterns = [
     # Volunteer endpoints
     path('', views.volunteer_list, name='volunteer-list'),
+    path('register/', views.volunteer_register, name='volunteer-register'),  # Public registration
     path('stats/', views.volunteer_stats, name='volunteer-stats'),
     path('<int:pk>/', views.volunteer_detail, name='volunteer-detail'),
     

@@ -5,12 +5,17 @@ import {
   IconButton,
   Box,
   Tooltip,
+  Chip,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { Shipment } from '../types';
-import { getStatusLabel, getCargoTypeLabel } from '../data/contentOptions';
+import { getCargoTypeLabel } from '../data/contentOptions';
 
 interface ShipmentListProps {
   shipments: Shipment[];
@@ -50,8 +55,8 @@ export default function ShipmentList({
 
   const columns: GridColDef[] = [
     {
-      field: 'takip_no',
-      headerName: 'Takip No',
+      field: 'kargo_no',
+      headerName: 'Kargo No',
       width: 130,
       minWidth: 120,
       flex: 0.8,
@@ -76,9 +81,9 @@ export default function ShipmentList({
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap'
           }}
-          title={`${params.value.icerik_adi} (${getCargoTypeLabel(params.value.kargo_tipi)})`}
+          title={`${params.value} (${getCargoTypeLabel(params.row.kargo_tipi)})`}
         >
-          {params.value.icerik_adi} • {getCargoTypeLabel(params.value.kargo_tipi)}
+          {params.value} • {getCargoTypeLabel(params.row.kargo_tipi)}
         </Typography>
       ),
     },
@@ -90,7 +95,7 @@ export default function ShipmentList({
       flex: 1,
       renderCell: (params) => (
         <Typography variant="body2">
-          {`${params.row.gorevliler.yardim_toplama_gonullusu.ad} ${params.row.gorevliler.yardim_toplama_gonullusu.soyad}`}
+          {params.row.toplama_gonullusu_detail?.full_name || '-'}
         </Typography>
       ),
     },
@@ -102,10 +107,7 @@ export default function ShipmentList({
       flex: 1,
       renderCell: (params) => (
         <Typography variant="body2">
-          {params.row.gorevliler.yardim_tasima_gorevlisi ? 
-            `${params.row.gorevliler.yardim_tasima_gorevlisi.ad} ${params.row.gorevliler.yardim_tasima_gorevlisi.soyad}` : 
-            '-'
-          }
+          {params.row.tasima_gonullusu_detail?.full_name || '-'}
         </Typography>
       ),
     },
@@ -117,62 +119,88 @@ export default function ShipmentList({
       flex: 1,
       renderCell: (params) => (
         <Typography variant="body2">
-          {params.row.gorevliler.yardim_dagitim_gorevlisi ? 
-            `${params.row.gorevliler.yardim_dagitim_gorevlisi.ad} ${params.row.gorevliler.yardim_dagitim_gorevlisi.soyad}` : 
-            '-'
-          }
+          {params.row.dagitim_gonullusu_detail?.full_name || '-'}
         </Typography>
       ),
     },
     {
-      field: 'konum',
-      headerName: 'Şehir',
-      width: 120,
-      minWidth: 100,
-      flex: 0.8,
+      field: 'cikis_yeri_display',
+      headerName: 'Çıkış → Varış',
+      width: 150,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <Typography variant="body2">
-          {params.value.sehir}
+          {params.row.cikis_yeri_display} → {params.row.ulasacagi_yer_display}
         </Typography>
       ),
     },
     {
-      field: 'kargo_durumu',
+      field: 'durum',
       headerName: 'Durum',
-      width: 120,
-      minWidth: 100,
-      flex: 0.8,
+      width: 140,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => {
-        const getStatusColor = (status: string) => {
+        const getStatusConfig = (status: string) => {
           switch (status) {
-            case 'hazırlanıyor':
-              return 'warning.main';
+            case 'hazirlaniyor':
+              return {
+                color: 'primary' as const,
+                icon: <InventoryIcon sx={{ fontSize: 16 }} />,
+                label: 'Hazırlanıyor'
+              };
             case 'yolda':
-              return 'info.main';
-            case 'teslim edildi':
-              return 'success.main';
-            case 'iptal edildi':
-              return 'error.main';
+              return {
+                color: 'secondary' as const,
+                icon: <LocalShippingIcon sx={{ fontSize: 16 }} />,
+                label: 'Yolda'
+              };
+            case 'teslim_edildi':
+              return {
+                color: 'success' as const,
+                icon: <CheckCircleIcon sx={{ fontSize: 16 }} />,
+                label: 'Teslim Edildi'
+              };
+            case 'iptal_edildi':
+              return {
+                color: 'error' as const,
+                icon: <CancelIcon sx={{ fontSize: 16 }} />,
+                label: 'İptal Edildi'
+              };
             default:
-              return 'text.primary';
+              return {
+                color: 'default' as const,
+                icon: <InventoryIcon sx={{ fontSize: 16 }} />,
+                label: params.row.durum_display || params.value || 'Bilinmiyor'
+              };
           }
         };
         
+        const config = getStatusConfig(params.value);
+        
         return (
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: getStatusColor(params.value),
-              fontWeight: 500
+          <Chip
+            icon={config.icon}
+            label={config.label}
+            color={config.color}
+            size="small"
+            variant="filled"
+            sx={{
+              fontWeight: 500,
+              fontSize: '0.75rem',
+              height: 24,
+              '& .MuiChip-icon': {
+                marginLeft: '4px',
+                marginRight: '-2px'
+              }
             }}
-          >
-            {getStatusLabel(params.value)}
-          </Typography>
+          />
         );
       },
     },
     {
-      field: 'son_guncelleme_tarihi',
+      field: 'son_degisiklik',
       headerName: 'Son Güncelleme',
       width: 140,
       renderCell: (params) => {

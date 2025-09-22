@@ -147,7 +147,8 @@ export default function AppAppBar() {
                 variant="text" 
                 color="info" 
                 size="small"
-                onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
+                component={Link}
+                to="/contact"
               >
                 İletişim
               </Button>
@@ -173,7 +174,8 @@ export default function AppAppBar() {
               color="primary"
               variant="contained"
               size="small"
-              onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
+              component={Link}
+              to="/sign-up"
             >
               Gönüllü ol 💙
             </Button>
@@ -215,8 +217,10 @@ export default function AppAppBar() {
                   <Button
                     variant="text"
                     fullWidth
+                    component={Link}
+                    to="/contact"
                     sx={{ textAlign: 'left', justifyContent: 'flex-start' }}
-                    onClick={() => window.open('https://forms.gle/SqSKAGdtF6CoU1Jd8', '_blank')}
+                    onClick={toggleDrawer(false)}
                   >
                     İletişim
                   </Button>
@@ -227,7 +231,8 @@ export default function AppAppBar() {
                     color="primary"
                     variant="contained"
                     fullWidth
-                    onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
+                    component={Link}
+                    to="/sign-up"
                   >
                     Gönüllü ol 💙
                   </Button>

@@ -1,31 +1,25 @@
-import { CargoType, SecurityApproval } from '../types';
+import { CargoType } from '../types';
 
-// Kargo tipleri - Detaylı kategorizasyon
+// Kargo tipleri - Django backend ile uyumlu
 export const cargoTypes: Array<{ value: CargoType; label: string; description: string }> = [
-  { value: 'gıda', label: 'Gıda Ürünleri', description: 'Yiyecek, içecek ve beslenme malzemeleri' },
-  { value: 'ilaç', label: 'Sağlık Malzemeleri', description: 'İlaç, tıbbi malzeme ve sağlık ürünleri' },
+  { value: 'gida', label: 'Gıda Ürünleri', description: 'Yiyecek, içecek ve beslenme malzemeleri' },
+  { value: 'ilac', label: 'Sağlık Malzemeleri', description: 'İlaç, tıbbi malzeme ve sağlık ürünleri' },
   { value: 'giyim', label: 'Giyim ve Tekstil', description: 'Kıyafet, ayakkabı, battaniye ve tekstil ürünleri' },
-  { value: 'karışık', label: 'Karışık Paket', description: 'Farklı kategorilerden ürünler içeren paketler' },
-  { value: 'diğer', label: 'Diğer Malzemeler', description: 'Elektronik, temizlik, eğitim, barınma malzemeleri vb.' },
+  { value: 'karisik', label: 'Karışık Paket', description: 'Farklı kategorilerden ürünler içeren paketler' },
+  { value: 'diger', label: 'Diğer Malzemeler', description: 'Elektronik, temizlik, eğitim, barınma malzemeleri vb.' },
 ];
 
-// Durum seçenekleri
+// Durum seçenekleri - Django backend ile uyumlu
 export const statusOptions = [
-  { value: 'hazırlanıyor', label: 'Hazırlanıyor' },
+  { value: 'hazirlaniyor', label: 'Hazırlanıyor' },
   { value: 'yolda', label: 'Yolda' },
-  { value: 'teslim edildi', label: 'Teslim Edildi' },
-  { value: 'iptal edildi', label: 'İptal Edildi' },
+  { value: 'teslim_edildi', label: 'Teslim Edildi' },
+  { value: 'iptal_edildi', label: 'İptal Edildi' },
 ];
 
-// Güvenlik onayı seçenekleri
-export const securityApprovalOptions: Array<{ value: SecurityApproval; label: string }> = [
-  { value: 'kontrol edildi', label: 'Kontrol Edildi' },
-  { value: 'kontrol edilmedi', label: 'Kontrol Edilmedi' },
-];
-
-// İçerik önerileri - Kategorilere göre düzenlenmiş
+// İçerik önerileri - Django backend ile uyumlu anahtar değerler
 export const contentSuggestions = {
-  'gıda': [
+  'gida': [
     'Su (5L, 10L, 19L)',
     'Konserve Gıda (Et, Sebze, Meyve)',
     'Kuru Gıda Paketi',
@@ -47,7 +41,7 @@ export const contentSuggestions = {
     'Çikolata ve Şeker',
     'Mama Biberon ve Emzik'
   ],
-  'ilaç': [
+  'ilac': [
     'Reçeteli İlaç Paketi',
     'Ağrı Kesici (Parol, Aspirin)',
     'Ateş Düşürücü',
@@ -99,7 +93,7 @@ export const contentSuggestions = {
     'Çizme ve Bot',
     'Kemer ve Aksesuar'
   ],
-  'karışık': [
+  'karisik': [
     'Aile Yardım Paketi',
     'Acil Durum Paketi',
     'Bebek Bakım Paketi',
@@ -119,7 +113,7 @@ export const contentSuggestions = {
     'Kamp ve Barınma Paketi',
     'İletişim Paketi'
   ],
-  'diğer': [
+  'diger': [
     'Elektronik Eşya (Telefon, Tablet)',
     'Ev Eşyası (Tencere, Tabak)',
     'Eğitim Malzemeleri',
@@ -217,7 +211,4 @@ export const getStatusLabel = (value: string): string => {
   return option ? option.label : value;
 };
 
-export const getSecurityApprovalLabel = (value: SecurityApproval): string => {
-  const option = securityApprovalOptions.find(option => option.value === value);
-  return option ? option.label : value;
-};
+// statusOptions already exported above

@@ -5,12 +5,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-app_name = 'cargo'
-
+# Router setup
 router = DefaultRouter()
-router.register(r'', views.CargoViewSet, basename='cargo')
+router.register(r'kargo', views.KargoViewSet, basename='kargo')
+router.register(r'cargo', views.CargoLegacyViewSet, basename='cargo-legacy')  # Legacy API
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('track/<str:tracking_number>/', views.track_cargo, name='track-cargo'),
+    path('', include(router.urls)),  # Root level access only
 ]
+
+app_name = 'cargo'

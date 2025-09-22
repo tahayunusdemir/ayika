@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -69,7 +67,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean; onLoginSuc
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [loginError, setLoginError] = React.useState('');
-  const [rememberMe, setRememberMe] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -211,17 +208,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean; onLoginSuc
                 disabled={isLoading}
               />
             </FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  color="primary" 
-                  disabled={isLoading}
-                />
-              }
-              label="Beni hatırla"
-            />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
               type="submit"
@@ -235,11 +221,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean; onLoginSuc
             <Link
               onClick={handleClickOpen}
               variant="body2"
-              sx={{ 
-                alignSelf: 'center', 
-                cursor: isLoading ? 'default' : 'pointer',
-                opacity: isLoading ? 0.5 : 1
-              }}
+              sx={{ alignSelf: 'center', cursor: 'pointer' }}
             >
               Şifrenizi mi unuttunuz?
             </Link>
@@ -247,7 +229,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean; onLoginSuc
           <Typography sx={{ textAlign: 'center' }}>
             Hesabınız yok mu?{' '}
             <Link
-              onClick={() => window.open('https://forms.gle/VRahDyBZUA3cojZa6', '_blank')}
+              href="/sign-up"
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >

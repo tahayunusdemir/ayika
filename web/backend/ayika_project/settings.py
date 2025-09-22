@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'corsheaders',
+    'django_filters',
     
     # Local apps
     'apps.core',
     'apps.volunteers',
     'apps.cargo',
+    'apps.contacts',
 ]
 
 MIDDLEWARE = [
@@ -111,10 +113,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-    # Custom validator for uppercase, lowercase, and special characters
-    {
-        'NAME': 'apps.volunteers.validators.CustomPasswordValidator',
-    },
+    # Custom validator temporarily removed - will be added later if needed
+    # {
+    #     'NAME': 'apps.volunteers.validators.CustomPasswordValidator',
+    # },
 ]
 
 

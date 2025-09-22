@@ -16,13 +16,14 @@ export interface Volunteer {
   ad: string; // First name (matches Django field)
   soyad: string; // Last name (matches Django field)
   full_name?: string; // Combined name from backend (read-only)
+  email: string; // Email address (required for creation, read-only after)
   telefon: string; // Phone without leading 0 (5XXXXXXXXX)
   sehir: string; // City (lowercase, matches Django choices)
   sehir_display?: string; // City display name from backend (read-only)
   gonullu_tipi: VolunteerType; // Volunteer type (matches Django field)
   gonullu_tipi_display?: string; // Volunteer type display name from backend (read-only)
   is_active: boolean; // Active status
-  created_at: string; // Creation date (matches Django field)
+  created_at: string; // Creation date (matches Django field - auto-assigned)
   updated_at: string; // Update date (matches Django field)
 }
 
@@ -94,10 +95,13 @@ type ValidationResult = { issues: { message: string; path: (keyof Volunteer)[] }
 export function validate(volunteer: Partial<Volunteer>): ValidationResult {
   let issues: ValidationResult['issues'] = [];
 
-  if (!volunteer.gonulluluk_no) {
-    issues = [...issues, { message: 'Gönüllülük numarası zorunludur', path: ['gonulluluk_no'] }];
-  } else if (!/^G\d{10}$/.test(volunteer.gonulluluk_no)) {
-    issues = [...issues, { message: 'Gönüllülük numarası G ile başlamalı ve 10 haneli olmalıdır (örn: G0123456789)', path: ['gonulluluk_no'] }];
+  // Gönüllülük numarası oluşturma sırasında otomatik atanır, düzenleme sırasında kontrol edilir
+  if (volunteer.gonulluluk_no !== undefined) {
+    if (!volunteer.gonulluluk_no) {
+      issues = [...issues, { message: 'Gönüllülük numarası zorunludur', path: ['gonulluluk_no'] }];
+    } else if (!/^G\d{10}$/.test(volunteer.gonulluluk_no)) {
+      issues = [...issues, { message: 'Gönüllülük numarası G ile başlamalı ve 10 haneli olmalıdır (örn: G0123456789)', path: ['gonulluluk_no'] }];
+    }
   }
 
   if (!volunteer.ad) {
@@ -106,6 +110,12 @@ export function validate(volunteer: Partial<Volunteer>): ValidationResult {
 
   if (!volunteer.soyad) {
     issues = [...issues, { message: 'Soyad alanı zorunludur', path: ['soyad'] }];
+  }
+
+  if (!volunteer.email) {
+    issues = [...issues, { message: 'E-posta adresi zorunludur', path: ['email'] }];
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(volunteer.email)) {
+    issues = [...issues, { message: 'Geçerli bir e-posta adresi giriniz', path: ['email'] }];
   }
 
   if (!volunteer.telefon) {

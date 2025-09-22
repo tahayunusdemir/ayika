@@ -1,199 +1,122 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Shipment, ShipmentFormData, ShipmentFilters } from '../types';
+import { cargoApi } from '../data/apiService';
 
 interface UseShipmentsReturn {
   shipments: Shipment[];
   filteredShipments: Shipment[];
   filters: ShipmentFilters;
   setFilters: (filters: ShipmentFilters) => void;
-  addShipment: (formData: ShipmentFormData) => void;
-  updateShipment: (id: string, formData: ShipmentFormData) => void;
-  deleteShipment: (id: string) => void;
-  getShipmentById: (id: string) => Shipment | undefined;
+  addShipment: (formData: ShipmentFormData) => Promise<void>;
+  updateShipment: (id: number, formData: ShipmentFormData) => Promise<void>;
+  deleteShipment: (id: number) => Promise<void>;
+  getShipmentById: (id: number) => Shipment | undefined;
+  refreshShipments: () => Promise<void>;
   loading: boolean;
   error: string | null;
 }
 
-export function useShipments(initialShipments: Shipment[] = []): UseShipmentsReturn {
-  const [shipments, setShipments] = useState<Shipment[]>(initialShipments);
+export function useShipments(): UseShipmentsReturn {
+  const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ShipmentFilters>({
     searchTerm: '',
-    statusFilter: '',
     cargoTypeFilter: '',
-    cityFilter: '',
-    securityFilter: '',
+    originCityFilter: '',
+    destinationCityFilter: '',
+    statusFilter: '',
   });
 
-  // Update shipments when initialShipments changes
-  useEffect(() => {
-    setShipments(initialShipments);
-  }, [initialShipments]);
-
-  // Generate tracking number
-  const generateTrackingNumber = (): string => {
-    const year = new Date().getFullYear();
-    const nextId = shipments.length + 1;
-    return `AYK-${year}${String(nextId).padStart(3, '0')}`;
-  };
-
-  // Add new shipment
-  const addShipment = (formData: ShipmentFormData) => {
+  // Load shipments from API
+  const loadShipments = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-
-      const currentDateTime = new Date().toISOString().replace('T', ' ').slice(0, 19);
       
-      const newShipment: Shipment = {
-        id: Date.now().toString(),
-        takip_no: generateTrackingNumber(),
-        kargo_durumu: 'hazırlanıyor',
-        gonderim_tarihi: currentDateTime,
-        son_guncelleme_tarihi: currentDateTime,
-        
-        gonderici: {
-          ad: formData.gonderici_ad,
-          soyad: formData.gonderici_soyad,
-          telefon: formData.gonderici_telefon,
-          email: formData.gonderici_email,
-          gizlilik_durumu: formData.gizlilik_durumu
-        },
-        
-        icerik: {
-          icerik_adi: formData.icerik_adi,
-          kargo_tipi: formData.kargo_tipi,
-          agirlik_hacim: formData.agirlik_hacim
-        },
-        
-        konum: {
-          sehir: formData.sehir
-        },
-        
-        gorevliler: {
-          yardim_toplama_gonullusu: {
-            ad: formData.toplama_gonullusu_ad,
-            soyad: formData.toplama_gonullusu_soyad,
-            gonulluluk_no: formData.toplama_gonullusu_no
-          },
-          yardim_tasima_gorevlisi: formData.tasima_gorevlisi_ad ? {
-            ad: formData.tasima_gorevlisi_ad,
-            soyad: formData.tasima_gorevlisi_soyad || '',
-            gonulluluk_no: formData.tasima_gorevlisi_no || ''
-          } : undefined,
-          yardim_dagitim_gorevlisi: formData.dagitim_gorevlisi_ad ? {
-            ad: formData.dagitim_gorevlisi_ad,
-            soyad: formData.dagitim_gorevlisi_soyad || '',
-            gonulluluk_no: formData.dagitim_gorevlisi_no || ''
-          } : undefined
-        },
-        
-        durum_gecmisi: [
-          {
-            tarih: currentDateTime,
-            aciklama: 'Kargo kaydı oluşturuldu'
-          }
-        ],
-        
-        guvenlik_onayi: formData.guvenlik_onayi,
-        ozel_not: formData.ozel_not
-      };
+      const data = await cargoApi.getShipments();
+      setShipments(data);
+    } catch (err: any) {
+      let errorMessage = 'Kargolar yüklenirken hata oluştu';
+      
+      if (err.code === 'NETWORK_ERROR') {
+        errorMessage = 'Backend sunucusuna bağlanılamıyor. Lütfen sunucunun çalıştığından emin olun.';
+      } else if (err.status === 404) {
+        errorMessage = 'Kargo API endpoint\'i bulunamadı. URL yapılandırması kontrol edilmeli.';
+      } else if (err.status === 403) {
+        errorMessage = 'Kargo verilerine erişim izniniz yok. Giriş yapmanız gerekebilir.';
+      } else if (err.status === 500) {
+        errorMessage = 'Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  // Initial load
+  useEffect(() => {
+    loadShipments();
+  }, [loadShipments]);
+
+  // Add new shipment
+  const addShipment = async (formData: ShipmentFormData): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const newShipment = await cargoApi.createShipment(formData);
       setShipments(prev => [...prev, newShipment]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Kargo eklenirken hata oluştu');
+      const errorMessage = err instanceof Error ? err.message : 'Kargo eklenirken hata oluştu';
+      setError(errorMessage);
+      throw err; // Re-throw to allow component to handle
     } finally {
       setLoading(false);
     }
   };
 
   // Update existing shipment
-  const updateShipment = (id: string, formData: ShipmentFormData) => {
+  const updateShipment = async (id: number, formData: ShipmentFormData): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
-
-      const currentDateTime = new Date().toISOString().replace('T', ' ').slice(0, 19);
-
-      setShipments(prev => prev.map(shipment => {
-        if (shipment.id === id) {
-          return {
-            ...shipment,
-            son_guncelleme_tarihi: currentDateTime,
-            
-            gonderici: {
-              ad: formData.gonderici_ad,
-              soyad: formData.gonderici_soyad,
-              telefon: formData.gonderici_telefon,
-              email: formData.gonderici_email,
-              gizlilik_durumu: formData.gizlilik_durumu
-            },
-            
-            icerik: {
-              icerik_adi: formData.icerik_adi,
-              kargo_tipi: formData.kargo_tipi,
-              agirlik_hacim: formData.agirlik_hacim
-            },
-            
-            konum: {
-              sehir: formData.sehir
-            },
-            
-            gorevliler: {
-              yardim_toplama_gonullusu: {
-                ad: formData.toplama_gonullusu_ad,
-                soyad: formData.toplama_gonullusu_soyad,
-                gonulluluk_no: formData.toplama_gonullusu_no
-              },
-              yardim_tasima_gorevlisi: formData.tasima_gorevlisi_ad ? {
-                ad: formData.tasima_gorevlisi_ad,
-                soyad: formData.tasima_gorevlisi_soyad || '',
-                gonulluluk_no: formData.tasima_gorevlisi_no || ''
-              } : undefined,
-              yardim_dagitim_gorevlisi: formData.dagitim_gorevlisi_ad ? {
-                ad: formData.dagitim_gorevlisi_ad,
-                soyad: formData.dagitim_gorevlisi_soyad || '',
-                gonulluluk_no: formData.dagitim_gorevlisi_no || ''
-              } : undefined
-            },
-            
-            guvenlik_onayi: formData.guvenlik_onayi,
-            ozel_not: formData.ozel_not,
-            
-            durum_gecmisi: [
-              ...shipment.durum_gecmisi,
-              {
-                tarih: currentDateTime,
-                aciklama: 'Kargo bilgileri güncellendi'
-              }
-            ]
-          };
-        }
-        return shipment;
-      }));
+      
+      const updatedShipment = await cargoApi.updateShipment(id, formData);
+      setShipments(prev => prev.map(shipment => 
+        shipment.id === id ? updatedShipment : shipment
+      ));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Kargo güncellenirken hata oluştu');
+      const errorMessage = err instanceof Error ? err.message : 'Kargo güncellenirken hata oluştu';
+      setError(errorMessage);
+      throw err; // Re-throw to allow component to handle
     } finally {
       setLoading(false);
     }
   };
 
   // Delete shipment
-  const deleteShipment = (id: string) => {
+  const deleteShipment = async (id: number): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
+      
+      await cargoApi.deleteShipment(id);
       setShipments(prev => prev.filter(shipment => shipment.id !== id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Kargo silinirken hata oluştu');
+      const errorMessage = err instanceof Error ? err.message : 'Kargo silinirken hata oluştu';
+      setError(errorMessage);
+      throw err; // Re-throw to allow component to handle
     } finally {
       setLoading(false);
     }
   };
 
   // Get shipment by ID
-  const getShipmentById = (id: string): Shipment | undefined => {
+  const getShipmentById = (id: number): Shipment | undefined => {
     return shipments.find(shipment => shipment.id === id);
   };
 
@@ -205,35 +128,38 @@ export function useShipments(initialShipments: Shipment[] = []): UseShipmentsRet
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       filtered = filtered.filter(shipment => {
-        const senderName = shipment.gonderici.gizlilik_durumu ? '' : `${shipment.gonderici.ad} ${shipment.gonderici.soyad}`;
-        const volunteerName = `${shipment.gorevliler.yardim_toplama_gonullusu.ad} ${shipment.gorevliler.yardim_toplama_gonullusu.soyad}`;
+        const senderName = shipment.anonim_gonderici ? '' : `${shipment.gonderici_ad || ''} ${shipment.gonderici_soyad || ''}`;
+        const volunteerName = shipment.toplama_gonullusu_detail?.full_name || '';
         
-        return shipment.takip_no.toLowerCase().includes(searchLower) ||
+        return shipment.kargo_no.toLowerCase().includes(searchLower) ||
                volunteerName.toLowerCase().includes(searchLower) ||
                senderName.toLowerCase().includes(searchLower) ||
-               shipment.icerik.icerik_adi.toLowerCase().includes(searchLower);
+               shipment.icerik.toLowerCase().includes(searchLower);
       });
     }
 
     // Status filter
     if (filters.statusFilter) {
-      filtered = filtered.filter(shipment => shipment.kargo_durumu === filters.statusFilter);
+      filtered = filtered.filter(shipment => shipment.durum === filters.statusFilter);
     }
 
+    // Origin city filter
+    if (filters.originCityFilter) {
+      filtered = filtered.filter(shipment => 
+        shipment.cikis_yeri === filters.originCityFilter
+      );
+    }
 
-    // City filter
-    if (filters.cityFilter) {
-      filtered = filtered.filter(shipment => shipment.konum.sehir === filters.cityFilter);
+    // Destination city filter
+    if (filters.destinationCityFilter) {
+      filtered = filtered.filter(shipment => 
+        shipment.ulasacagi_yer === filters.destinationCityFilter
+      );
     }
 
     // Cargo type filter
     if (filters.cargoTypeFilter) {
-      filtered = filtered.filter(shipment => shipment.icerik.kargo_tipi === filters.cargoTypeFilter);
-    }
-
-    // Security filter
-    if (filters.securityFilter) {
-      filtered = filtered.filter(shipment => shipment.guvenlik_onayi === filters.securityFilter);
+      filtered = filtered.filter(shipment => shipment.kargo_tipi === filters.cargoTypeFilter);
     }
 
     return filtered;
@@ -248,6 +174,7 @@ export function useShipments(initialShipments: Shipment[] = []): UseShipmentsRet
     updateShipment,
     deleteShipment,
     getShipmentById,
+    refreshShipments: loadShipments,
     loading,
     error,
   };

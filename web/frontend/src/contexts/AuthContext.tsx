@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { authService, User, LoginCredentials, AuthResponse } from '../services/authService';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authService, User, LoginCredentials, SignUpData, AuthResponse } from '../services/authService';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthResponse>;
+  signUp: (signUpData: SignUpData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -70,6 +71,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const signUp = async (signUpData: SignUpData): Promise<AuthResponse> => {
+    setIsLoading(true);
+    try {
+      const response = await authService.signUp(signUpData);
+      return response;
+    } catch (error) {
+      console.error('Sign up failed:', error);
+      return {
+        success: false,
+        message: 'Kayıt sırasında bir hata oluştu.',
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<void> => {
     setIsLoading(true);
     try {
@@ -101,6 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: user !== null,
     isLoading,
     login,
+    signUp,
     logout,
     refreshUser,
   };

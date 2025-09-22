@@ -16,7 +16,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import useNotifications from '../hooks/useNotifications/useNotifications';
 import {
   getOne as getVolunteer,
   updateOne as updateVolunteer,
@@ -37,7 +36,6 @@ export default function VolunteerStatusDialog({
   onClose,
   onSuccess,
 }: VolunteerStatusDialogProps) {
-  const notifications = useNotifications();
   const [volunteer, setVolunteer] = React.useState<Volunteer | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -75,27 +73,12 @@ export default function VolunteerStatusDialog({
     setIsSubmitting(true);
     try {
       await updateVolunteer(volunteer.id, { is_active: newStatus });
-      
-      notifications.show(
-        `${getDisplayName(volunteer)} adlı gönüllünün durumu ${newStatus ? 'aktif' : 'pasif'} olarak güncellendi.`,
-        {
-          severity: 'success',
-          autoHideDuration: 3000,
-        }
-      );
-      
       onSuccess();
     } catch (updateError) {
-      notifications.show(
-        `Durum güncellenirken hata oluştu: ${(updateError as Error).message}`,
-        {
-          severity: 'error',
-          autoHideDuration: 5000,
-        }
-      );
+      setError(updateError as Error);
     }
     setIsSubmitting(false);
-  }, [volunteer, newStatus, notifications, onSuccess]);
+  }, [volunteer, newStatus, onSuccess]);
 
   const renderContent = React.useMemo(() => {
     if (isLoading) {

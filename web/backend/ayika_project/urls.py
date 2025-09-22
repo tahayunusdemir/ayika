@@ -13,7 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apps.core.urls')),
     path('api/v1/volunteers/', include('apps.volunteers.urls')),
-    path('api/v1/cargo/', include('apps.cargo.urls')),
+    path('api/v1/', include('apps.cargo.urls')),  # Changed to include cargo directly under api/v1/
 ]
 
 # Serve media files in development

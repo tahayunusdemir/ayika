@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-import random
+from django.db import transaction
 
 
 class Volunteer(models.Model):
@@ -17,7 +17,7 @@ class Volunteer(models.Model):
         max_length=12,
         unique=True,
         blank=True,
-        help_text='Otomatik üretilen gönüllülük numarası (G0123456789)'
+        help_text='Otomatik üretilen gönüllülük numarası (G000000000)'
     )
     
     # Kişisel Bilgiler
@@ -173,12 +173,23 @@ class Volunteer(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.gonulluluk_no:
-            # Otomatik gönüllülük numarası üretimi
-            while True:
-                number = f"G{random.randint(1000000000, 9999999999)}"
-                if not Volunteer.objects.filter(gonulluluk_no=number).exists():
-                    self.gonulluluk_no = number
-                    break
+            # Sequential gönüllülük numarası üretimi (G000000000 formatında)
+            with transaction.atomic():
+                # Son gönüllü numarasını bul
+                last_volunteer = Volunteer.objects.filter(
+                    gonulluluk_no__startswith='G'
+                ).order_by('gonulluluk_no').last()
+                
+                if last_volunteer and last_volunteer.gonulluluk_no:
+                    # Son numaradan sonraki numarayı al
+                    last_number = int(last_volunteer.gonulluluk_no[1:])  # G'yi çıkar
+                    next_number = last_number + 1
+                else:
+                    # İlk gönüllü
+                    next_number = 0
+                
+                # G000000000 formatında oluştur (9 haneli, sıfırlarla doldur)
+                self.gonulluluk_no = f"G{next_number:09d}"
         super().save(*args, **kwargs)
     
     @property

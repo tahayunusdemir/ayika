@@ -1,22 +1,30 @@
+import React from 'react';
 import {
-  Stack,
-  TextField,
-  Autocomplete,
-  FormControl,
-  FormLabel,
   Box,
   Typography,
+  TextField,
   Grid,
-  InputAdornment,
+  FormControl,
+  FormLabel,
   Select,
   MenuItem,
+  Autocomplete,
   FormControlLabel,
   Switch,
   Paper,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  InputAdornment,
 } from '@mui/material';
-import { ShipmentFormData, CargoType, SecurityApproval, ShipmentStatus } from '../types';
-import { turkishCities } from '../data/cities';
-import { cargoTypes, securityApprovalOptions, statusOptions, allContentSuggestions, getContentSuggestionsByType } from '../data/contentOptions';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { ShipmentFormData, CargoType, ShipmentStatus, SEHIR_CHOICES, DURUM_CHOICES } from '../types';
+import { cargoTypes, allContentSuggestions, getContentSuggestionsByType } from '../data/contentOptions';
+import { volunteersApi } from '../data/apiService';
+import VolunteerSearchAutocomplete from './VolunteerSearchAutocomplete';
 
 interface ShipmentFormProps {
   formData: ShipmentFormData;
@@ -25,10 +33,31 @@ interface ShipmentFormProps {
 }
 
 export default function ShipmentForm({ formData, onChange, errors = {} }: ShipmentFormProps) {
+  const [volunteers, setVolunteers] = React.useState<any[]>([]);
+  const [loadingVolunteers, setLoadingVolunteers] = React.useState(false);
+
+  // Gönüllüleri yükle
+  React.useEffect(() => {
+    const loadVolunteers = async () => {
+      setLoadingVolunteers(true);
+      try {
+        const activeVolunteers = await volunteersApi.getActiveVolunteers();
+        setVolunteers(activeVolunteers || []);
+      } catch (apiError) {
+        console.error('Gönüllü verileri yüklenirken hata:', apiError);
+        setVolunteers([]);
+      } finally {
+        setLoadingVolunteers(false);
+      }
+    };
+
+    loadVolunteers();
+  }, []);
+
   const handleChange = (field: keyof ShipmentFormData, value: any) => {
-    // Kargo tipi değiştiğinde içerik adını temizle
+    // Kargo tipi değiştiğinde içeriği temizle
     if (field === 'kargo_tipi' && value !== formData.kargo_tipi) {
-      onChange({ ...formData, [field]: value, icerik_adi: '' });
+      onChange({ ...formData, [field]: value, icerik: '' });
     } else {
       onChange({ ...formData, [field]: value });
     }
@@ -55,8 +84,8 @@ export default function ShipmentForm({ formData, onChange, errors = {} }: Shipme
               <FormControlLabel
                 control={
                   <Switch
-                    checked={formData.gizlilik_durumu}
-                    onChange={(e) => handleChange('gizlilik_durumu', e.target.checked)}
+                    checked={formData.anonim_gonderici}
+                    onChange={(e) => handleChange('anonim_gonderici', e.target.checked)}
                     size="small"
                   />
                 }
@@ -65,7 +94,7 @@ export default function ShipmentForm({ formData, onChange, errors = {} }: Shipme
               />
             </FormControl>
           </Grid>
-          {!formData.gizlilik_durumu && (
+          {!formData.anonim_gonderici && (
             <>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <FormControl fullWidth required>
@@ -172,22 +201,32 @@ export default function ShipmentForm({ formData, onChange, errors = {} }: Shipme
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth required>
-              <FormLabel>İçerik Adı</FormLabel>
+              <FormLabel>İçerik</FormLabel>
               <Autocomplete
                 freeSolo
                 size="small"
                 options={formData.kargo_tipi ? getContentSuggestionsByType(formData.kargo_tipi) : allContentSuggestions}
-                value={formData.icerik_adi}
-                onChange={(_, newValue) => handleChange('icerik_adi', newValue || '')}
-                onInputChange={(_, newInputValue) => handleChange('icerik_adi', newInputValue)}
+                value={formData.icerik}
+                onChange={(_, newValue) => handleChange('icerik', newValue || '')}
+                onInputChange={(_, newInputValue) => handleChange('icerik', newInputValue)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="İçerik adı"
-                    error={!!errors.icerik_adi}
-                    helperText={errors.icerik_adi}
+                    placeholder={formData.kargo_tipi ? 
+                      `${formData.kargo_tipi} kategorisinden seçin veya yazın...` : 
+                      "İçerik açıklaması yazın veya seçin..."
+                    }
+                    error={!!errors.icerik}
+                    helperText={errors.icerik || (formData.kargo_tipi ? 
+                      `${getContentSuggestionsByType(formData.kargo_tipi).length} öneri mevcut` : 
+                      "Önce kargo tipi seçin"
+                    )}
                   />
                 )}
+                noOptionsText="Bu kategoride öneri bulunamadı"
+                clearText="Temizle"
+                closeText="Kapat"
+                openText="Aç"
               />
             </FormControl>
           </Grid>
@@ -202,167 +241,153 @@ export default function ShipmentForm({ formData, onChange, errors = {} }: Shipme
         <Grid container spacing={1.5}>
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth required>
-              <FormLabel>Şehir</FormLabel>
+              <FormLabel>Çıkış Yeri</FormLabel>
               <Autocomplete
-                options={turkishCities}
+                options={SEHIR_CHOICES}
                 size="small"
-                getOptionLabel={(option) => option.name}
-                value={turkishCities.find(city => city.name === formData.sehir) || null}
-                onChange={(_, newValue) => handleChange('sehir', newValue?.name || '')}
+                getOptionLabel={(option) => option.label}
+                value={SEHIR_CHOICES.find(city => city.value === formData.cikis_yeri) || null}
+                onChange={(_, newValue) => handleChange('cikis_yeri', newValue?.value || '')}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="Şehir seçin"
-                    error={!!errors.sehir}
-                    helperText={errors.sehir}
+                    placeholder="Çıkış şehri seçin"
+                    error={!!errors.cikis_yeri}
+                    helperText={errors.cikis_yeri}
                   />
                 )}
-                renderOption={(props, option) => (
-                  <Box component="li" {...props}>
-                    {option.name}
-                  </Box>
-                )}
+                renderOption={(props, option) => {
+                  const { key, ...otherProps } = props;
+                  return (
+                    <Box component="li" key={key} {...otherProps}>
+                      {option.label}
+                    </Box>
+                  );
+                }}
               />
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FormControl fullWidth>
-              <FormLabel>Ağırlık/Hacim</FormLabel>
+            <FormControl fullWidth required>
+              <FormLabel>Varış Yeri</FormLabel>
+              <Autocomplete
+                options={SEHIR_CHOICES}
+                size="small"
+                getOptionLabel={(option) => option.label}
+                value={SEHIR_CHOICES.find(city => city.value === formData.ulasacagi_yer) || null}
+                onChange={(_, newValue) => handleChange('ulasacagi_yer', newValue?.value || '')}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Varış şehri seçin"
+                    error={!!errors.ulasacagi_yer}
+                    helperText={errors.ulasacagi_yer}
+                  />
+                )}
+                renderOption={(props, option) => {
+                  const { key, ...otherProps } = props;
+                  return (
+                    <Box component="li" key={key} {...otherProps}>
+                      {option.label}
+                    </Box>
+                  );
+                }}
+              />
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <FormControl fullWidth required>
+              <FormLabel>Ağırlık (kg)</FormLabel>
               <TextField
-                value={formData.agirlik_hacim || ''}
-                onChange={(e) => handleChange('agirlik_hacim', e.target.value || undefined)}
+                value={formData.agirlik}
+                onChange={(e) => handleChange('agirlik', e.target.value)}
                 fullWidth
                 size="small"
-                placeholder="Örn: 50 kg, 100 adet"
+                type="number"
+                inputProps={{ min: 0.01, step: 0.01 }}
+                placeholder="0.00"
+                error={!!errors.agirlik}
+                helperText={errors.agirlik}
+              />
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <FormControl fullWidth required>
+              <FormLabel>Hacim (m³)</FormLabel>
+              <TextField
+                value={formData.hacim}
+                onChange={(e) => handleChange('hacim', e.target.value)}
+                fullWidth
+                size="small"
+                type="number"
+                inputProps={{ min: 0.01, step: 0.01 }}
+                placeholder="0.00"
+                error={!!errors.hacim}
+                helperText={errors.hacim}
+              />
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <FormControl fullWidth required>
+              <FormLabel>Miktar (Adet)</FormLabel>
+              <TextField
+                value={formData.miktar}
+                onChange={(e) => handleChange('miktar', parseInt(e.target.value) || 1)}
+                fullWidth
+                size="small"
+                type="number"
+                inputProps={{ min: 1, step: 1 }}
+                placeholder="1"
+                error={!!errors.miktar}
+                helperText={errors.miktar}
               />
             </FormControl>
           </Grid>
         </Grid>
       </Paper>
 
-      {/* Görevli Bilgileri */}
+      {/* Gönüllü Bilgileri */}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Görevli Bilgileri
+          Gönüllü Bilgileri
         </Typography>
         <Grid container spacing={1.5}>
           <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth required>
-              <FormLabel>Toplama Gönüllüsü - Ad</FormLabel>
-              <TextField
-                value={formData.toplama_gonullusu_ad}
-                onChange={(e) => handleChange('toplama_gonullusu_ad', e.target.value)}
-                fullWidth
-                size="small"
-                error={!!errors.toplama_gonullusu_ad}
-                helperText={errors.toplama_gonullusu_ad}
-                placeholder="Ad"
-              />
-            </FormControl>
+            <VolunteerSearchAutocomplete
+              label="Toplama Gönüllüsü"
+              volunteerType="toplama"
+              volunteers={volunteers}
+              value={formData.toplama_gonullusu}
+              onChange={(volunteerId) => handleChange('toplama_gonullusu', volunteerId)}
+              error={errors.toplama_gonullusu}
+              loading={loadingVolunteers}
+              disabled={loadingVolunteers}
+              required={true}
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth required>
-              <FormLabel>Toplama Gönüllüsü - Soyad</FormLabel>
-              <TextField
-                value={formData.toplama_gonullusu_soyad}
-                onChange={(e) => handleChange('toplama_gonullusu_soyad', e.target.value)}
-                fullWidth
-                size="small"
-                error={!!errors.toplama_gonullusu_soyad}
-                helperText={errors.toplama_gonullusu_soyad}
-                placeholder="Soyad"
-              />
-            </FormControl>
+            <VolunteerSearchAutocomplete
+              label="Taşıma Gönüllüsü"
+              volunteerType="tasima"
+              volunteers={volunteers}
+              value={formData.tasima_gonullusu}
+              onChange={(volunteerId) => handleChange('tasima_gonullusu', volunteerId)}
+              error={errors.tasima_gonullusu}
+              loading={loadingVolunteers}
+              disabled={loadingVolunteers}
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth required>
-              <FormLabel>Gönüllü No</FormLabel>
-              <TextField
-                value={formData.toplama_gonullusu_no}
-                onChange={(e) => handleChange('toplama_gonullusu_no', e.target.value)}
-                fullWidth
-                size="small"
-                error={!!errors.toplama_gonullusu_no}
-                helperText={errors.toplama_gonullusu_no}
-                placeholder="GON001"
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Taşıma Görevlisi - Ad</FormLabel>
-              <TextField
-                value={formData.tasima_gorevlisi_ad || ''}
-                onChange={(e) => handleChange('tasima_gorevlisi_ad', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="Ad"
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Taşıma Görevlisi - Soyad</FormLabel>
-              <TextField
-                value={formData.tasima_gorevlisi_soyad || ''}
-                onChange={(e) => handleChange('tasima_gorevlisi_soyad', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="Soyad"
-                disabled={!formData.tasima_gorevlisi_ad}
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Taşıma Gönüllü No</FormLabel>
-              <TextField
-                value={formData.tasima_gorevlisi_no || ''}
-                onChange={(e) => handleChange('tasima_gorevlisi_no', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="GON002"
-                disabled={!formData.tasima_gorevlisi_ad}
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Dağıtım Görevlisi - Ad</FormLabel>
-              <TextField
-                value={formData.dagitim_gorevlisi_ad || ''}
-                onChange={(e) => handleChange('dagitim_gorevlisi_ad', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="Ad"
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Dağıtım Görevlisi - Soyad</FormLabel>
-              <TextField
-                value={formData.dagitim_gorevlisi_soyad || ''}
-                onChange={(e) => handleChange('dagitim_gorevlisi_soyad', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="Soyad"
-                disabled={!formData.dagitim_gorevlisi_ad}
-              />
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <FormControl fullWidth>
-              <FormLabel>Dağıtım Gönüllü No</FormLabel>
-              <TextField
-                value={formData.dagitim_gorevlisi_no || ''}
-                onChange={(e) => handleChange('dagitim_gorevlisi_no', e.target.value || undefined)}
-                fullWidth
-                size="small"
-                placeholder="GON003"
-                disabled={!formData.dagitim_gorevlisi_ad}
-              />
-            </FormControl>
+            <VolunteerSearchAutocomplete
+              label="Dağıtım Gönüllüsü"
+              volunteerType="dagitim"
+              volunteers={volunteers}
+              value={formData.dagitim_gonullusu}
+              onChange={(volunteerId) => handleChange('dagitim_gonullusu', volunteerId)}
+              error={errors.dagitim_gonullusu}
+              loading={loadingVolunteers}
+              disabled={loadingVolunteers}
+            />
           </Grid>
         </Grid>
       </Paper>
@@ -377,56 +402,44 @@ export default function ShipmentForm({ formData, onChange, errors = {} }: Shipme
             <FormControl fullWidth required>
               <FormLabel>Durum</FormLabel>
               <Select
-                value={formData.kargo_durumu}
-                onChange={(e) => handleChange('kargo_durumu', e.target.value as ShipmentStatus)}
-                error={!!errors.kargo_durumu}
+                value={formData.durum}
+                onChange={(e) => handleChange('durum', e.target.value as ShipmentStatus)}
+                error={!!errors.durum}
                 size="small"
                 displayEmpty
               >
                 <MenuItem value="" disabled>
                   <Typography color="text.secondary">Durum seçiniz</Typography>
                 </MenuItem>
-                {statusOptions.map((status) => (
-                  <MenuItem key={status.value} value={status.value}>
-                    {status.label}
-                  </MenuItem>
-                ))}
+                {DURUM_CHOICES.map((status) => {
+                  const getStatusIcon = (value: string) => {
+                    switch (value) {
+                      case 'hazirlaniyor':
+                        return <InventoryIcon sx={{ fontSize: 18 }} />;
+                      case 'yolda':
+                        return <LocalShippingIcon sx={{ fontSize: 18 }} />;
+                      case 'teslim_edildi':
+                        return <CheckCircleIcon sx={{ fontSize: 18 }} />;
+                      case 'iptal_edildi':
+                        return <CancelIcon sx={{ fontSize: 18 }} />;
+                      default:
+                        return <InventoryIcon sx={{ fontSize: 18 }} />;
+                    }
+                  };
+                  
+                  return (
+                    <MenuItem key={status.value} value={status.value}>
+                      <ListItemIcon>
+                        {getStatusIcon(status.value)}
+                      </ListItemIcon>
+                      <ListItemText primary={status.label} />
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            {/* Empty space for alignment */}
-          </Grid>
-        </Grid>
-      </Paper>
-
-      {/* Güvenlik ve Notlar */}
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Güvenlik ve Notlar
-        </Typography>
-        <Grid container spacing={1.5}>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <FormControl fullWidth required>
-              <FormLabel>Güvenlik Onayı</FormLabel>
-              <Select
-                value={formData.guvenlik_onayi}
-                onChange={(e) => handleChange('guvenlik_onayi', e.target.value as SecurityApproval)}
-                error={!!errors.guvenlik_onayi}
-                size="small"
-              >
-                {securityApprovalOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            {/* Empty space for alignment */}
-          </Grid>
-          <Grid size={{ xs: 12 }}>
             <FormControl fullWidth>
               <FormLabel>Özel Not</FormLabel>
               <TextField

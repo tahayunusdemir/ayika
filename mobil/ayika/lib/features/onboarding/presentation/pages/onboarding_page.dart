@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../home/presentation/pages/home_page.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -48,10 +47,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   // Onboarding tamamlandığında çağrılır
-  Future<void> _completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', true);
-    
+  void _completeOnboarding() {
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const HomePage()),

@@ -88,7 +88,11 @@ class ApiClient {
         
         // Handle specific error cases
         if (response.status === 403) {
-          throw new Error('Giriş bilgileri verilmedi.');
+          throw new Error('Bu işlem için yönetici yetkilerine sahip olmanız gerekiyor.');
+        }
+        
+        if (response.status === 401) {
+          throw new Error('Giriş yapmanız gerekiyor.');
         }
         
         throw new Error(

@@ -20,28 +20,29 @@ interface ShipmentCreateDialogProps {
   loading?: boolean;
 }
 
-const initialFormData: ShipmentFormData = {
+// Form data interface for creation (allows undefined for toplama_gonullusu initially)
+interface CreateFormData extends Omit<ShipmentFormData, 'toplama_gonullusu'> {
+  toplama_gonullusu?: number;
+}
+
+const initialFormData: CreateFormData = {
+  anonim_gonderici: false,
   gonderici_ad: '',
   gonderici_soyad: '',
-  gonderici_telefon: undefined,
-  gonderici_email: undefined,
-  gizlilik_durumu: false,
-  icerik_adi: '',
+  gonderici_telefon: '',
+  gonderici_email: '',
+  cikis_yeri: '',
+  ulasacagi_yer: '',
+  agirlik: '',
+  hacim: '',
+  miktar: 1,
+  durum: 'hazirlaniyor',
   kargo_tipi: '' as CargoType,
-  agirlik_hacim: undefined,
-  sehir: '',
-  toplama_gonullusu_ad: '',
-  toplama_gonullusu_soyad: '',
-  toplama_gonullusu_no: '',
-  tasima_gorevlisi_ad: undefined,
-  tasima_gorevlisi_soyad: undefined,
-  tasima_gorevlisi_no: undefined,
-  dagitim_gorevlisi_ad: undefined,
-  dagitim_gorevlisi_soyad: undefined,
-  dagitim_gorevlisi_no: undefined,
-  kargo_durumu: 'hazırlanıyor',
-  guvenlik_onayi: 'kontrol edilmedi',
-  ozel_not: undefined,
+  icerik: '',
+  toplama_gonullusu: undefined,
+  tasima_gonullusu: undefined,
+  dagitim_gonullusu: undefined,
+  ozel_not: '',
 };
 
 export default function ShipmentCreateDialog({
@@ -50,7 +51,7 @@ export default function ShipmentCreateDialog({
   onSubmit,
   loading = false,
 }: ShipmentCreateDialogProps) {
-  const [formData, setFormData] = React.useState<ShipmentFormData>(initialFormData);
+  const [formData, setFormData] = React.useState<CreateFormData>(initialFormData);
   const [errors, setErrors] = React.useState<Partial<Record<keyof ShipmentFormData, string>>>({});
 
   React.useEffect(() => {
@@ -63,40 +64,41 @@ export default function ShipmentCreateDialog({
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof ShipmentFormData, string>> = {};
 
-    if (!formData.gizlilik_durumu && !formData.gonderici_ad.trim()) {
+    if (!formData.anonim_gonderici && !formData.gonderici_ad?.trim()) {
       newErrors.gonderici_ad = 'Gönderici adı gereklidir';
     }
 
-    if (!formData.gizlilik_durumu && !formData.gonderici_soyad.trim()) {
+    if (!formData.anonim_gonderici && !formData.gonderici_soyad?.trim()) {
       newErrors.gonderici_soyad = 'Gönderici soyadı gereklidir';
     }
 
-    if (!formData.gizlilik_durumu && !formData.gonderici_telefon?.trim()) {
-      newErrors.gonderici_telefon = 'Telefon numarası gereklidir';
+    if (!formData.cikis_yeri.trim()) {
+      newErrors.cikis_yeri = 'Çıkış yeri seçilmelidir';
     }
 
-    if (!formData.toplama_gonullusu_ad.trim()) {
-      newErrors.toplama_gonullusu_ad = 'Toplama gönüllüsü adı gereklidir';
+    if (!formData.ulasacagi_yer.trim()) {
+      newErrors.ulasacagi_yer = 'Varış yeri seçilmelidir';
     }
 
-    if (!formData.toplama_gonullusu_soyad.trim()) {
-      newErrors.toplama_gonullusu_soyad = 'Toplama gönüllüsü soyadı gereklidir';
+    if (!formData.icerik.trim()) {
+      newErrors.icerik = 'İçerik açıklaması gereklidir';
     }
 
-    if (!formData.toplama_gonullusu_no.trim()) {
-      newErrors.toplama_gonullusu_no = 'Gönüllülük numarası gereklidir';
+    if (!formData.agirlik.trim()) {
+      newErrors.agirlik = 'Ağırlık gereklidir';
     }
 
-    if (!formData.sehir.trim()) {
-      newErrors.sehir = 'Şehir seçilmelidir';
-    }
-
-    if (!formData.icerik_adi.trim()) {
-      newErrors.icerik_adi = 'İçerik adı gereklidir';
+    if (!formData.hacim.trim()) {
+      newErrors.hacim = 'Hacim gereklidir';
     }
 
     if (!formData.kargo_tipi) {
       newErrors.kargo_tipi = 'Kargo tipi seçilmelidir';
+    }
+
+    // Toplama gönüllüsü zorunlu
+    if (!formData.toplama_gonullusu) {
+      newErrors.toplama_gonullusu = 'Toplama gönüllüsü seçilmelidir';
     }
 
     // Email validation if provided
@@ -112,8 +114,13 @@ export default function ShipmentCreateDialog({
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
-      onSubmit(formData);
+    if (validateForm() && formData.toplama_gonullusu) {
+      // Convert form data to proper ShipmentFormData type
+      const submitData: ShipmentFormData = {
+        ...formData,
+        toplama_gonullusu: formData.toplama_gonullusu,
+      };
+      onSubmit(submitData);
     }
   };
 
@@ -152,8 +159,8 @@ export default function ShipmentCreateDialog({
       <DialogContent sx={{ pb: 2 }}>
         <Box sx={{ mt: 1 }}>
           <ShipmentForm
-            formData={formData}
-            onChange={setFormData}
+            formData={formData as ShipmentFormData}
+            onChange={(data) => setFormData(data as CreateFormData)}
             errors={errors}
           />
         </Box>

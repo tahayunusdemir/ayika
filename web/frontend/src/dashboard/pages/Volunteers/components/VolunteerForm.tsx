@@ -9,17 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent, SelectProps } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { trTR } from '@mui/x-date-pickers/locales';
-import type { Dayjs } from 'dayjs';
 import { TURKISH_CITIES, getCityDisplayName } from '../data/volunteers';
 import type { Volunteer, VolunteerType } from '../data/volunteers';
-import { dateUtils } from '../../../theme/customizations/dateUtils';
 
 export interface VolunteerFormState {
-  values: Partial<Omit<Volunteer, 'id' | 'user' | 'updated_at'>>;
+  values: Partial<Omit<Volunteer, 'id' | 'user' | 'updated_at' | 'created_at' | 'gonulluluk_no'>>;
   errors: Partial<Record<keyof VolunteerFormState['values'], string>>;
 }
 
@@ -83,16 +77,6 @@ export default function VolunteerForm(props: VolunteerFormProps) {
     [onFieldChange],
   );
 
-  const handleDateFieldChange = React.useCallback(
-    (fieldName: keyof VolunteerFormState['values']) => (value: Dayjs | null) => {
-      if (value?.isValid()) {
-        onFieldChange(fieldName, value.toISOString() ?? null);
-      } else {
-        onFieldChange(fieldName, null);
-      }
-    },
-    [onFieldChange],
-  );
 
   const handleSelectFieldChange = React.useCallback(
     (event: SelectChangeEvent) => {
@@ -112,34 +96,14 @@ export default function VolunteerForm(props: VolunteerFormProps) {
 
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      adapterLocale="tr"
-      localeText={trTR.components.MuiLocalizationProvider.defaultProps.localeText}
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      noValidate
+      autoComplete="off"
+      onReset={handleReset}
     >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        noValidate
-        autoComplete="off"
-        onReset={handleReset}
-      >
         <Grid container spacing={2} mb={2} columns={12}>
-          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.gonulluluk_no} fullWidth>
-              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllülük Numarası</FormLabel>
-              <TextField
-                value={formValues.gonulluluk_no ?? ''}
-                onChange={handleTextFieldChange}
-                name="gonulluluk_no"
-                placeholder="G0123456789"
-                error={!!formErrors.gonulluluk_no}
-                fullWidth
-                inputProps={{ maxLength: 11 }}
-              />
-              <FormHelperText>{formErrors.gonulluluk_no ?? ' '}</FormHelperText>
-            </FormControl>
-          </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.gonullu_tipi} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Gönüllü Tipi</FormLabel>
@@ -168,6 +132,21 @@ export default function VolunteerForm(props: VolunteerFormProps) {
                 ))}
               </Select>
               <FormHelperText>{formErrors.gonullu_tipi ?? ' '}</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+            <FormControl error={!!formErrors.email} fullWidth>
+              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>E-posta Adresi</FormLabel>
+              <TextField
+                value={formValues.email ?? ''}
+                onChange={handleTextFieldChange}
+                name="email"
+                type="email"
+                placeholder="ornek@email.com"
+                error={!!formErrors.email}
+                fullWidth
+              />
+              <FormHelperText>{formErrors.email ?? 'Geçerli bir e-posta adresi giriniz'}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
@@ -237,27 +216,6 @@ export default function VolunteerForm(props: VolunteerFormProps) {
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.created_at} fullWidth>
-              <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Katılım Tarihi</FormLabel>
-              <DatePicker
-                value={dateUtils.toDayjs(formValues.created_at)}
-                onChange={handleDateFieldChange('created_at')}
-                name="created_at"
-                {...dateUtils.getDatePickerProps()}
-                maxDate={dateUtils.now()}
-                shouldDisableDate={(date) => dateUtils.isAfter(date, dateUtils.now())}
-                slotProps={{
-                  textField: {
-                    error: !!formErrors.created_at,
-                    variant: 'outlined',
-                  },
-                }}
-                disabled={isSubmitting}
-              />
-              <FormHelperText>{formErrors.created_at ?? ' '}</FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.is_active} fullWidth>
               <FormLabel sx={{ mb: 1, fontWeight: 600 }}>Aktif Durum</FormLabel>
               <Select
@@ -292,7 +250,6 @@ export default function VolunteerForm(props: VolunteerFormProps) {
             {submitButtonLabel}
           </Button>
         </Stack>
-      </Box>
-    </LocalizationProvider>
+    </Box>
   );
 }
